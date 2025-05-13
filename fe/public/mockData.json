@@ -1,0 +1,296 @@
+{
+  "categories": [
+    { "id": 1, "name": "DỊCH VỤ TÓC" },
+    { "id": 2, "name": "SPA & RELAX" }
+  ],
+  
+  "services": [
+    {
+      "id": 1,
+      "categoryId": 1,
+      "name": "Cắt tóc",
+      "price": "Giá từ 379.000đ",
+      "image": "https://storage.30shine.com/web/v4/images/uon-trang-chu/uon-1.jpg",
+      "description": "Trải nghiệm cắt tóc phong cách, dành riêng cho phái mạnh, vừa tiện lợi vừa thư giãn tại đây."
+    },
+    {
+      "id": 2,
+      "categoryId": 1,
+      "name": "Uốn định hình",
+      "price": "Giá từ 799.000đ",
+      "image": "https://storage.30shine.com/web/v4/images/uon-trang-chu/uon-2.jpg",
+      "description": "Tạo kiểu tóc uốn định hình, giữ nếp lâu, phù hợp với mọi phong cách."
+    },
+    {
+      "id": 3,
+      "categoryId": 1,
+      "name": "Thay đổi màu tóc",
+      "price": "Giá từ 199.000đ",
+      "image": "https://storage.30shine.com/web/v4/images/uon-trang-chu/uon-3.jpg",
+      "description": "Thay đổi màu tóc theo xu hướng, an toàn và bền màu."
+    },
+    {
+      "id": 4,
+      "categoryId": 2,
+      "name": "Gói Spa thư giãn 1",
+      "price": "Giá từ 599.000đ",
+      "image": "https://storage.30shine.com/web/v4/images/pc/pc_home_spa_1.png",
+      "description": "Gói spa thư giãn cơ bản, giúp bạn xua tan mệt mỏi."
+    },
+    {
+      "id": 5,
+      "categoryId": 2,
+      "name": "Gói Spa thư giãn 2",
+      "price": "Giá từ 899.000đ",
+      "image": "https://storage.30shine.com/web/v4/images/pc/pc_home_spa_3.png",
+      "description": "Gói spa thư giãn nâng cao, mang lại cảm giác sảng khoái tối đa."
+    }
+  ],
+  
+  "combos": [
+    {
+      "id": 1,
+      "serviceId": 1,
+      "name": "Cắt gội Combo 3",
+      "description": "Combo cắt kỹ\nCombo gội massage chăm sóc da",
+      "duration": "65 Phút",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 2,
+      "serviceId": 1,
+      "name": "Cắt gội Combo 4",
+      "description": "Combo cắt kỹ\nCombo gội massage bằng đá nóng",
+      "duration": "75 Phút",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 3,
+      "serviceId": 1,
+      "name": "Cắt gội Combo 5",
+      "description": "Combo cắt kỹ\nCombo gội massage lấy nhân mụn chuyên sâu",
+      "duration": "75 Phút",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 4,
+      "serviceId": 2,
+      "name": "Uốn định hình cơ bản",
+      "description": "Uốn tóc giữ nếp lâu\nTư vấn kiểu phù hợp",
+      "duration": "60 Phút",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 5,
+      "serviceId": 3,
+      "name": "Nhuộm màu cơ bản",
+      "description": "Nhuộm màu an toàn\nBền màu lâu dài",
+      "duration": "40 Phút",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 6,
+      "serviceId": 4,
+      "name": "Spa thư giãn cơ bản",
+      "description": "Massage thư giãn\nChăm sóc da mặt",
+      "duration": "50 Phút",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 7,
+      "serviceId": 5,
+      "name": "Spa thư giãn nâng cao",
+      "description": "Massage toàn thân\nChăm sóc da chuyên sâu",
+      "duration": "70 Phút",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    }
+  ],
+  
+  "comboDetails": [
+    {
+      "id": 1,
+      "comboId": 1,
+      "name": "Cắt gội Combo 3 Detail",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg",
+      "description": "Chi tiết các bước cắt gội và massage"
+    },
+    {
+      "id": 2,
+      "comboId": 2,
+      "name": "Cắt gội Combo 4 Detail",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg",
+      "description": "Chi tiết các bước cắt gội và massage đá nóng"
+    },
+    {
+      "id": 3,
+      "comboId": 3,
+      "name": "Cắt gội Combo 5 Detail",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg",
+      "description": "Chi tiết các bước cắt gội và chăm sóc da"
+    },
+    {
+      "id": 4,
+      "comboId": 4,
+      "name": "Uốn định hình cơ bản Detail",
+      "image": "https://via.placeholder.com/300x200?text=Uon+Dinh+Hinh+Detail",
+      "description": "Chi tiết các bước uốn tóc cơ bản"
+    },
+    {
+      "id": 5,
+      "comboId": 5,
+      "name": "Nhuộm màu cơ bản Detail",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg",
+      "description": "Chi tiết các bước nhuộm màu"
+    },
+    {
+      "id": 6,
+      "comboId": 6,
+      "name": "Spa thư giãn cơ bản Detail",
+      "image": "https://via.placeholder.com/300x200?text=Spa+Co+Ban+Detail",
+      "description": "Chi tiết các bước spa cơ bản"
+    },
+    {
+      "id": 7,
+      "comboId": 7,
+      "name": "Spa thư giãn nâng cao Detail",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg",
+      "description": "Chi tiết các bước spa nâng cao"
+    }
+  ],
+  
+  "comboSteps": [
+    {
+      "id": 1,
+      "comboDetailId": 1,
+      "stepsId": 1
+    },
+    {
+      "id": 2,
+      "comboDetailId": 1,
+      "stepsId": 2
+    },
+    {
+      "id": 3,
+      "comboDetailId": 2,
+      "stepsId": 3
+    },
+    {
+      "id": 4,
+      "comboDetailId": 2,
+      "stepsId": 2
+    },
+    {
+      "id": 5,
+      "comboDetailId": 3,
+      "stepsId": 4
+    },
+    {
+      "id": 6,
+      "comboDetailId": 3,
+      "stepsId": 2
+    },
+    {
+      "id": 7,
+      "comboDetailId": 4,
+      "stepsId": 5
+    },
+    {
+      "id": 8,
+      "comboDetailId": 4,
+      "stepsId": 6
+    },
+    {
+      "id": 9,
+      "comboDetailId": 5,
+      "stepsId": 7
+    },
+    {
+      "id": 10,
+      "comboDetailId": 5,
+      "stepsId": 8
+    },
+    {
+      "id": 11,
+      "comboDetailId": 6,
+      "stepsId": 9
+    },
+    {
+      "id": 12,
+      "comboDetailId": 6,
+      "stepsId": 10
+    },
+    {
+      "id": 13,
+      "comboDetailId": 7,
+      "stepsId": 11
+    },
+    {
+      "id": 14,
+      "comboDetailId": 7,
+      "stepsId": 12
+    }
+  ],
+  
+  "stepAll": [
+    {
+      "id": 1,
+      "name": "Gội đầu massage",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Cắt tỉa kỹ thuật",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Massage đá nóng",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Lấy nhân mụn",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpgn"
+    },
+    {
+      "id": 5,
+      "name": "Chuẩn bị tóc",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Uốn định hình",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 7,
+      "name": "Chuẩn bị màu nhuộm",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 8,
+      "name": "Nhuộm tóc",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 9,
+      "name": "Massage thư giãn",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 10,
+      "name": "Chăm sóc da mặt",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 11,
+      "name": "Massage toàn thân",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    },
+    {
+      "id": 12,
+      "name": "Chăm sóc da chuyên sâu",
+      "image": "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg"
+    }
+  ]
+}
