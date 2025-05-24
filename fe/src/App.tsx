@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/layout/Layout";
 import { HomePage } from "./components/pages/client/home/Home";
 import { AboutPage } from "./components/pages/client/about/About";
-import { BookingPage } from "./components/pages/client/booking/Booking";
+// import { BookingPage } from "./components/pages/client/booking/Booking";
 import { LoginPage } from "./components/pages/client/auth/Login";
 import { ForgotPasswordPage } from "./components/pages/client/auth/Forgot";
 import { RegisterPage } from "./components/pages/client/auth/Register";
@@ -16,6 +16,10 @@ import { LocationPage } from "./components/pages/client/location/Location";
 import { Header } from "./components/layout/layoutpr/Header";
 import routes from "./config/routes";
 import { ResetPasswordPage } from "./components/pages/client/auth/Reset";
+import { BookingForm } from "./components/pages/client/booking/BookingForm";
+import { SelectStore } from "./components/pages/client/booking/SelectStore";
+import { SelectService } from "./components/pages/client/booking/SelectService";
+import { PhoneInput } from "./components/pages/client/booking/PhoneInput";
 
 function App() {
   return (
@@ -23,7 +27,6 @@ function App() {
       <Routes>
         <Route path="/" index element={<Layout><HomePage /></Layout>} />
         <Route path={routes.about} element={<Layout><AboutPage /></Layout>} />
-        <Route path={routes.booking} element={<Layout><BookingPage /></Layout>} />
         <Route path={routes.login} element={<LoginPage />} />
         <Route path={routes.register} element={<RegisterPage />} />
         <Route path={routes.forgot} element={<ForgotPasswordPage />} />
@@ -37,6 +40,13 @@ function App() {
           <Route path={routes.profile.updateProfile} element={<UpdateProfile />} />
         </Route>
         <Route path={routes.location_page} element={<Layout><LocationPage /></Layout>} />
+        <Route path={routes.booking} element={<Layout><BookingForm/></Layout>} />
+        <Route path="/store" element={<Layout><SelectStore /></Layout>} />
+        <Route path="/services" element={<Layout><SelectService/></Layout>} />
+        <Route path="/phone" element={<Layout><PhoneInput/></Layout>} />
+
+
+
       </Routes>
     </Router>
   );
