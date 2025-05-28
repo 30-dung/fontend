@@ -5,6 +5,7 @@ import url from "../../../../services/url";
 
 interface Store {
   storeId: number;
+  storeImages: string;
   storeName: string;
   phoneNumber: string;
   cityProvince: string;
@@ -164,7 +165,7 @@ export const LocationPage = () => {
             className="flex items-center gap-4 p-4 border border-gray-200 rounded-lg shadow-sm"
           >
             <img
-              src="https://via.placeholder.com/100"
+              src={store.storeImages || "https://via.placeholder.com/150"}
               alt={store.storeName}
               className="w-24 h-24 object-cover rounded"
             />

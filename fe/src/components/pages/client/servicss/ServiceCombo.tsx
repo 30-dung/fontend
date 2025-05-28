@@ -163,7 +163,7 @@ export function ServiceComBo() {
                 {/* Nút Đặt lịch */}
                 <div className="flex justify-center mt-8">
                   <Link
-                    to="/book-now"
+                   to="/booking"
                     className="bg-shine-primary text-white font-bold py-3 px-6 rounded-full hover:bg-shine-primary/90 transition"
                   >
                     ĐẶT LỊCH NGAY
@@ -180,7 +180,7 @@ export function ServiceComBo() {
               className="fixed bottom-6 right-6"
             >
               <Link
-                to="/book-now"
+                to="/booking"
                 className="flex items-center bg-shine-primary text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-shine-primary/90 transition animate-bounce"
               >
                 <FaPhoneAlt className="mr-2" />
