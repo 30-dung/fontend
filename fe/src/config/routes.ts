@@ -13,7 +13,11 @@ const routes = {
         index: '/profile',
         updateProfile: '/profile/updateProfile',
     },
-    location_page: '/location_page'
+    location_page: '/location_page',
+    // store: '/store',
+    // services: '/services',
+    stylistAndTime: '/stylist-and-time',
+    bookingConfirmation: '/booking-confirmation'
 }
 
 export default routes;

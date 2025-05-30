@@ -1,174 +1,605 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { FaStore, FaCut, FaUser, FaCalendarAlt, FaChevronRight } from 'react-icons/fa';
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  FaStore,
+  FaCut,
+  FaUser,
+  FaCalendarAlt,
+  FaChevronRight,
+  FaChevronDown,
+  FaChevronUp,
+} from "react-icons/fa";
 import api from "../../../../services/api";
 import url from "../../../../services/url";
+import routes from "../../../../config/routes";
+import { SelectStore } from "./SelectStore";
+import { SelectService } from "./SelectService";
 
 interface Store {
-    storeId: number;
-    storeName: string;
+  storeId: number;
+  storeName: string;
 }
 
-interface Service {
-    storeServiceId: number;
-    service: {
-        serviceName: string;
-    };
-    price: number;
+export interface Service {
+  storeServiceId: number;
+  service: {
+    serviceName: string;
+    durationMinutes: number;
+  };
+  price: number;
 }
 
-export function Booking() {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const navigate = useNavigate();
-    const [step, setStep] = useState<number>(parseInt(searchParams.get('step') || '0'));
-    const [phone, setPhone] = useState<string>('');
-    const [selectedStore, setSelectedStore] = useState<Store | null>(null);
-    const [selectedServices, setSelectedServices] = useState<Service[]>([]);
-    const [error, setError] = useState<string | null>(null);
+interface Employee {
+  employeeId: number;
+  fullName: string;
+  email: string;
+  phoneNumber: string;
+  avatarUrl?: string;
+}
 
-    // Load user profile
-    useEffect(() => {
-        const fetchUserProfile = async () => {
-            try {
-                if (!localStorage.getItem('token')) {
-                    setError('Vui lòng đăng nhập để tiếp tục');
-                    navigate('/login');
-                    return;
-                }
-                const response = await api.get(url.USER.PROFILE);
-                setPhone(response.data.phoneNumber || '');
-            } catch (err: any) {
-                setError('Không thể tải thông tin người dùng');
-            }
-        };
-        fetchUserProfile();
-    }, [navigate]);
+interface WorkingTimeSlot {
+  timeSlotId: number;
+  startTime: string;
+  endTime: string;
+  isAvailable: boolean;
+}
 
-    // Load salon nếu có salonId
-    useEffect(() => {
-        const salonId = searchParams.get('salonId') || localStorage.getItem('storeId');
-        if (salonId && salonId !== '0') {
-            api.get(`${url.STORE.GET_BY_ID}/${salonId}`)
-                .then((res) => {
-                    setSelectedStore(res.data);
-                    localStorage.setItem('storeId', salonId);
-                })
-                .catch((err) => {
-                    setError('Không thể tải thông tin salon: ' + (err.response?.data?.message || err.message));
-                });
+interface StoreService {
+  storeServiceId: number;
+  service: {
+    serviceName: string;
+    durationMinutes: number;
+  };
+  price: number;
+}
+
+export default function BookingForm() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [step, setStep] = useState<number>(parseInt(searchParams.get("step") || "0"));
+  const [phone, setPhone] = useState<string>(searchParams.get("phone") || "");
+  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+  const [selectedServices, setSelectedServices] = useState<Service[]>([]);
+  const [errorStore, setErrorStore] = useState<string | null>(null);
+  const [errorService, setErrorService] = useState<string | null>(null);
+  const [errorDate, setErrorDate] = useState<string | null>(null);
+  const storeId = localStorage.getItem("storeId") || "0";
+  const [stylists, setStylists] = useState<Employee[]>([]);
+  const [selectedStylist, setSelectedStylist] = useState<Employee | null>(null);
+  const [stylistOpen, setStylistOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string>(
+    new Date().toISOString().split("T")[0]
+  );
+  const [availableSlots, setAvailableSlots] = useState<WorkingTimeSlot[]>([]);
+  const [selectedSlot, setSelectedSlot] = useState<WorkingTimeSlot | null>(null);
+  const [servicesDetails, setServicesDetails] = useState<StoreService[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Kiểm tra đăng nhập và lấy phone từ profile
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        if (!localStorage.getItem("access_token")) {
+          setErrorStore("Vui lòng đăng nhập để tiếp tục");
+          navigate(routes.login);
+          return;
         }
-    }, [searchParams]);
-
-    // Load services đã chọn
-    useEffect(() => {
-        const salonId = searchParams.get('salonId') || localStorage.getItem('storeId');
-        const services = JSON.parse(localStorage.getItem('selectedServices') || '[]');
-
-        if (services.length > 0 && salonId) {
-            Promise.all(
-                services.map((serviceId: number) =>
-                    api.get(`${url.STORE_SERVICE.GET_BY_STORE}/${salonId}`)
-                        .then((res) => res.data.find((s: Service) => s.storeServiceId === serviceId))
-                )
-            ).then((fetchedServices) => {
-                setSelectedServices(fetchedServices.filter((s: Service | undefined): s is Service => !!s));
-            }).catch(() => {
-                setError('Không thể tải chi tiết dịch vụ');
-            });
-        }
-    }, [searchParams]);
-
-    // Cập nhật URL với searchParams khi phone hoặc step thay đổi
-    useEffect(() => {
-        const currentSalonId = selectedStore?.storeId?.toString() || searchParams.get('salonId') || localStorage.getItem('storeId') || '0';
-        const currentPhone = phone || searchParams.get('phone') || '';
-
+        const response = await api.get(url.USER.PROFILE);
+        const userPhone = response.data.phoneNumber;
+        setPhone(userPhone);
         setSearchParams({
-            phone: currentPhone,
-            salonId: currentSalonId,
-            step: step.toString(),
+          phone: userPhone,
+          salonId: storeId,
+          step: step.toString(),
         });
-    }, [phone, step, selectedStore, setSearchParams]);
-
-    const handleStepChange = (newStep: number) => {
-        setStep(newStep);
+      } catch (err: any) {
+        if (err.response?.status === 401) {
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("user_role");
+          setErrorStore("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại.");
+          navigate(routes.login);
+        } else {
+          setErrorStore("Không thể tải thông tin người dùng: " + err.message);
+        }
+      }
     };
+    fetchUserProfile();
+  }, [navigate, setSearchParams, storeId, step]);
 
-    return (
-        <div className="w-full max-w-md mx-auto bg-gray-100 min-h-screen font-sans">
-            <div className="navigator flex justify-center py-4">
-                <span className="text-2xl font-bold text-[#15397F] tracking-tight">Đặt lịch giữ chỗ</span>
-            </div>
+  // Load salon
+  useEffect(() => {
+    const salonId = searchParams.get("salonId") || localStorage.getItem("storeId") || "0";
+    if (salonId !== "0") {
+      api
+        .get(`${url.STORE.GET_BY_ID}/${salonId}`)
+        .then((res) => {
+          setSelectedStore(res.data);
+          localStorage.setItem("storeId", salonId);
+          setSelectedServices([]);
+          setSelectedStylist(null);
+          setSelectedDate(new Date().toISOString().split("T")[0]);
+          setAvailableSlots([]);
+          setStylists([]);
+        })
+        .catch((err) => {
+          setErrorStore("Không thể tải thông tin salon: " + (err.response?.data?.message || err.message));
+        });
+    } else {
+      setSelectedStore(null);
+      setSelectedServices([]);
+      setSelectedStylist(null);
+      setSelectedDate(new Date().toISOString().split("T")[0]);
+      setAvailableSlots([]);
+      setStylists([]);
+    }
+  }, [searchParams]);
 
-            <div className="bg-white p-4">
-                <div className="body relative py-4">
-                    <div className="main-screen space-y-4">
-                        {/* Chọn Salon */}
-                        <div className="main-screen__block bg-white rounded-xl p-5 transition-all">
-                            <div className="font-semibold text-lg text-[#15397F] mb-3">1. Chọn salon</div>
-                            <div
-                                className="flex items-center bg-gray-50 h-12 rounded-lg px-4 border cursor-pointer hover:bg-gray-100 transition"
-                                onClick={() => {
-                                    handleStepChange(1);
-                                    navigate('/store');
-                                }}
-                            >
-                                <FaStore className="mr-3 w-5 h-5 text-[#15397F] transition" />
-                                <span className="text-sm text-gray-600 truncate w-full">
-                                    {selectedStore ? selectedStore.storeName : 'Chọn salon'}
-                                </span>
-                                <FaChevronRight className="w-4 h-4 ml-2 text-gray-500 transition" />
-                            </div>
-                        </div>
+  // Load dịch vụ đã chọn
+  useEffect(() => {
+    const salonId = searchParams.get("salonId") || localStorage.getItem("storeId") || "0";
+    const services = JSON.parse(localStorage.getItem("selectedServices") || "[]");
 
-                        {/* Chọn dịch vụ */}
-                        <div className="main-screen__block bg-white rounded-xl p-5 transition-all">
-                            <div className="font-semibold text-lg text-[#15397F] mb-3">2. Chọn dịch vụ</div>
-                            <div
-                                className="flex items-center bg-gray-50 h-12 rounded-lg px-4 cursor-pointer hover:bg-gray-100 transition"
-                                onClick={() => {
-                                    if (!selectedStore) {
-                                        setError('Vui lòng chọn salon trước');
-                                        return;
-                                    }
-                                    handleStepChange(2);
-                                    navigate('/services');
-                                }}
-                            >
-                                <FaCut className="mr-3 w-5 h-5 text-[#15397F] transition" />
-                                <span className="text-sm text-gray-600 truncate w-full">
-                                    Đã chọn {selectedServices.length} dịch vụ (Tổng: {selectedServices
-                                        .reduce((sum, s) => sum + s.price, 0)
-                                        .toLocaleString()} VND)
-                                </span>
-                                <FaChevronRight className="w-4 h-4 ml-2 text-gray-500 transition" />
-                            </div>
-                        </div>
+    if (services.length > 0 && salonId !== "0" && selectedStore) {
+      Promise.all(
+        services.map((serviceId: number) =>
+          api
+            .get(`${url.STORE_SERVICE.GET_BY_STORE}/${salonId}`)
+            .then((res) => res.data.find((s: Service) => s.storeServiceId === serviceId))
+        )
+      )
+        .then((fetchedServices) => {
+          const filteredServices = fetchedServices.filter((s: Service | undefined): s is Service => !!s);
+          setSelectedServices(filteredServices);
+          if (filteredServices.length === 0) {
+            setErrorService("Không tìm thấy dịch vụ nào cho salon này");
+            localStorage.setItem("selectedServices", JSON.stringify([]));
+          }
+        })
+        .catch(() => {
+          setErrorService("Không thể tải chi tiết dịch vụ");
+        });
+    }
+  }, [searchParams, selectedStore]);
 
-                        {/* Chọn stylist và thời gian */}
-                        <div className="main-screen__block bg-white rounded-xl p-5 transition-all">
-                            <div className="font-semibold text-lg text-[#15397F] mb-3">3. Chọn stylist & thời gian</div>
-                            <div
-                                className="flex items-center bg-gray-50 h-12 rounded-lg px-4 cursor-pointer hover:bg-gray-100 transition"
-                                onClick={() => {
-                                    if (!selectedStore || selectedServices.length === 0) {
-                                        setError('Vui lòng chọn salon và ít nhất một dịch vụ trước');
-                                        return;
-                                    }
-                                    handleStepChange(3);
-                                    navigate('/stylist-and-time');
-                                }}
-                            >
-                                <FaUser className="mr-3 w-5 h-5 text-[#15397F] transition" />
-                                <span className="text-sm text-gray-600 truncate w-full">Chọn stylist & thời gian</span>
-                                <FaChevronRight className="w-4 h-4 ml-2 text-gray-500 transition" />
-                            </div>
-                        </div>
+  // Cập nhật URL
+  useEffect(() => {
+    const currentSalonId =
+      selectedStore?.storeId?.toString() ||
+      searchParams.get("salonId") ||
+      localStorage.getItem("storeId") ||
+      "0";
+    setSearchParams({
+      phone,
+      salonId: currentSalonId,
+      step: step.toString(),
+    });
+  }, [step, phone, selectedStore, setSearchParams]);
 
-                        {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
-                    </div>
-                </div>
-            </div>
-        </div>
+  // Load stylists
+  useEffect(() => {
+    const fetchStylists = async () => {
+      if (!storeId || storeId === "0" || !selectedStore || selectedServices.length === 0) {
+        setStylists([]);
+        return;
+      }
+      setLoading(true);
+      try {
+        const response = await api.get(`${url.EMPLOYEE.BY_STORE}/${storeId}`);
+        const mappedStylists = response.data.map((stylist: any) => ({
+          employeeId: stylist.employeeId,
+          fullName: stylist.fullName,
+          email: stylist.email,
+          phoneNumber: stylist.phoneNumber,
+          avatarUrl: stylist.avatarUrl,
+        }));
+        setStylists(mappedStylists);
+      } catch (err: any) {
+        console.error("Không thể tải danh sách stylist:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStylists();
+  }, [storeId, selectedStore, selectedServices]);
+
+  // Load khung giờ
+  useEffect(() => {
+    const fetchAvailableSlots = async () => {
+      if (!selectedStore || selectedServices.length === 0 || !selectedStylist || !selectedDate) {
+        setAvailableSlots([]);
+        return;
+      }
+      setLoading(true);
+      try {
+        const response = await api.get(url.EMPLOYEE.WORKING_TIME_SLOTS, {
+          params: {
+            employeeId: selectedStylist.employeeId,
+            date: selectedDate,
+          },
+        });
+        setAvailableSlots(response.data);
+        if (response.data.length === 0) {
+          setErrorDate("Không có khung giờ trống cho stylist này vào ngày đã chọn");
+        } else {
+          setErrorDate(null);
+        }
+      } catch (err: any) {
+        setErrorDate(err.response?.data?.message || "Không thể tải khung giờ trống");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAvailableSlots();
+  }, [selectedStore, selectedServices, selectedStylist, selectedDate]);
+
+  // Load chi tiết dịch vụ
+  useEffect(() => {
+    const fetchServicesDetails = async () => {
+      if (!storeId || storeId === "0") return;
+      try {
+        const response = await api.get(`${url.STORE_SERVICE.GET_BY_STORE}/${storeId}`);
+        const services = response.data.filter((s: StoreService) =>
+          selectedServices.map(s => s.storeServiceId).includes(s.storeServiceId)
+        );
+        setServicesDetails(services);
+        if (services.length === 0 && selectedServices.length > 0) {
+          setErrorService("Không tìm thấy chi tiết dịch vụ đã chọn");
+        }
+      } catch (err: any) {
+        setErrorService(err.response?.data?.message || "Không thể tải chi tiết dịch vụ");
+      }
+    };
+    fetchServicesDetails();
+  }, [storeId, selectedServices]);
+
+  const handleStepChange = (newStep: number) => {
+    setStep(newStep);
+    setSearchParams({
+      phone,
+      salonId: storeId,
+      step: newStep.toString(),
+    });
+  };
+
+  const handleConfirm = async () => {
+  if (!selectedStylist || !selectedSlot || servicesDetails.length === 0 || !phone) {
+    setErrorService("Vui lòng chọn stylist, thời gian, dịch vụ và cung cấp số điện thoại");
+    return;
+  }
+
+  let currentStartTime = new Date(selectedSlot.startTime);
+  const appointments = servicesDetails.map((service, index) => {
+    const duration = service.service.durationMinutes;
+    const startTime = formatDateTimeWithoutOffset(currentStartTime);
+    const endTime = formatDateTimeWithoutOffset(
+      new Date(currentStartTime.getTime() + duration * 60000)
     );
+    currentStartTime = new Date(endTime);
+    const appointment = {
+      storeServiceId: service.storeServiceId,
+      timeSlotId: selectedSlot.timeSlotId, // Use the same timeSlotId for now
+      startTime,
+      endTime,
+      phoneNumber: phone,
+      notes: "Khách hàng ưu tiên nhanh",
+    };
+    console.log(`Appointment ${index}:`, appointment);
+    return appointment;
+  });
+
+  try {
+    const response = await api.post(url.APPOINTMENT.CREATE, appointments);
+    console.log("Created appointments:", response.data);
+    const appointmentIds = Array.isArray(response.data)
+      ? response.data.map((a: any) => a.appointmentId)
+      : [response.data.appointmentId];
+    localStorage.setItem("appointmentId", appointmentIds[0].toString());
+    navigate(routes.bookingConfirmation, { state: { appointments: response.data } });
+  } catch (err: any) {
+    console.error("Booking error:", err.response?.data || err.message);
+    setErrorService(err.response?.data?.message || "Không thể tạo cuộc hẹn");
+  }
+};
+
+  const formatDateTimeWithoutOffset = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  };
+
+  const currentTime = new Date().getTime();
+
+  const isButtonEnabled =
+    selectedStore && selectedServices.length > 0 && selectedStylist && selectedDate && selectedSlot && phone;
+
+  const handleServiceClick = () => {
+    if (!selectedStore) {
+      setErrorStore("Vui lòng chọn salon trước");
+      return;
+    }
+    setErrorStore(null);
+    setErrorService(null);
+    handleStepChange(2);
+  };
+
+  const handleStylistClick = () => {
+    if (!selectedStore) {
+      setErrorStore("Vui lòng chọn salon trước");
+      return;
+    }
+    if (selectedServices.length === 0) {
+      setErrorService("Vui lòng chọn dịch vụ trước");
+      return;
+    }
+    setErrorStore(null);
+    setErrorService(null);
+    setStylistOpen(!stylistOpen);
+  };
+
+  return (
+    <div className="w-full max-w-md mx-auto bg-gray-100 min-h-screen font-sans">
+      <div className="flex justify-center items-center py-4 px-4 shadow-sm bg-white">
+        <span className="text-xl font-semibold text-[#15397F] tracking-tight">
+          Đặt lịch giữ chỗ
+        </span>
+      </div>
+
+      <div className="bg-white px-6">
+        <div className="relative py-6">
+          {step === 1 && (
+            <SelectStore
+              salonId={storeId}
+              phone={phone}
+              setStep={setStep}
+            />
+          )}
+
+          {step === 2 && (
+            <SelectService
+              salonId={storeId}
+              phone={phone}
+              setSelectedServices={setSelectedServices}
+              setStep={setStep}
+            />
+          )}
+
+          {step === 0 && (
+            <div className="space-y-6">
+              {/* Chọn Salon */}
+              <div>
+                <div className="flex items-center mb-4">
+                  <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 shadow-md">
+                    1
+                  </div>
+                  <div className="font-semibold text-lg text-[#15397F]">
+                    Chọn salon
+                  </div>
+                </div>
+                <div
+                  className={`flex items-center bg-gray-50 h-12 rounded-lg px-4 ${
+                    errorStore ? "border-2 border-red-600" : "border border-gray-200"
+                  } cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm`}
+                  onClick={() => handleStepChange(1)}
+                >
+                  <FaStore className="mr-3 w-5 h-5 text-[#15397F]" />
+                  <span className="text-sm text-gray-600 truncate w-full font-medium">
+                    {selectedStore ? selectedStore.storeName : "Chọn salon"}
+                  </span>
+                  <FaChevronRight className="w-4 h-4 ml-2 text-gray-400" />
+                </div>
+                {errorStore && (
+                  <div className="text-red-600 font-bold text-sm mt-1">{errorStore}</div>
+                )}
+              </div>
+
+              {/* Chọn dịch vụ */}
+              <div>
+                <div className="flex items-center mb-4">
+                  <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 shadow-md">
+                    2
+                  </div>
+                  <div className="font-semibold text-lg text-[#15397F]">
+                    Chọn dịch vụ
+                  </div>
+                </div>
+                <div
+                  className={`flex items-center bg-gray-50 h-12 rounded-lg px-4 ${
+                    errorService ? "border-2 border-red-600" : "border border-gray-200"
+                  } cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm`}
+                  onClick={handleServiceClick}
+                >
+                  <FaCut className="mr-3 w-5 h-5 text-[#15397F]" />
+                  <span className="text-sm text-gray-600 truncate w-full font-medium">
+                    Đã chọn {selectedServices.length} dịch vụ
+                  </span>
+                  <FaChevronRight className="w-4 h-4 ml-2 text-gray-400" />
+                </div>
+                {errorService && (
+                  <div className="text-red-600 font-bold text-sm mt-1">{errorService}</div>
+                )}
+                {selectedServices.length > 0 && (
+                  <div className="mt-3 text-sm text-green-600 font-medium">
+                    {selectedServices.map((service) => (
+                      <div key={service.storeServiceId}>{service.service.serviceName}</div>
+                    ))}
+                    <div className="mt-1">
+                      Tổng số tiền cần thanh toán: {" "}
+                      {selectedServices.reduce((sum, s) => sum + s.price, 0).toLocaleString()} VND
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Chọn stylist, ngày và thời gian */}
+              <div>
+                <div className="flex items-center mb-4">
+                  <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 shadow-md">
+                    3
+                  </div>
+                  <div className="font-semibold text-lg text-[#15397F]">
+                    Chọn ngày, giờ & stylist
+                  </div>
+                </div>
+
+                {/* Stylist Dropdown */}
+                <div className="mb-6 relative">
+                  <div
+                    className="flex items-center bg-gray-50 h-12 rounded-lg px-4 border border-gray-200 cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm"
+                    onClick={handleStylistClick}
+                  >
+                    <FaUser className="mr-3 w-5 h-5 text-[#15397F]" />
+                    <span className="text-sm text-gray-600 flex-1 font-medium">
+                      {selectedStylist ? selectedStylist.fullName : "Chọn stylist"}
+                    </span>
+                    {stylistOpen ? (
+                      <FaChevronUp className="w-4 h-4 text-gray-400" />
+                    ) : (
+                      <FaChevronDown className="w-4 h-4 text-gray-400" />
+                    )}
+                  </div>
+                  {stylistOpen && (
+                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                      {stylists.length === 0 ? (
+                        <div className="text-center text-gray-500 py-4">
+                          Không có stylist nào để hiển thị
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-3 gap-2 p-3">
+                          {stylists.map((stylist) => (
+                            <div
+                              key={stylist.employeeId}
+                              className="flex flex-col items-center cursor-pointer p-2 hover:bg-gray-100 rounded-lg"
+                              onClick={() => {
+                                setSelectedStylist(stylist);
+                                setStylistOpen(false);
+                              }}
+                            >
+                              <div className="w-20 h-24 bg-gray-300 rounded-lg overflow-hidden mb-2">
+                                {stylist.avatarUrl ? (
+                                  <img
+                                    src={stylist.avatarUrl}
+                                    alt={stylist.fullName}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center">
+                                    <FaUser className="text-gray-600 text-2xl" />
+                                  </div>
+                                )}
+                              </div>
+                              <div className="text-sm font-medium text-gray-800 text-center">
+                                {stylist.fullName}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Chọn Ngày */}
+                <div className="mb-6">
+                  <div
+                    className={`flex items-center bg-gray-50 h-12 rounded-lg px-4 border ${
+                      errorDate ? "border-2 border-red-600" : "border-gray-200"
+                    } cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm`}
+                  >
+                    <FaCalendarAlt className="mr-3 w-5 h-5 text-[#15397F]" />
+                    <input
+                      type="date"
+                      value={selectedDate}
+                      onChange={(e) => {
+                        setErrorDate(null);
+                        setSelectedDate(e.target.value);
+                      }}
+                      className="w-full bg-transparent border-none focus:outline-none text-sm text-gray-600 font-medium"
+                      min={new Date().toISOString().split("T")[0]}
+                    />
+                  </div>
+                  {errorDate && (
+                    <div className="text-red-600 font-bold text-sm mt-1">{errorDate}</div>
+                  )}
+                </div>
+
+                {/* Chọn Khung Giờ */}
+                <div className="mb-6">
+                  {loading && (
+                    <div className="text-center text-gray-500 py-4 font-medium">
+                      Đang tải khung giờ...
+                    </div>
+                  )}
+                  {!loading && (!selectedStylist || !selectedDate) && (
+                    <div className="text-center text-gray-500 py-4 font-medium">
+                      Vui lòng chọn stylist và ngày để xem khung giờ
+                    </div>
+                  )}
+                  {!loading && selectedStylist && selectedDate && availableSlots.length > 0 && (
+                    <div className="grid grid-cols-4 gap-2">
+                      {availableSlots.map((slot) => {
+                        const slotStartTime = new Date(slot.startTime).getTime();
+                        const isPast = slotStartTime < currentTime;
+                        const isBooked = !slot.isAvailable;
+                        const isDisabled = isPast || isBooked;
+                        const slotLabel = new Date(slot.startTime)
+                          .toLocaleTimeString("vi-VN", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                          .replace(":", "H");
+                        return (
+                          <button
+                            key={`${slot.timeSlotId}-${slot.startTime}`}
+                            className={`py-2 px-2 border rounded-lg text-sm font-semibold transition duration-200 shadow-sm ${
+                              isDisabled
+                                ? "bg-gray-200 cursor-not-allowed text-gray-400"
+                                : selectedSlot?.startTime === slot.startTime
+                                ? "bg-[#15397F] text-white shadow-md"
+                                : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100 hover:shadow-md"
+                            }`}
+                            onClick={() => !isDisabled && setSelectedSlot(slot)}
+                            disabled={isDisabled}
+                          >
+                            {slotLabel}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {!loading &&
+                    selectedStylist &&
+                    selectedDate &&
+                    availableSlots.length === 0 && (
+                      <div className="text-center text-gray-500 py-4 font-medium">
+                        Không có khung giờ trống cho stylist này vào ngày đã chọn
+                      </div>
+                    )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 0 && (
+            <div className="sticky bottom-0 p-4 bg-white border-t border-gray-200 shadow-lg">
+              <button
+                className={`w-full py-3 rounded-lg text-white font-semibold text-lg uppercase tracking-wide transition duration-200 shadow-md ${
+                  isButtonEnabled
+                    ? "bg-[#15397F] hover:bg-[#0e2a5b] hover:shadow-lg"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
+                onClick={handleConfirm}
+                disabled={!isButtonEnabled}
+              >
+                Chốt giờ cắt
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }

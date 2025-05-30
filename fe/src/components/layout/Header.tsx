@@ -31,6 +31,7 @@ export function Header() {
           console.error("Failed to fetch user data:", error);
           localStorage.removeItem("access_token");
           localStorage.removeItem("user_role");
+            localStorage.removeItem("token");
           setUser(null);
           navigate("/login");
         } finally {
@@ -69,6 +70,7 @@ export function Header() {
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user_role");
+    localStorage.removeItem("token");
     setUser(null);
     setIsDropdownOpen(false);
     navigate("/login");
@@ -114,6 +116,13 @@ export function Header() {
                 <NavLink to={routes.home}>
                   <span className="menu-item-text pointer hover:text-shine-secondary">
                     Trang chủ
+                  </span>
+                </NavLink>
+              </li>
+              <li className="menu-item">
+                <NavLink to={routes.booking}>
+                  <span className="menu-item-text pointer hover:text-shine-secondary">
+                    Đặt Lịch Nhanh
                   </span>
                 </NavLink>
               </li>

@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"; // Import axios để xử lý lỗi
+import axios from "axios";
 import api from "../../../../services/api";
 import url from "../../../../services/url";
 import routes from "../../../../config/routes";
 
-// Define the shape of formData and formErrors
 interface FormData {
   email: string;
   password: string;
@@ -19,7 +18,7 @@ interface FormErrors {
 interface AuthResponse {
   token: string;
   role: string;
-  message?: string; // Cho trường hợp lỗi
+  message?: string;
 }
 
 export function LoginPage() {
@@ -37,15 +36,20 @@ export function LoginPage() {
   });
   const [notification, setNotification] = useState<{ message: string; isSuccess: boolean } | null>(null);
 
-  // Thay thế đoạn checkLoginStatus bằng:
-useEffect(() => {
-  const token = localStorage.getItem("access_token");
-  if (token) {
-    // Kiểm tra token hợp lệ bằng API riêng nếu cần
-    navigate("/");
-  }
-  setLoading(false);
-}, [navigate]);
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    const role = localStorage.getItem("user_role");
+    if (token && role) {
+      if (role.includes("ROLE_ADMIN") || role.includes("ROLE_EMPLOYEE")) {
+        navigate("/admin");
+      } else if (role.includes("ROLE_CUSTOMER")) {
+        navigate("/");
+      } else {
+        navigate("/login");
+      }
+    }
+    setLoading(false);
+  }, [navigate]);
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -89,19 +93,20 @@ useEffect(() => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await api.post<AuthResponse>( // Sửa kiểu ApiResponse thành AuthResponse
-          url.AUTH.LOGIN,
-          formData,
-        );
+        const response = await api.post<AuthResponse>(url.AUTH.LOGIN, formData);
         localStorage.setItem("access_token", response.data.token);
-        // Lưu role nếu cần
         localStorage.setItem("user_role", response.data.role);
         setNotification({ message: "Login successful", isSuccess: true });
         setTimeout(() => {
-          navigate("/");
+          if (response.data.role.includes("ROLE_ADMIN") || response.data.role.includes("ROLE_EMPLOYEE")) {
+            navigate("/admin");
+          } else if (response.data.role.includes("ROLE_CUSTOMER")) {
+            navigate("/");
+          } else {
+            navigate("/login");
+          }
         }, 1000);
       } catch (error) {
-        // Xử lý lỗi chi tiết hơn
         let errorMessage = "An error occurred during login";
         if (axios.isAxiosError(error)) {
           errorMessage = error.response?.data?.message || error.message;
@@ -136,7 +141,7 @@ useEffect(() => {
                   htmlFor="email"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >
-                  Your email
+                  Your Email
                 </label>
                 <input
                   type="email"
@@ -206,7 +211,7 @@ useEffect(() => {
                   </div>
                 </div>
                 <Link to={routes.forgot} className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
-                    Fogot PassWord ?
+                    Forgot Password?
                 </Link>
               </div>
               {notification && (
