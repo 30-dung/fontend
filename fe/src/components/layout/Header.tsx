@@ -202,7 +202,7 @@ export function Header() {
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     >
                       <NavLink
-                        to="/history"
+                        to={routes.bookingHistorey}
                         className="block w-full"
                         onClick={() => setIsDropdownOpen(false)}
                       >

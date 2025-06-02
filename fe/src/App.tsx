@@ -21,6 +21,7 @@ import { SelectService } from './components/pages/client/booking/SelectService';
 import { BookingConfirmation } from './components/pages/client/booking/BookingConfirmation';
 import { DashboahPage } from './components/pages/admin/dashboah/dashboah';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { BookingHistory } from './components/pages/client/booking/BookingHistory';
 
 function App() {
   return (
@@ -47,7 +48,7 @@ function App() {
           <Route path={routes.location_page} element={<Layout><LocationPage /></Layout>} />
           <Route path={routes.booking} element={<Layout><BookingForm /></Layout>} />
           {/* <Route path={routes.store} element={<Layout><SelectStore /></Layout>} /> */}
-          {/* <Route path={routes.services} element={<Layout><SelectService /></Layout>} /> */}
+          <Route path={routes.bookingHistorey} element={<Layout><BookingHistory /></Layout>} />
 
           <Route path={routes.bookingConfirmation} element={<Layout><BookingConfirmation /></Layout>} />
         </Route>

@@ -38,6 +38,8 @@ const url = {
         CREATE: 'appointments',
         GET_ALL: 'appointments',
         GET_BY_ID: 'appointments', // Matches /api/appointments/{appointmentId}
+        GET_BY_USER: 'appointments/user/{email}', // Lấy lịch hẹn của người dùng
+        CANCEL: 'appointments/{id}/cancel',
     },
 };
 

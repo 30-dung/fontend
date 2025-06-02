@@ -2,6 +2,7 @@ const routes = {
     home: '/',
     about: '/about',
     booking: '/booking',
+    bookingHistorey: '/booking_history',
     login: '/login',
     register: '/register',
     forgot: '/forgot_password',

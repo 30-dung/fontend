@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../../services/api';
 import url from '../../../../services/url';
+import routes from '../../../../config/routes';
 
 interface Appointment {
     appointmentId: number;
@@ -97,7 +98,7 @@ export function BookingConfirmation() {
             )}
             <button
                 className="w-full mt-4 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg py-2"
-                onClick={() => navigate('/booking-history')}
+                onClick={() => navigate(routes.bookingHistorey)}
             >
                 Xem lịch sử đặt lịch
             </button>
