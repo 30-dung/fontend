@@ -191,10 +191,8 @@ export function Header() {
                         className="block w-full"
                         onClick={() => setIsDropdownOpen(false)}
                       >
-                        Số dư TOPUP{" "}
-                        <span className="text-blue-600 float-right">
-                          {user.topupBalance}đ
-                        </span>
+                        Thông tin tài khoản
+                       
                       </NavLink>
                     </li>
                     <li
@@ -209,30 +207,8 @@ export function Header() {
                         Lịch sử tạo dáng
                       </NavLink>
                     </li>
-                    <li
-                      role="menuitem"
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    >
-                      <NavLink
-                        to="/offers"
-                        className="block w-full"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        Ưu đãi của anh
-                      </NavLink>
-                    </li>
-                    <li
-                      role="menuitem"
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    >
-                      <NavLink
-                        to="/tips"
-                        className="block w-full"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        Bí kíp chăm sóc tóc
-                      </NavLink>
-                    </li>
+                    
+                    
                     <li
                       role="menuitem"
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"

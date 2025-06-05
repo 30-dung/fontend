@@ -6,6 +6,7 @@ import url from "../../../../services/url";
 interface Store {
   storeId: number;
   storeName: string;
+  storeImages: string;
   phoneNumber: string;
   cityProvince: string;
   district: string;
@@ -30,7 +31,7 @@ export function SelectStore({ salonId, phone, setStep }: SelectStoreProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [stores, setStores] = useState<Store[]>([]);
-  const [cities, setCities] = useState<string[]>([]);
+  const [cities, setCities] = useState<CityWithCountDTO[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showStoreList, setShowStoreList] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -39,10 +40,12 @@ export function SelectStore({ salonId, phone, setStep }: SelectStoreProps) {
     const fetchCities = async () => {
       setLoading(true);
       try {
-        const response = await api.get(url.STORE.CITIES);
-        setCities(response.data.map((city: CityWithCountDTO) => city.cityProvince));
+        const response = await api.get<CityWithCountDTO[]>(url.STORE.CITIES);
+        console.log("Fetched cities data:", response.data);
+        setCities(response.data);
         setError(null);
       } catch (err: any) {
+        console.error("Error fetching cities:", err);
         setError(err.response?.data?.message || 'Không thể tải danh sách tỉnh/thành phố');
       } finally {
         setLoading(false);
@@ -60,16 +63,23 @@ export function SelectStore({ salonId, phone, setStep }: SelectStoreProps) {
       }
       setLoading(true);
       try {
-        const response = await api.get(url.STORE.LOCATE, {
+        const cityProvince = searchTerm.trim();
+        const response = await api.get<Store[]>(url.STORE.LOCATE, {
           params: {
-            cityProvince: searchTerm.includes(',') ? searchTerm.split(',')[0].trim() : searchTerm,
-            district: searchTerm.includes(',') ? searchTerm.split(',')[1].trim() : '',
+            cityProvince,
+            district: '', // Luôn để trống district khi tìm theo tỉnh/thành phố
           },
         });
-        setStores(response.data);
+        console.log("Fetched stores data:", response.data);
+        // Lọc lại để đảm bảo chỉ hiển thị cửa hàng thuộc cityProvince
+        const filteredStores = response.data.filter(
+          (store) => store.cityProvince.toLowerCase() === cityProvince.toLowerCase()
+        );
+        setStores(filteredStores);
         setShowStoreList(true);
         setError(null);
       } catch (err: any) {
+        console.error("Error fetching stores:", err);
         setError(err.response?.data?.message || 'Không tìm thấy salon');
         setStores([]);
         setShowStoreList(true);
@@ -103,7 +113,7 @@ export function SelectStore({ salonId, phone, setStep }: SelectStoreProps) {
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Tìm kiếm salon theo tỉnh, thành phố, quận (VD: Hà Nội, Ba Đình)"
+          placeholder="Tìm kiếm salon theo tỉnh/thành phố (VD: Hà Nội)"
           className="text-black w-full border-none focus:outline-none text-sm placeholder-gray-500 bg-transparent"
         />
         {searchTerm && (
@@ -126,11 +136,11 @@ export function SelectStore({ salonId, phone, setStep }: SelectStoreProps) {
             {cities.length > 0 ? (
               cities.map((city) => (
                 <div
-                  key={city}
-                  onClick={() => setSearchTerm(city)}
+                  key={city.cityProvince}
+                  onClick={() => setSearchTerm(city.cityProvince)}
                   className="bg-[#9AA5CF] text-white text-sm px-3 py-1.5 rounded-md cursor-pointer hover:opacity-90"
                 >
-                  {city}
+                  {city.cityProvince} 
                 </div>
               ))
             ) : (
@@ -150,7 +160,7 @@ export function SelectStore({ salonId, phone, setStep }: SelectStoreProps) {
                 onClick={() => handleStoreSelect(store)}
               >
                 <img
-                  src="https://via.placeholder.com/100x80?text=Salon"
+                  src={store.storeImages || 'https://via.placeholder.com/150'}
                   alt={store.storeName}
                   className="w-24 h-20 object-cover rounded-md mr-4"
                 />

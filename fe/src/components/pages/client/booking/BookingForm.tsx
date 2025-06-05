@@ -56,14 +56,13 @@ interface StoreService {
 export default function BookingForm() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [step, setStep] = useState<number>(parseInt(searchParams.get("step") || "0"));
-  const [phone, setPhone] = useState<string>(searchParams.get("phone") || "");
+  const [step, setStep] = useState<number>(0);
+  const [phone, setPhone] = useState<string>("");
   const [selectedStore, setSelectedStore] = useState<Store | null>(null);
   const [selectedServices, setSelectedServices] = useState<Service[]>([]);
   const [errorStore, setErrorStore] = useState<string | null>(null);
   const [errorService, setErrorService] = useState<string | null>(null);
   const [errorDate, setErrorDate] = useState<string | null>(null);
-  const storeId = localStorage.getItem("storeId") || "0";
   const [stylists, setStylists] = useState<Employee[]>([]);
   const [selectedStylist, setSelectedStylist] = useState<Employee | null>(null);
   const [stylistOpen, setStylistOpen] = useState(false);
@@ -74,6 +73,52 @@ export default function BookingForm() {
   const [selectedSlot, setSelectedSlot] = useState<WorkingTimeSlot | null>(null);
   const [servicesDetails, setServicesDetails] = useState<StoreService[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Reset dữ liệu khi vào trang
+  useEffect(() => {
+    // Chỉ giữ storeId nếu đã chọn đủ các bước và vẫn ở trang booking
+    const storeId = localStorage.getItem("storeId") || "0";
+    const isFullySelected = localStorage.getItem("isFullySelected") === "true";
+
+    if (storeId !== "0" && isFullySelected) {
+      // Giữ storeId nếu đã chọn đủ các bước
+      api
+        .get(`${url.STORE.GET_BY_ID}/${storeId}`)
+        .then((res) => {
+          setSelectedStore(res.data);
+        })
+        .catch((err) => {
+          setErrorStore("Không thể tải thông tin salon: " + (err.response?.data?.message || err.message));
+          localStorage.removeItem("storeId");
+        });
+    } else {
+      // Reset tất cả dữ liệu
+      setSelectedStore(null);
+      setSelectedServices([]);
+      setSelectedStylist(null);
+      setSelectedDate(new Date().toISOString().split("T")[0]);
+      setAvailableSlots([]);
+      setStylists([]);
+      setSelectedSlot(null);
+      setServicesDetails([]);
+      localStorage.removeItem("selectedServices");
+      localStorage.removeItem("isFullySelected");
+    }
+  }, []);
+
+  // Xóa dữ liệu localStorage khi rời khỏi trang
+  useEffect(() => {
+    return () => {
+      // Ép kiểu thành PerformanceNavigationTiming để truy cập thuộc tính type
+      const navigationEntries = window.performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
+      // Kiểm tra nếu mảng không rỗng và không phải là refresh trang
+      if (navigationEntries.length > 0 && !navigationEntries[0].type.includes("reload")) {
+        localStorage.removeItem("selectedServices");
+        localStorage.removeItem("storeId");
+        localStorage.removeItem("isFullySelected");
+      }
+    };
+  }, []);
 
   // Kiểm tra đăng nhập và lấy phone từ profile
   useEffect(() => {
@@ -89,7 +134,7 @@ export default function BookingForm() {
         setPhone(userPhone);
         setSearchParams({
           phone: userPhone,
-          salonId: storeId,
+          salonId: localStorage.getItem("storeId") || "0",
           step: step.toString(),
         });
       } catch (err: any) {
@@ -104,7 +149,7 @@ export default function BookingForm() {
       }
     };
     fetchUserProfile();
-  }, [navigate, setSearchParams, storeId, step]);
+  }, [navigate, setSearchParams, step]);
 
   // Load salon
   useEffect(() => {
@@ -115,69 +160,17 @@ export default function BookingForm() {
         .then((res) => {
           setSelectedStore(res.data);
           localStorage.setItem("storeId", salonId);
-          setSelectedServices([]);
-          setSelectedStylist(null);
-          setSelectedDate(new Date().toISOString().split("T")[0]);
-          setAvailableSlots([]);
-          setStylists([]);
         })
         .catch((err) => {
           setErrorStore("Không thể tải thông tin salon: " + (err.response?.data?.message || err.message));
         });
-    } else {
-      setSelectedStore(null);
-      setSelectedServices([]);
-      setSelectedStylist(null);
-      setSelectedDate(new Date().toISOString().split("T")[0]);
-      setAvailableSlots([]);
-      setStylists([]);
     }
   }, [searchParams]);
-
-  // Load dịch vụ đã chọn
-  useEffect(() => {
-    const salonId = searchParams.get("salonId") || localStorage.getItem("storeId") || "0";
-    const services = JSON.parse(localStorage.getItem("selectedServices") || "[]");
-
-    if (services.length > 0 && salonId !== "0" && selectedStore) {
-      Promise.all(
-        services.map((serviceId: number) =>
-          api
-            .get(`${url.STORE_SERVICE.GET_BY_STORE}/${salonId}`)
-            .then((res) => res.data.find((s: Service) => s.storeServiceId === serviceId))
-        )
-      )
-        .then((fetchedServices) => {
-          const filteredServices = fetchedServices.filter((s: Service | undefined): s is Service => !!s);
-          setSelectedServices(filteredServices);
-          if (filteredServices.length === 0) {
-            setErrorService("Không tìm thấy dịch vụ nào cho salon này");
-            localStorage.setItem("selectedServices", JSON.stringify([]));
-          }
-        })
-        .catch(() => {
-          setErrorService("Không thể tải chi tiết dịch vụ");
-        });
-    }
-  }, [searchParams, selectedStore]);
-
-  // Cập nhật URL
-  useEffect(() => {
-    const currentSalonId =
-      selectedStore?.storeId?.toString() ||
-      searchParams.get("salonId") ||
-      localStorage.getItem("storeId") ||
-      "0";
-    setSearchParams({
-      phone,
-      salonId: currentSalonId,
-      step: step.toString(),
-    });
-  }, [step, phone, selectedStore, setSearchParams]);
 
   // Load stylists
   useEffect(() => {
     const fetchStylists = async () => {
+      const storeId = localStorage.getItem("storeId") || "0";
       if (!storeId || storeId === "0" || !selectedStore || selectedServices.length === 0) {
         setStylists([]);
         return;
@@ -200,7 +193,7 @@ export default function BookingForm() {
       }
     };
     fetchStylists();
-  }, [storeId, selectedStore, selectedServices]);
+  }, [selectedStore, selectedServices]);
 
   // Load khung giờ
   useEffect(() => {
@@ -235,6 +228,7 @@ export default function BookingForm() {
   // Load chi tiết dịch vụ
   useEffect(() => {
     const fetchServicesDetails = async () => {
+      const storeId = localStorage.getItem("storeId") || "0";
       if (!storeId || storeId === "0") return;
       try {
         const response = await api.get(`${url.STORE_SERVICE.GET_BY_STORE}/${storeId}`);
@@ -250,56 +244,57 @@ export default function BookingForm() {
       }
     };
     fetchServicesDetails();
-  }, [storeId, selectedServices]);
+  }, [selectedServices]);
 
   const handleStepChange = (newStep: number) => {
     setStep(newStep);
     setSearchParams({
       phone,
-      salonId: storeId,
+      salonId: localStorage.getItem("storeId") || "0",
       step: newStep.toString(),
     });
   };
 
   const handleConfirm = async () => {
-  if (!selectedStylist || !selectedSlot || servicesDetails.length === 0 || !phone) {
-    setErrorService("Vui lòng chọn stylist, thời gian, dịch vụ và cung cấp số điện thoại");
-    return;
-  }
+    if (!selectedStylist || !selectedSlot || servicesDetails.length === 0 || !phone) {
+      setErrorService("Vui lòng chọn stylist, thời gian, dịch vụ và cung cấp số điện thoại");
+      return;
+    }
 
-  let currentStartTime = new Date(selectedSlot.startTime);
-  const appointments = servicesDetails.map((service, index) => {
-    const duration = service.service.durationMinutes;
-    const startTime = formatDateTimeWithoutOffset(currentStartTime);
-    const endTime = formatDateTimeWithoutOffset(
-      new Date(currentStartTime.getTime() + duration * 60000)
-    );
-    currentStartTime = new Date(endTime);
-    const appointment = {
-      storeServiceId: service.storeServiceId,
-      timeSlotId: selectedSlot.timeSlotId, // Use the same timeSlotId for now
-      startTime,
-      endTime,
-      phoneNumber: phone,
-      notes: "Khách hàng ưu tiên nhanh",
-    };
-    console.log(`Appointment ${index}:`, appointment);
-    return appointment;
-  });
+    let currentStartTime = new Date(selectedSlot.startTime);
+    const appointments = servicesDetails.map((service, index) => {
+      const duration = service.service.durationMinutes;
+      const startTime = formatDateTimeWithoutOffset(currentStartTime);
+      const endTime = formatDateTimeWithoutOffset(
+        new Date(currentStartTime.getTime() + duration * 60000)
+      );
+      currentStartTime = new Date(endTime);
+      const appointment = {
+        storeServiceId: service.storeServiceId,
+        timeSlotId: selectedSlot.timeSlotId,
+        startTime,
+        endTime,
+        phoneNumber: phone,
+        notes: "Khách hàng ưu tiên nhanh",
+      };
+      console.log(`Appointment ${index}:`, appointment);
+      return appointment;
+    });
 
-  try {
-    const response = await api.post(url.APPOINTMENT.CREATE, appointments);
-    console.log("Created appointments:", response.data);
-    const appointmentIds = Array.isArray(response.data)
-      ? response.data.map((a: any) => a.appointmentId)
-      : [response.data.appointmentId];
-    localStorage.setItem("appointmentId", appointmentIds[0].toString());
-    navigate(routes.bookingConfirmation, { state: { appointments: response.data } });
-  } catch (err: any) {
-    console.error("Booking error:", err.response?.data || err.message);
-    setErrorService(err.response?.data?.message || "Không thể tạo cuộc hẹn");
-  }
-};
+    try {
+      const response = await api.post(url.APPOINTMENT.CREATE, appointments);
+      console.log("Created appointments:", response.data);
+      const appointmentIds = Array.isArray(response.data)
+        ? response.data.map((a: any) => a.appointmentId)
+        : [response.data.appointmentId];
+      localStorage.setItem("appointmentId", appointmentIds[0].toString());
+      localStorage.setItem("isFullySelected", "true"); // Đánh dấu đã chọn đủ các bước
+      navigate(routes.bookingConfirmation, { state: { appointments: response.data } });
+    } catch (err: any) {
+      console.error("Booking error:", err.response?.data || err.message);
+      setErrorService(err.response?.data?.message || "Không thể tạo cuộc hẹn");
+    }
+  };
 
   const formatDateTimeWithoutOffset = (date: Date): string => {
     const year = date.getFullYear();
@@ -352,7 +347,7 @@ export default function BookingForm() {
         <div className="relative py-6">
           {step === 1 && (
             <SelectStore
-              salonId={storeId}
+              salonId={localStorage.getItem("storeId") || "0"}
               phone={phone}
               setStep={setStep}
             />
@@ -360,7 +355,7 @@ export default function BookingForm() {
 
           {step === 2 && (
             <SelectService
-              salonId={storeId}
+              salonId={localStorage.getItem("storeId") || "0"}
               phone={phone}
               setSelectedServices={setSelectedServices}
               setStep={setStep}

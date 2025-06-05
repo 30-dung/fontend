@@ -276,7 +276,7 @@ export function RegisterPage() {
                     <p className="text-sm text-red-600">{formErrors.phoneNumber}</p>
                   )}
                 </div>
-                <div>
+                {/* <div>
                   <label
                     htmlFor="membershipType"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -297,7 +297,7 @@ export function RegisterPage() {
                   {formErrors.membershipType && (
                     <p className="text-sm text-red-600">{formErrors.membershipType}</p>
                   )}
-                </div>
+                </div> */}
               </div>
               <div className="flex items-center">
                 <input

@@ -4,13 +4,15 @@ import url from '../../../../services/url';
 
 interface Appointment {
     appointmentId: number;
+    slug: string;
     storeName: string;
-    serviceName: string;
+    serviceName: string[];
     employeeName: string;
     startTime: string;
     endTime: string;
     status: string;
     totalAmount: number;
+    createdAt: string; // Thêm trường createdAt
 }
 
 export function BookingHistory() {
@@ -18,7 +20,6 @@ export function BookingHistory() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Hàm lấy email người dùng từ API hoặc token (giả định)
     const getUserEmail = async () => {
         try {
             const response = await api.get(url.USER.PROFILE);
@@ -28,23 +29,40 @@ export function BookingHistory() {
         }
     };
 
-    // Hàm lấy lịch sử đặt lịch
     const fetchHistory = async () => {
         try {
             const email = await getUserEmail();
             const response = await api.get(url.APPOINTMENT.GET_BY_USER.replace('{email}', email));
-            // Chuyển đổi dữ liệu từ API thành định dạng phù hợp
-            const formattedAppointments = response.data.map((item: any) => ({
-                appointmentId: item.appointmentId,
-                storeName: item.storeService?.store?.storeName || 'Unknown Store',
-                serviceName: item.storeService?.service?.serviceName || 'Unknown Service',
-                employeeName: item.employee?.fullName || 'Unknown Employee',
-                startTime: item.startTime,
-                endTime: item.endTime,
-                status: item.status,
-                totalAmount: item.invoice?.totalAmount || 0,
-            }));
-            setAppointments(formattedAppointments);
+            console.log('API response:', response.data);
+
+            const appointmentMap = new Map<number, Appointment>();
+            response.data.forEach((item: any) => {
+                const appointmentId = item.appointmentId;
+                if (appointmentMap.has(appointmentId)) {
+                    const existing = appointmentMap.get(appointmentId)!;
+                    existing.serviceName.push(item.storeService?.serviceName || 'Unknown Service');
+                } else {
+                    appointmentMap.set(appointmentId, {
+                        appointmentId: item.appointmentId,
+                        slug: item.slug || 'APPT-UNKNOWN',
+                        storeName: item.storeService?.storeName || 'Unknown Store',
+                        serviceName: [item.storeService?.serviceName || 'Unknown Service'],
+                        employeeName: item.employee?.fullName || 'Unknown Employee',
+                        startTime: item.startTime,
+                        endTime: item.endTime,
+                        status: item.status,
+                        totalAmount: item.invoice?.totalAmount || 0,
+                        createdAt: item.createdAt || new Date().toISOString(), // Thêm createdAt, fallback nếu BE không trả về
+                    });
+                }
+            });
+
+            // Sắp xếp appointments theo createdAt giảm dần
+            const sortedAppointments = Array.from(appointmentMap.values()).sort(
+                (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+            console.log('Sorted Appointments:', sortedAppointments);
+            setAppointments(sortedAppointments);
             setLoading(false);
         } catch (err: any) {
             setError(err.response?.data?.message || 'Không thể tải lịch sử đặt lịch');
@@ -52,13 +70,11 @@ export function BookingHistory() {
         }
     };
 
-    // Hàm hủy lịch hẹn
     const cancelAppointment = async (appointmentId: number) => {
         if (!window.confirm('Bạn có chắc muốn hủy lịch hẹn này?')) return;
 
         try {
             await api.patch(url.APPOINTMENT.CANCEL.replace('{id}', appointmentId.toString()));
-            // Cập nhật state để thay đổi trạng thái và ẩn nút hủy
             setAppointments((prev) =>
                 prev.map((appt) =>
                     appt.appointmentId === appointmentId ? { ...appt, status: 'CANCELLED' } : appt
@@ -87,13 +103,13 @@ export function BookingHistory() {
                     {appointments.map((appointment) => (
                         <div key={appointment.appointmentId} className="bg-white rounded-lg shadow-md p-4">
                             <p className="text-sm text-gray-600">
-                                Mã đặt lịch: <strong>#{appointment.appointmentId}</strong>
+                                Mã đặt lịch: <strong>{appointment.slug}</strong>
                             </p>
                             <p className="text-sm text-gray-600">
                                 Cửa hàng: <strong>{appointment.storeName}</strong>
                             </p>
                             <p className="text-sm text-gray-600">
-                                Dịch vụ: <strong>{appointment.serviceName}</strong>
+                                Dịch vụ: <strong>{appointment.serviceName.join(', ')}</strong>
                             </p>
                             <p className="text-sm text-gray-600">
                                 Stylist: <strong>{appointment.employeeName}</strong>
@@ -106,7 +122,16 @@ export function BookingHistory() {
                                 Trạng thái: <strong>{appointment.status}</strong>
                             </p>
                             <p className="text-sm text-gray-600">
-                                Tổng tiền: <strong>{appointment.totalAmount.toLocaleString()} VND</strong>
+                                Tổng tiền:{' '}
+                                <strong>
+                                    {appointment.totalAmount > 0
+                                        ? `${appointment.totalAmount.toLocaleString()} VND`
+                                        : 'Chưa xác định'}
+                                </strong>
+                            </p>
+                            <p className="text-sm text-gray-600">
+                                Đặt lúc:{' '}
+                                <strong>{new Date(appointment.createdAt).toLocaleString('vi-VN')}</strong>
                             </p>
                             {(appointment.status === 'PENDING' || appointment.status === 'CONFIRMED') && (
                                 <button

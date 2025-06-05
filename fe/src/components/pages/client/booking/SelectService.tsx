@@ -11,6 +11,7 @@ interface StoreService {
     serviceName: string;
     description: string;
     durationMinutes: number;
+    serviceImg : string;
   };
   price: number;
 }
@@ -133,9 +134,7 @@ export function SelectService({ salonId, phone, setSelectedServices, setStep }: 
             >
               <img
                 className="w-full h-40 object-cover"
-                src={service.service.description.includes('Combo')
-                  ? 'https://storage.30shine.com/service/combo_booking/1046.jpg'
-                  : 'https://storage.30shine.com/Resource/bookingService/2022/10/12/thumb_600x400_comboservice_1665576728.jpg'}
+                src={service.service.serviceImg || "https://via.placeholder.com/150"}
                 alt={service.service.serviceName}
               />
               <div className="p-4">
