@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import routes from "../../config/routes";
-import api from "../../services/api";
-import url from "../../services/url";
-import logo from "../../assets/images/logo.png"; // Import logo
+import logo from "../assets/images/logo.png";
+import api from "../services/api";
+import url from "../services/url";
+import routes from "../config/routes";
 
 export function Header() {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export function Header() {
           console.error("Failed to fetch user data:", error);
           localStorage.removeItem("access_token");
           localStorage.removeItem("user_role");
-            localStorage.removeItem("token");
+          localStorage.removeItem("token");
           setUser(null);
           navigate("/login");
         } finally {
@@ -107,9 +107,8 @@ export function Header() {
           </button>
 
           <div
-            className={`nav-bar__menu ${
-              isMobileMenuOpen ? "block" : "hidden"
-            } md:flex flex-1 justify-center`}
+            className={`nav-bar__menu ${isMobileMenuOpen ? "block" : "hidden"
+              } md:flex flex-1 justify-center`}
           >
             <ul className="menu flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
               <li className="menu-item">
@@ -207,8 +206,8 @@ export function Header() {
                         Lịch sử tạo dáng
                       </NavLink>
                     </li>
-                    
-                    
+
+
                     <li
                       role="menuitem"
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"

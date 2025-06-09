@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import api from "../../../../services/api";
-import url from "../../../../services/url";
 import { Service } from './BookingForm';
+import api from '../../../services/api';
+import url from '../../../services/url';
 
 interface StoreService {
   storeServiceId: number;
@@ -11,7 +11,7 @@ interface StoreService {
     serviceName: string;
     description: string;
     durationMinutes: number;
-    serviceImg : string;
+    serviceImg: string;
   };
   price: number;
 }
@@ -144,10 +144,9 @@ export function SelectService({ salonId, phone, setSelectedServices, setStep }: 
                 <div className="flex items-center justify-between mt-3">
                   <span className="text-base font-semibold text-gray-900">{service.price.toLocaleString()} VND</span>
                   <button
-                    className={`text-white font-semibold text-sm px-4 py-1.5 rounded-lg ${
-                      selectedServicesState.find(s => s.storeServiceId === service.storeServiceId)
+                    className={`text-white font-semibold text-sm px-4 py-1.5 rounded-lg ${selectedServicesState.find(s => s.storeServiceId === service.storeServiceId)
                         ? 'bg-blue-800' : 'bg-blue-600 hover:bg-blue-700'
-                    }`}
+                      }`}
                     onClick={() => handleSelectService(service)}
                   >
                     {selectedServicesState.find(s => s.storeServiceId === service.storeServiceId)

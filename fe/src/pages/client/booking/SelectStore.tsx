@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import api from "../../../../services/api";
-import url from "../../../../services/url";
+import api from '../../../services/api';
+import url from '../../../services/url';
 
 interface Store {
   storeId: number;
@@ -140,7 +140,7 @@ export function SelectStore({ salonId, phone, setStep }: SelectStoreProps) {
                   onClick={() => setSearchTerm(city.cityProvince)}
                   className="bg-[#9AA5CF] text-white text-sm px-3 py-1.5 rounded-md cursor-pointer hover:opacity-90"
                 >
-                  {city.cityProvince} 
+                  {city.cityProvince}
                 </div>
               ))
             ) : (

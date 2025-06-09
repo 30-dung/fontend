@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../../../../services/api';
-import url from '../../../../services/url';
-import routes from '../../../../config/routes';
+import api from '../../../services/api';
+import url from '../../../services/url';
+import routes from '../../../config/routes';
 
 interface Appointment {
     appointmentId: number;

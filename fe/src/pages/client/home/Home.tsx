@@ -4,7 +4,7 @@ import { FaArrowRight, FaArrowLeft, FaStar, FaCut, FaSpa, FaPhoneAlt } from "rea
 import { FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion"; // Thêm framer-motion để tạo animation
 import axios from "axios";
-import  routes from "../../../../config/routes"; // Đường dẫn đến file config
+import routes from "../../../config/routes";
 // định dạng interface data 
 interface Category {
   id: number;
@@ -200,7 +200,7 @@ export function HomePage() {
             </div>
           </div>
 
-         
+
 
           {/* Services - Đặt lịch và đánh giá */}
           <motion.div

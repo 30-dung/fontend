@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import api from "../../../../services/api";
-import url from "../../../../services/url";
+import api from "../../../services/api";
+import url from "../../../services/url";
 
 // Define the shape of formData and formErrors
 interface FormData {
@@ -177,11 +177,10 @@ export function ResetPasswordPage() {
             </div>
             {notification && (
               <p
-                className={`text-sm p-2 rounded ${
-                  notification.isSuccess
-                    ? "text-green-500 bg-green-100"
-                    : "text-red-500 bg-red-100"
-                }`}
+                className={`text-sm p-2 rounded ${notification.isSuccess
+                  ? "text-green-500 bg-green-100"
+                  : "text-red-500 bg-red-100"
+                  }`}
               >
                 {notification.message}
               </p>

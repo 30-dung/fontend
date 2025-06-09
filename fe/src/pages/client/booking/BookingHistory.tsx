@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import api from '../../../../services/api';
-import url from '../../../../services/url';
+import api from '../../../services/api';
+import url from '../../../services/url';
 
 interface Appointment {
     appointmentId: number;

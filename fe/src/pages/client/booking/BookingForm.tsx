@@ -9,11 +9,11 @@ import {
   FaChevronDown,
   FaChevronUp,
 } from "react-icons/fa";
-import api from "../../../../services/api";
-import url from "../../../../services/url";
-import routes from "../../../../config/routes";
 import { SelectStore } from "./SelectStore";
 import { SelectService } from "./SelectService";
+import url from "../../../services/url";
+import api from "../../../services/api";
+import routes from "../../../config/routes";
 
 interface Store {
   storeId: number;
@@ -341,259 +341,254 @@ export default function BookingForm() {
       )}
 
       {step === 1 && (
-            <SelectStore
-              salonId={localStorage.getItem("storeId") || "0"}
-              phone={phone}
-              setStep={setStep}
-            />
-          )}
+        <SelectStore
+          salonId={localStorage.getItem("storeId") || "0"}
+          phone={phone}
+          setStep={setStep}
+        />
+      )}
 
-          {step === 2 && (
-            <SelectService
-              salonId={localStorage.getItem("storeId") || "0"}
-              phone={phone}
-              setSelectedServices={setSelectedServices}
-              setStep={setStep}
-            />
-          )}
+      {step === 2 && (
+        <SelectService
+          salonId={localStorage.getItem("storeId") || "0"}
+          phone={phone}
+          setSelectedServices={setSelectedServices}
+          setStep={setStep}
+        />
+      )}
 
       <div className="bg-white px-6">
-        
-          
 
-          {step === 0 && (
-            <div className="space-y-6">
-              {/* Chọn Salon */}
-              <div>
-                <div className="flex items-center mb-4">
-                  <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 shadow-md">
-                    1
-                  </div>
-                  <div className="font-semibold text-lg text-[#15397F]">
-                    Chọn salon
-                  </div>
+
+
+        {step === 0 && (
+          <div className="space-y-6">
+            {/* Chọn Salon */}
+            <div>
+              <div className="flex items-center mb-4">
+                <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 shadow-md">
+                  1
                 </div>
-                <div
-                  className={`flex items-center bg-gray-50 h-12 rounded-lg px-4 ${
-                    errorStore ? "border-2 border-red-600" : "border border-gray-200"
+                <div className="font-semibold text-lg text-[#15397F]">
+                  Chọn salon
+                </div>
+              </div>
+              <div
+                className={`flex items-center bg-gray-50 h-12 rounded-lg px-4 ${errorStore ? "border-2 border-red-600" : "border border-gray-200"
                   } cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm`}
-                  onClick={() => handleStepChange(1)}
-                >
-                  <FaStore className="mr-3 w-5 h-5 text-[#15397F]" />
-                  <span className="text-sm text-gray-600 truncate w-full font-medium">
-                    {selectedStore ? selectedStore.storeName : "Chọn salon"}
-                  </span>
-                  <FaChevronRight className="w-4 h-4 ml-2 text-gray-400" />
+                onClick={() => handleStepChange(1)}
+              >
+                <FaStore className="mr-3 w-5 h-5 text-[#15397F]" />
+                <span className="text-sm text-gray-600 truncate w-full font-medium">
+                  {selectedStore ? selectedStore.storeName : "Chọn salon"}
+                </span>
+                <FaChevronRight className="w-4 h-4 ml-2 text-gray-400" />
+              </div>
+              {errorStore && (
+                <div className="text-red-600 font-bold text-sm mt-1">{errorStore}</div>
+              )}
+            </div>
+
+            {/* Chọn dịch vụ */}
+            <div>
+              <div className="flex items-center mb-4">
+                <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 shadow-md">
+                  2
                 </div>
-                {errorStore && (
-                  <div className="text-red-600 font-bold text-sm mt-1">{errorStore}</div>
-                )}
+                <div className="font-semibold text-lg text-[#15397F]">
+                  Chọn dịch vụ
+                </div>
+              </div>
+              <div
+                className={`flex items-center bg-gray-50 h-12 rounded-lg px-4 ${errorService ? "border-2 border-red-600" : "border border-gray-200"
+                  } cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm`}
+                onClick={handleServiceClick}
+              >
+                <FaCut className="mr-3 w-5 h-5 text-[#15397F]" />
+                <span className="text-sm text-gray-600 truncate w-full font-medium">
+                  Đã chọn {selectedServices.length} dịch vụ
+                </span>
+                <FaChevronRight className="w-4 h-4 ml-2 text-gray-400" />
+              </div>
+              {errorService && (
+                <div className="text-red-600 font-bold text-sm mt-1">{errorService}</div>
+              )}
+              {selectedServices.length > 0 && (
+                <div className="mt-3 text-sm text-green-600 font-medium">
+                  {selectedServices.map((service) => (
+                    <div key={service.storeServiceId}>{service.service.serviceName}</div>
+                  ))}
+                  <div className="mt-1">
+                    Tổng số tiền cần thanh toán: {" "}
+                    {selectedServices.reduce((sum, s) => sum + s.price, 0).toLocaleString()} VND
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Chọn stylist, ngày và thời gian */}
+            <div>
+              <div className="flex items-center mb-4">
+                <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 shadow-md">
+                  3
+                </div>
+                <div className="font-semibold text-lg text-[#15397F]">
+                  Chọn ngày, giờ & stylist
+                </div>
               </div>
 
-              {/* Chọn dịch vụ */}
-              <div>
-                <div className="flex items-center mb-4">
-                  <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 shadow-md">
-                    2
-                  </div>
-                  <div className="font-semibold text-lg text-[#15397F]">
-                    Chọn dịch vụ
-                  </div>
-                </div>
+              {/* Stylist Dropdown */}
+              <div className="mb-6 relative">
                 <div
-                  className={`flex items-center bg-gray-50 h-12 rounded-lg px-4 ${
-                    errorService ? "border-2 border-red-600" : "border border-gray-200"
-                  } cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm`}
-                  onClick={handleServiceClick}
+                  className="flex items-center bg-gray-50 h-12 rounded-lg px-4 border border-gray-200 cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm"
+                  onClick={handleStylistClick}
                 >
-                  <FaCut className="mr-3 w-5 h-5 text-[#15397F]" />
-                  <span className="text-sm text-gray-600 truncate w-full font-medium">
-                    Đã chọn {selectedServices.length} dịch vụ
+                  <FaUser className="mr-3 w-5 h-5 text-[#15397F]" />
+                  <span className="text-sm text-gray-600 flex-1 font-medium">
+                    {selectedStylist ? selectedStylist.fullName : "Chọn stylist"}
                   </span>
-                  <FaChevronRight className="w-4 h-4 ml-2 text-gray-400" />
+                  {stylistOpen ? (
+                    <FaChevronUp className="w-4 h-4 text-gray-400" />
+                  ) : (
+                    <FaChevronDown className="w-4 h-4 text-gray-400" />
+                  )}
                 </div>
-                {errorService && (
-                  <div className="text-red-600 font-bold text-sm mt-1">{errorService}</div>
-                )}
-                {selectedServices.length > 0 && (
-                  <div className="mt-3 text-sm text-green-600 font-medium">
-                    {selectedServices.map((service) => (
-                      <div key={service.storeServiceId}>{service.service.serviceName}</div>
-                    ))}
-                    <div className="mt-1">
-                      Tổng số tiền cần thanh toán: {" "}
-                      {selectedServices.reduce((sum, s) => sum + s.price, 0).toLocaleString()} VND
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Chọn stylist, ngày và thời gian */}
-              <div>
-                <div className="flex items-center mb-4">
-                  <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 shadow-md">
-                    3
-                  </div>
-                  <div className="font-semibold text-lg text-[#15397F]">
-                    Chọn ngày, giờ & stylist
-                  </div>
-                </div>
-
-                {/* Stylist Dropdown */}
-                <div className="mb-6 relative">
-                  <div
-                    className="flex items-center bg-gray-50 h-12 rounded-lg px-4 border border-gray-200 cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm"
-                    onClick={handleStylistClick}
-                  >
-                    <FaUser className="mr-3 w-5 h-5 text-[#15397F]" />
-                    <span className="text-sm text-gray-600 flex-1 font-medium">
-                      {selectedStylist ? selectedStylist.fullName : "Chọn stylist"}
-                    </span>
-                    {stylistOpen ? (
-                      <FaChevronUp className="w-4 h-4 text-gray-400" />
+                {stylistOpen && (
+                  <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {stylists.length === 0 ? (
+                      <div className="text-center text-gray-500 py-4">
+                        Không có stylist nào để hiển thị
+                      </div>
                     ) : (
-                      <FaChevronDown className="w-4 h-4 text-gray-400" />
+                      <div className="grid grid-cols-3 gap-2 p-3">
+                        {stylists.map((stylist) => (
+                          <div
+                            key={stylist.employeeId}
+                            className="flex flex-col items-center cursor-pointer p-2 hover:bg-gray-100 rounded-lg"
+                            onClick={() => {
+                              setSelectedStylist(stylist);
+                              setStylistOpen(false);
+                            }}
+                          >
+                            <div className="w-20 h-24 bg-gray-300 rounded-lg overflow-hidden mb-2">
+                              {stylist.avatarUrl ? (
+                                <img
+                                  src={stylist.avatarUrl}
+                                  alt={stylist.fullName}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <FaUser className="text-gray-600 text-2xl" />
+                                </div>
+                              )}
+                            </div>
+                            <div className="text-sm font-medium text-gray-800 text-center">
+                              {stylist.fullName}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
-                  {stylistOpen && (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                      {stylists.length === 0 ? (
-                        <div className="text-center text-gray-500 py-4">
-                          Không có stylist nào để hiển thị
-                        </div>
-                      ) : (
-                        <div className="grid grid-cols-3 gap-2 p-3">
-                          {stylists.map((stylist) => (
-                            <div
-                              key={stylist.employeeId}
-                              className="flex flex-col items-center cursor-pointer p-2 hover:bg-gray-100 rounded-lg"
-                              onClick={() => {
-                                setSelectedStylist(stylist);
-                                setStylistOpen(false);
-                              }}
-                            >
-                              <div className="w-20 h-24 bg-gray-300 rounded-lg overflow-hidden mb-2">
-                                {stylist.avatarUrl ? (
-                                  <img
-                                    src={stylist.avatarUrl}
-                                    alt={stylist.fullName}
-                                    className="w-full h-full object-cover"
-                                  />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center">
-                                    <FaUser className="text-gray-600 text-2xl" />
-                                  </div>
-                                )}
-                              </div>
-                              <div className="text-sm font-medium text-gray-800 text-center">
-                                {stylist.fullName}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
+                )}
+              </div>
 
-                {/* Chọn Ngày */}
-                <div className="mb-6">
-                  <div
-                    className={`flex items-center bg-gray-50 h-12 rounded-lg px-4 border ${
-                      errorDate ? "border-2 border-red-600" : "border-gray-200"
+              {/* Chọn Ngày */}
+              <div className="mb-6">
+                <div
+                  className={`flex items-center bg-gray-50 h-12 rounded-lg px-4 border ${errorDate ? "border-2 border-red-600" : "border-gray-200"
                     } cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm`}
-                  >
-                    <FaCalendarAlt className="mr-3 w-5 h-5 text-[#15397F]" />
-                    <input
-                      type="date"
-                      value={selectedDate}
-                      onChange={(e) => {
-                        setErrorDate(null);
-                        setSelectedDate(e.target.value);
-                      }}
-                      className="w-full bg-transparent border-none focus:outline-none text-sm text-gray-600 font-medium"
-                      min={new Date().toISOString().split("T")[0]}
-                    />
-                  </div>
-                  {errorDate && (
-                    <div className="text-red-600 font-bold text-sm mt-1">{errorDate}</div>
-                  )}
+                >
+                  <FaCalendarAlt className="mr-3 w-5 h-5 text-[#15397F]" />
+                  <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => {
+                      setErrorDate(null);
+                      setSelectedDate(e.target.value);
+                    }}
+                    className="w-full bg-transparent border-none focus:outline-none text-sm text-gray-600 font-medium"
+                    min={new Date().toISOString().split("T")[0]}
+                  />
                 </div>
+                {errorDate && (
+                  <div className="text-red-600 font-bold text-sm mt-1">{errorDate}</div>
+                )}
+              </div>
 
-                {/* Chọn Khung Giờ */}
-                <div className="mb-6">
-                  {loading && (
-                    <div className="text-center text-gray-500 py-4 font-medium">
-                      Đang tải khung giờ...
-                    </div>
-                  )}
-                  {!loading && (!selectedStylist || !selectedDate) && (
-                    <div className="text-center text-gray-500 py-4 font-medium">
-                      Vui lòng chọn stylist và ngày để xem khung giờ
-                    </div>
-                  )}
-                  {!loading && selectedStylist && selectedDate && availableSlots.length > 0 && (
-                    <div className="grid grid-cols-4 gap-2">
-                      {availableSlots.map((slot) => {
-                        const slotStartTime = new Date(slot.startTime).getTime();
-                        const isPast = slotStartTime < currentTime;
-                        const isBooked = !slot.isAvailable;
-                        const isDisabled = isPast || isBooked;
-                        const slotLabel = new Date(slot.startTime)
-                          .toLocaleTimeString("vi-VN", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                          .replace(":", "H");
-                        return (
-                          <button
-                            key={`${slot.timeSlotId}-${slot.startTime}`}
-                            className={`py-2 px-2 border rounded-lg text-sm font-semibold transition duration-200 shadow-sm ${
-                              isDisabled
-                                ? "bg-gray-200 cursor-not-allowed text-gray-400"
-                                : selectedSlot?.startTime === slot.startTime
+              {/* Chọn Khung Giờ */}
+              <div className="mb-6">
+                {loading && (
+                  <div className="text-center text-gray-500 py-4 font-medium">
+                    Đang tải khung giờ...
+                  </div>
+                )}
+                {!loading && (!selectedStylist || !selectedDate) && (
+                  <div className="text-center text-gray-500 py-4 font-medium">
+                    Vui lòng chọn stylist và ngày để xem khung giờ
+                  </div>
+                )}
+                {!loading && selectedStylist && selectedDate && availableSlots.length > 0 && (
+                  <div className="grid grid-cols-4 gap-2">
+                    {availableSlots.map((slot) => {
+                      const slotStartTime = new Date(slot.startTime).getTime();
+                      const isPast = slotStartTime < currentTime;
+                      const isBooked = !slot.isAvailable;
+                      const isDisabled = isPast || isBooked;
+                      const slotLabel = new Date(slot.startTime)
+                        .toLocaleTimeString("vi-VN", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                        .replace(":", "H");
+                      return (
+                        <button
+                          key={`${slot.timeSlotId}-${slot.startTime}`}
+                          className={`py-2 px-2 border rounded-lg text-sm font-semibold transition duration-200 shadow-sm ${isDisabled
+                              ? "bg-gray-200 cursor-not-allowed text-gray-400"
+                              : selectedSlot?.startTime === slot.startTime
                                 ? "bg-[#15397F] text-white shadow-md"
                                 : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100 hover:shadow-md"
                             }`}
-                            onClick={() => !isDisabled && setSelectedSlot(slot)}
-                            disabled={isDisabled}
-                          >
-                            {slotLabel}
-                          </button>
-                        );
-                      })}
+                          onClick={() => !isDisabled && setSelectedSlot(slot)}
+                          disabled={isDisabled}
+                        >
+                          {slotLabel}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+                {!loading &&
+                  selectedStylist &&
+                  selectedDate &&
+                  availableSlots.length === 0 && (
+                    <div className="text-center text-gray-500 py-4 font-medium">
+                      Không có khung giờ trống cho stylist này vào ngày đã chọn
                     </div>
                   )}
-                  {!loading &&
-                    selectedStylist &&
-                    selectedDate &&
-                    availableSlots.length === 0 && (
-                      <div className="text-center text-gray-500 py-4 font-medium">
-                        Không có khung giờ trống cho stylist này vào ngày đã chọn
-                      </div>
-                    )}
-                </div>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {step === 0 && (
-            <div className="sticky bottom-0 p-4 bg-white border-t border-gray-200 shadow-lg">
-              <button
-                className={`w-full py-3 rounded-lg text-white font-semibold text-lg uppercase tracking-wide transition duration-200 shadow-md ${
-                  isButtonEnabled
-                    ? "bg-[#15397F] hover:bg-[#0e2a5b] hover:shadow-lg"
-                    : "bg-gray-400 cursor-not-allowed"
+        {step === 0 && (
+          <div className="sticky bottom-0 p-4 bg-white border-t border-gray-200 shadow-lg">
+            <button
+              className={`w-full py-3 rounded-lg text-white font-semibold text-lg uppercase tracking-wide transition duration-200 shadow-md ${isButtonEnabled
+                  ? "bg-[#15397F] hover:bg-[#0e2a5b] hover:shadow-lg"
+                  : "bg-gray-400 cursor-not-allowed"
                 }`}
-                onClick={handleConfirm}
-                disabled={!isButtonEnabled}
-              >
-                Chốt giờ cắt
-              </button>
-            </div>
-          )}
-        </div>
-     
+              onClick={handleConfirm}
+              disabled={!isButtonEnabled}
+            >
+              Chốt giờ cắt
+            </button>
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }

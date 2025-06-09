@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import {ScrollToTop} from "../../hooks/useScrollTop";
+import { ScrollToTop } from "../hooks/useScrollTop";
 
 interface LayoutProps {
   children: ReactNode;

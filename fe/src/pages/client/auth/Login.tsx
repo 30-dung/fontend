@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import api from "../../../../services/api";
-import url from "../../../../services/url";
-import routes from "../../../../config/routes";
+import api from "../../../services/api";
+import url from "../../../services/url";
+import routes from "../../../config/routes";
 
 interface FormData {
   email: string;
@@ -211,16 +211,15 @@ export function LoginPage() {
                   </div>
                 </div>
                 <Link to={routes.forgot} className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
-                    Forgot Password?
+                  Forgot Password?
                 </Link>
               </div>
               {notification && (
                 <p
-                  className={`text-sm p-2 rounded ${
-                    notification.isSuccess
-                      ? "text-green-500 bg-green-100"
-                      : "text-red-500 bg-red-100"
-                  }`}
+                  className={`text-sm p-2 rounded ${notification.isSuccess
+                    ? "text-green-500 bg-green-100"
+                    : "text-red-500 bg-red-100"
+                    }`}
                 >
                   {notification.message}
                 </p>
