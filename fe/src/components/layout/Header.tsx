@@ -182,19 +182,19 @@ export function Header() {
                     className="absolute right-0 mt-2 w-48 bg-white text-gray-800 border border-gray-200 rounded-lg shadow-lg z-50"
                     role="menu"
                   >
-                    <li
+                    {/* <li
                       role="menuitem"
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     >
                       <NavLink
-                        to="/account"
+                        to="/profile"
                         className="block w-full"
                         onClick={() => setIsDropdownOpen(false)}
                       >
                         Thông tin tài khoản
                        
                       </NavLink>
-                    </li>
+                    </li> */}
                     <li
                       role="menuitem"
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer"

@@ -9,8 +9,7 @@ import { ShopPage } from './components/pages/client/shop/shop_product';
 import { ServiceComBo } from './components/pages/client/servicss/ServiceCombo';
 import { ComboDetail } from './components/pages/client/servicss/ComboDetail';
 import { ErrorPage } from './components/pages/client/error/Error';
-import { Profile } from './components/pages/client/profile';
-import { UpdateProfile } from './components/pages/client/profile/updateProfile';
+
 import { LocationPage } from './components/pages/client/location/Location';
 import { Header } from './components/layout/layoutpr/Header';
 import routes from './config/routes';
@@ -22,6 +21,7 @@ import { BookingConfirmation } from './components/pages/client/booking/BookingCo
 import { DashboahPage } from './components/pages/admin/dashboah/dashboah';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { BookingHistory } from './components/pages/client/booking/BookingHistory';
+
 
 function App() {
   return (
@@ -41,14 +41,15 @@ function App() {
           <Route path={routes.shop} element={<Layout><ShopPage /></Layout>} />
           <Route path={routes.services_combo} element={<Layout><ServiceComBo /></Layout>} />
           <Route path={routes.combo_detail} element={<Layout><ComboDetail /></Layout>} />
-          <Route path={routes.profile.index} element={<Layout><Header /></Layout>}>
+          {/* <Route path={routes.profile.index} element={<Layout><Header /></Layout>}>
             <Route path="/profile" index element={<Profile />} />
             <Route path={routes.profile.updateProfile} element={<UpdateProfile />} />
-          </Route>
+          </Route> */}
           <Route path={routes.location_page} element={<Layout><LocationPage /></Layout>} />
           <Route path={routes.booking} element={<Layout><BookingForm /></Layout>} />
           {/* <Route path={routes.store} element={<Layout><SelectStore /></Layout>} /> */}
           <Route path={routes.bookingHistorey} element={<Layout><BookingHistory /></Layout>} />
+     
 
           <Route path={routes.bookingConfirmation} element={<Layout><BookingConfirmation /></Layout>} />
         </Route>

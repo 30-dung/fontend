@@ -74,25 +74,38 @@ export default function BookingForm() {
   const [servicesDetails, setServicesDetails] = useState<StoreService[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Reset dữ liệu khi vào trang
+  // Reset storeId and load store when entering the page
   useEffect(() => {
-    // Chỉ giữ storeId nếu đã chọn đủ các bước và vẫn ở trang booking
-    const storeId = localStorage.getItem("storeId") || "0";
-    const isFullySelected = localStorage.getItem("isFullySelected") === "true";
+    // Prioritize salonId from query parameters
+    const salonId = searchParams.get("salonId");
+    // Clear localStorage storeId unless salonId is provided
+    if (!salonId) {
+      localStorage.removeItem("storeId");
+      setSelectedStore(null);
+    }
 
-    if (storeId !== "0" && isFullySelected) {
-      // Giữ storeId nếu đã chọn đủ các bước
+    const isFullySelected = localStorage.getItem("isFullySelected") === "true";
+    const storeId = salonId || "0"; // Only use salonId from query params
+
+    if (storeId !== "0") {
+      setLoading(true);
       api
         .get(`${url.STORE.GET_BY_ID}/${storeId}`)
         .then((res) => {
           setSelectedStore(res.data);
+          localStorage.setItem("storeId", storeId);
+          setErrorStore(null);
         })
         .catch((err) => {
           setErrorStore("Không thể tải thông tin salon: " + (err.response?.data?.message || err.message));
           localStorage.removeItem("storeId");
+          setSelectedStore(null);
+        })
+        .finally(() => {
+          setLoading(false);
         });
-    } else {
-      // Reset tất cả dữ liệu
+    } else if (!isFullySelected) {
+      // Reset all data if no storeId and not fully selected
       setSelectedStore(null);
       setSelectedServices([]);
       setSelectedStylist(null);
@@ -104,14 +117,12 @@ export default function BookingForm() {
       localStorage.removeItem("selectedServices");
       localStorage.removeItem("isFullySelected");
     }
-  }, []);
+  }, [searchParams]);
 
-  // Xóa dữ liệu localStorage khi rời khỏi trang
+  // Clear localStorage when leaving the page
   useEffect(() => {
     return () => {
-      // Ép kiểu thành PerformanceNavigationTiming để truy cập thuộc tính type
       const navigationEntries = window.performance.getEntriesByType("navigation") as PerformanceNavigationTiming[];
-      // Kiểm tra nếu mảng không rỗng và không phải là refresh trang
       if (navigationEntries.length > 0 && !navigationEntries[0].type.includes("reload")) {
         localStorage.removeItem("selectedServices");
         localStorage.removeItem("storeId");
@@ -120,7 +131,7 @@ export default function BookingForm() {
     };
   }, []);
 
-  // Kiểm tra đăng nhập và lấy phone từ profile
+  // Check login and fetch user profile
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -151,22 +162,6 @@ export default function BookingForm() {
     fetchUserProfile();
   }, [navigate, setSearchParams, step]);
 
-  // Load salon
-  useEffect(() => {
-    const salonId = searchParams.get("salonId") || localStorage.getItem("storeId") || "0";
-    if (salonId !== "0") {
-      api
-        .get(`${url.STORE.GET_BY_ID}/${salonId}`)
-        .then((res) => {
-          setSelectedStore(res.data);
-          localStorage.setItem("storeId", salonId);
-        })
-        .catch((err) => {
-          setErrorStore("Không thể tải thông tin salon: " + (err.response?.data?.message || err.message));
-        });
-    }
-  }, [searchParams]);
-
   // Load stylists
   useEffect(() => {
     const fetchStylists = async () => {
@@ -195,7 +190,7 @@ export default function BookingForm() {
     fetchStylists();
   }, [selectedStore, selectedServices]);
 
-  // Load khung giờ
+  // Load time slots
   useEffect(() => {
     const fetchAvailableSlots = async () => {
       if (!selectedStore || selectedServices.length === 0 || !selectedStylist || !selectedDate) {
@@ -225,7 +220,7 @@ export default function BookingForm() {
     fetchAvailableSlots();
   }, [selectedStore, selectedServices, selectedStylist, selectedDate]);
 
-  // Load chi tiết dịch vụ
+  // Load service details
   useEffect(() => {
     const fetchServicesDetails = async () => {
       const storeId = localStorage.getItem("storeId") || "0";
@@ -288,7 +283,7 @@ export default function BookingForm() {
         ? response.data.map((a: any) => a.appointmentId)
         : [response.data.appointmentId];
       localStorage.setItem("appointmentId", appointmentIds[0].toString());
-      localStorage.setItem("isFullySelected", "true"); // Đánh dấu đã chọn đủ các bước
+      localStorage.setItem("isFullySelected", "true");
       navigate(routes.bookingConfirmation, { state: { appointments: response.data } });
     } catch (err: any) {
       console.error("Booking error:", err.response?.data || err.message);
@@ -336,16 +331,16 @@ export default function BookingForm() {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto bg-gray-100 min-h-screen font-sans">
-      <div className="flex justify-center items-center py-4 px-4 shadow-sm bg-white">
-        <span className="text-xl font-semibold text-[#15397F] tracking-tight">
-          Đặt lịch giữ chỗ
-        </span>
-      </div>
+    <div className="w-full max-w-lg mx-auto bg-gray-100 min-h-screen font-sans">
+      {step === 0 && (
+        <div className="flex justify-center items-center py-4 px-4 shadow-sm bg-white">
+          <span className="text-xl font-semibold text-[#15397F] tracking-tight">
+            Đặt lịch giữ chỗ
+          </span>
+        </div>
+      )}
 
-      <div className="bg-white px-6">
-        <div className="relative py-6">
-          {step === 1 && (
+      {step === 1 && (
             <SelectStore
               salonId={localStorage.getItem("storeId") || "0"}
               phone={phone}
@@ -361,6 +356,10 @@ export default function BookingForm() {
               setStep={setStep}
             />
           )}
+
+      <div className="bg-white px-6">
+        
+          
 
           {step === 0 && (
             <div className="space-y-6">
@@ -594,7 +593,7 @@ export default function BookingForm() {
             </div>
           )}
         </div>
-      </div>
+     
     </div>
   );
 }

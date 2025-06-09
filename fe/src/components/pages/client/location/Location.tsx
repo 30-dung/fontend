@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from "../../../../services/api";
 import url from "../../../../services/url";
+import routes from "../../../../config/routes";
 
 interface Store {
   storeId: number;
@@ -29,6 +31,7 @@ export const LocationPage = () => {
   const [error, setError] = useState<string>("");
   const [cities, setCities] = useState<CityWithCount[]>([]);
   const [districts, setDistricts] = useState<CityWithCount[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -182,7 +185,10 @@ export const LocationPage = () => {
               <button className="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100">
                 CHỈ ĐƯỜNG
               </button>
-              <button className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+              <button
+                className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={() => navigate(`${routes.booking}?salonId=${store.storeId}`)}
+              >
                 ĐẶT LỊCH CĂT →
               </button>
             </div>
