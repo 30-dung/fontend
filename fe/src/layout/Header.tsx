@@ -156,7 +156,7 @@ export function Header() {
               <div className="user-menu" ref={dropdownRef}>
                 <button
                   onClick={toggleDropdown}
-                  className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-200"
+                  className="flex items-center space-x-2 rounded border border-shine-primary px-4 py-1.5 text-shine-primary hover:bg-shine-primary hover:text-white"
                   aria-expanded={isDropdownOpen}
                   aria-label="User menu"
                 >

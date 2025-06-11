@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import api from "../../../services/api";
 import url from "../../../services/url";
@@ -23,6 +23,8 @@ interface AuthResponse {
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams(); // NEW: Lấy query parameters
+  const returnTo = searchParams.get("returnTo") || "/"; // NEW: Lấy returnTo, mặc định là "/"
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -40,16 +42,15 @@ export function LoginPage() {
     const token = localStorage.getItem("access_token");
     const role = localStorage.getItem("user_role");
     if (token && role) {
-      if (role.includes("ROLE_ADMIN") || role.includes("ROLE_EMPLOYEE")) {
-        navigate("/admin");
-      } else if (role.includes("ROLE_CUSTOMER")) {
-        navigate("/");
-      } else {
-        navigate("/login");
-      }
+      if (role.includes("ROLE_CUSTOMER") ) {
+             navigate(returnTo);
+            // NEW: Chuyển hướng về returnTo
+          } else {
+            navigate("/login");
+          }
     }
     setLoading(false);
-  }, [navigate]);
+  }, [navigate, returnTo]); // NEW: Thêm returnTo vào dependencies
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -98,10 +99,9 @@ export function LoginPage() {
         localStorage.setItem("user_role", response.data.role);
         setNotification({ message: "Login successful", isSuccess: true });
         setTimeout(() => {
-          if (response.data.role.includes("ROLE_ADMIN") || response.data.role.includes("ROLE_EMPLOYEE")) {
-            navigate("/admin");
-          } else if (response.data.role.includes("ROLE_CUSTOMER")) {
-            navigate("/");
+          if (response.data.role.includes("ROLE_CUSTOMER") ) {
+             navigate(returnTo);
+            // NEW: Chuyển hướng về returnTo
           } else {
             navigate("/login");
           }

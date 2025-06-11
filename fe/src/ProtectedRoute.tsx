@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 interface ProtectedRouteProps {
   allowedRoles: string[];
@@ -7,9 +7,11 @@ interface ProtectedRouteProps {
 export const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
   const token = localStorage.getItem("access_token");
   const role = localStorage.getItem("user_role");
+  const location = useLocation();
 
   if (!token || !role || !allowedRoles.some(allowedRole => role.includes(allowedRole))) {
-    return <Navigate to="/login" replace />;
+    // Chuyển hướng đến login, kèm theo URL hiện tại (bao gồm query parameters)
+    return <Navigate to={`/login?returnTo=${encodeURIComponent(location.pathname + location.search)}`} replace />;
   }
 
   return <Outlet />;
