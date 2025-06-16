@@ -6,12 +6,12 @@ const url = {
         LOGIN: 'auth/login',
         FORGOT_PASSWORD: 'auth/forgot-password',
         RESET_PASSWORD: 'auth/reset-password',
-        // GUEST: 'auth/guest', // Removed as it doesn't exist in AuthController.java
     },
 
     USER: {
         PROFILE: 'user/profile',
         UPDATE_PROFILE: 'user/update-profile',
+        
     },
 
     STORE: {
@@ -31,7 +31,11 @@ const url = {
 
     EMPLOYEE: {
         BY_STORE: 'employees/store', // Matches /api/employees/store/{storeId}
-        WORKING_TIME_SLOTS: 'employee/working-time-slots/available', // Matches /api/employee/working-time-slots/available/{employeeId}/{date}
+        // Matches /api/employee/working-time-slots/available/{employeeId}/{date}
+    },
+
+    SLOT: {
+         WORKING_TIME_SLOTS: '/working-time-slots/available',
     },
 
     APPOINTMENT: {

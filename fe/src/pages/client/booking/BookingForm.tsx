@@ -199,7 +199,7 @@ export default function BookingForm() {
       }
       setLoading(true);
       try {
-        const response = await api.get(url.EMPLOYEE.WORKING_TIME_SLOTS, {
+        const response = await api.get(url.SLOT.WORKING_TIME_SLOTS, {
           params: {
             employeeId: selectedStylist.employeeId,
             date: selectedDate,
