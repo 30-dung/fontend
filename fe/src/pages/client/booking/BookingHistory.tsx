@@ -1,10 +1,10 @@
 // src/pages/client/booking/BookingHistory.tsx
 import { useState, useEffect } from "react";
-import api from "../../../services/api";
-import url from "../../../services/url";
-import ReviewFormModal from "../../../components/ReviewFormModal";
+import api from "@/services/api";
+import url from "@/services/url";
+import ReviewFormModal from "@/components/reviews/ReviewFormModal";
 import { useNavigate } from 'react-router-dom';
-import routes from '../../../config/routes';
+import routes from '@/config/routes';
 
 // Import các icons cần thiết từ react-icons
 import { FaCheckCircle, FaHourglassHalf, FaTimesCircle, FaInfoCircle } from 'react-icons/fa';

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FaSearch, FaMapMarkerAlt, FaStar, FaClock, FaArrowLeft } from "react-icons/fa"; // Import các icon cần thiết
-import api from "../../../services/api";
-import url from "../../../services/url";
+import api from "@/services/api";
+import url from "@/services/url";
 
 interface Store {
     storeId: number;

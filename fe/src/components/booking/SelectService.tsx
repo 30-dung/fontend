@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Service } from "./BookingForm";
-import api from "../../../services/api";
-import url from "../../../services/url";
+import { Service } from "../../pages/client/booking/BookingForm";
+import api from "@/services/api";
+import url from "@/services/url";
 import { FaSearch, FaClock, FaArrowLeft } from "react-icons/fa"; // Import icons
 
 interface StoreService {

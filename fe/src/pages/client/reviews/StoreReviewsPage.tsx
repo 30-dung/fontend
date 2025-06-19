@@ -1,16 +1,15 @@
 // src/pages/client/reviews/StoreReviewsPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import api from '../../../services/api';
-import url from '../../../services/url';
+import api from '@/services/api';
+import url from '@/services/url';
 import {
     OverallRating,
     CombinedReviewDisplayDTO,
     ApiResponse,
     ReviewReplyResponse,
-} from '../../../types/review';
-import StarRating from '../../../components/StarRating';
-import CombinedReviewCard from '../../../components/CombinedReviewCard';
+} from '@/types/review';
+import CombinedReviewCard from '@/components/reviews/CombinedReviewCard';
 import { FaStar, FaChevronLeft, FaChevronRight, FaFilter, FaComments } from 'react-icons/fa';
 
 const getCurrentUserId = (): number | null => {

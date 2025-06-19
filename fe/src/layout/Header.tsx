@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
-import logo from "../assets/images/logo.png";
-import api from "../services/api";
-import url from "../services/url";
-import routes from "../config/routes";
+import logo from "@/assets/images/logo.png";
+import api from "@/services/api";
+import url from "@/services/url";
+import routes from "@/config/routes";
 
 export function Header() {
     const navigate = useNavigate();

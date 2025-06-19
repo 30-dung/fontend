@@ -2,10 +2,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import api from "../../../services/api";
-import url from "../../../services/url";
-import routes from "../../../config/routes";
-import StarRating from "@/components/StarRating";
+import api from "@/services/api";
+import url from "@/services/url";
+import routes from "@/config/routes";
+import StarRating from "@/components/reviews/StarRating";
 // Import thư viện react-select
 import Select from 'react-select';
 

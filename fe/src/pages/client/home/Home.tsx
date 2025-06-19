@@ -11,7 +11,7 @@ import {
 import { FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion"; // Thêm framer-motion để tạo animation
 import axios from "axios";
-import routes from "../../../config/routes";
+import routes from "@/config/routes";
 // định dạng interface data
 interface Category {
     id: number;

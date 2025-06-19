@@ -3,7 +3,7 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { FaArrowLeft, FaPhoneAlt, FaArrowRight } from "react-icons/fa";
 import { motion } from "framer-motion";
 import axios from "axios";
-import routes from "../../../config/routes";
+import routes from "@/config/routes";
 
 // Định nghĩa interfaces cho dữ liệu
 interface Service {

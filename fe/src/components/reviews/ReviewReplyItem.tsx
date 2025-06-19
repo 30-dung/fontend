@@ -1,6 +1,6 @@
 // src/components/ReviewReplyItem.tsx
 import React, { useState } from 'react';
-import { ReviewReplyResponse } from '../types/review';
+import { ReviewReplyResponse } from '@/types/review';
 import { FaReply } from 'react-icons/fa';
 
 interface ReviewReplyItemProps {

@@ -1,9 +1,9 @@
 // src/components/CombinedReviewCard.tsx
 import React, { useState } from 'react';
 import StarRating from './StarRating';
-import { CombinedReviewDisplayDTO, ReviewReplyRequest, ReviewReplyResponse } from '../types/review';
-import api from '../services/api';
-import url from '../services/url';
+import { CombinedReviewDisplayDTO, ReviewReplyRequest, ReviewReplyResponse } from '@/types/review';
+import api from '@/services/api';
+import url from '@/services/url';
 import ReviewReplyItem from './ReviewReplyItem';
 import { FaStar } from 'react-icons/fa';
 

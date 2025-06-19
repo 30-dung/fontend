@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import api from "../../../services/api";
-import url from "../../../services/url";
+import api from "@/services/api";
+import url from "@/services/url";
 
 // Define the shape of formData and formErrors
 interface FormData {

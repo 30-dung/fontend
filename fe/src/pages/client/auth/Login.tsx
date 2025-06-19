@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import api from "../../../services/api";
-import url from "../../../services/url";
-import routes from "../../../config/routes";
+import api from "@/services/api";
+import url from "@/services/url";
+import routes from "@/config/routes";
 
 interface FormData {
     email: string;

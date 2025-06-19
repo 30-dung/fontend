@@ -1,11 +1,11 @@
 // src/components/ReviewFormModal.tsx
 import React, { useState, useEffect } from 'react';
 import StarRating from './StarRating';
-import { ReviewRequest, ReviewTargetType, UserInfo } from '../types/review';
-import api from '../services/api';
-import url from '../services/url';
+import { ReviewRequest, ReviewTargetType, UserInfo } from '@/types/review';
+import api from '@/services/api';
+import url from '@/services/url';
 import { useNavigate } from 'react-router-dom';
-import routes from '../config/routes';
+import routes from '@/config/routes';
 import { FaStore, FaUser, FaCut, FaRegCommentDots } from 'react-icons/fa';
 
 import { toast } from 'react-toastify'; // Import toast function

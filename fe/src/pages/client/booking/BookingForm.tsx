@@ -11,11 +11,11 @@ import {
     FaArrowLeft,
     // FaStar, // Không cần import FaStar nếu không dùng rating
 } from "react-icons/fa";
-import { SelectStore } from "./SelectStore";
-import { SelectService } from "./SelectService";
-import url from "../../../services/url";
-import api from "../../../services/api";
-import routes from "../../../config/routes";
+import { SelectStore } from "@/components/booking/SelectStore";
+import { SelectService } from "@/components/booking/SelectService";
+import url from "@/services/url";
+import api from "@/services/api";
+import routes from "@/config/routes";
 
 interface Store {
     storeId: number;
