@@ -1,3 +1,4 @@
+// src/config/routes.ts
 const routes = {
     home: '/',
     about: '/about',
@@ -15,8 +16,8 @@ const routes = {
         updateProfile: '/profile/updateProfile',
     },
     location_page: '/location_page',
-    // store: '/store',
-    // services: '/services',
+    // --- Bổ sung route cho trang đánh giá của cửa hàng ---
+    store_reviews: '/stores/:storeId/reviews', // Trang đánh giá tổng thể của cửa hàng
     stylistAndTime: '/stylist-and-time',
     bookingConfirmation: '/booking-confirmation'
 }

@@ -16,8 +16,9 @@ code {
 
 body {
   font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
-  background-color: #F5F5F7;
+  background-color: #ffffff;
   color: #15397F;
+  
 }
 
 :root {
@@ -114,3 +115,52 @@ body {
 .star-3 { animation-delay: 1s; }
 .star-4 { animation-delay: 1.5s; }
 .star-5 { animation-delay: 2s; }
+
+
+
+
+
+
+.custom-scrollbar-main::-webkit-scrollbar {
+    width: 10px; /* Chiều rộng thanh cuộn chính */
+}
+
+.custom-scrollbar-main::-webkit-scrollbar-track {
+    background: #e0e0e0; /* Màu nền track chính */
+    border-radius: 10px;
+}
+
+.custom-scrollbar-main::-webkit-scrollbar-thumb {
+    background: #a0a0a0; /* Màu thanh cuộn chính */
+    border-radius: 10px;
+}
+
+.custom-scrollbar-main::-webkit-scrollbar-thumb:hover {
+    background: #808080; /* Màu khi hover thanh cuộn chính */
+}
+
+/* Custom Scrollbar for inner store list */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px; /* Chiều rộng thanh cuộn nhỏ hơn */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #bbb; /* Màu thanh cuộn nhạt hơn */
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* Firefox compatibility */
+.custom-scrollbar-main,
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #a0a0a0 #e0e0e0; /* thumb color track color */
+}

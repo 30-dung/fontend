@@ -80,7 +80,7 @@ export function Header() {
     };
 
     return (
-        <header className="bg-white shadow-sm relative">
+        <header className="bg-white shadow-sm sticky top-0 z-50">
             <div className="new-header__container mx-auto max-w-[1200px]">
                 <nav className="nav-bar flex items-center justify-between py-2">
                     <div className="nav-bar__logo-main">

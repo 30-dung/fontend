@@ -1,336 +1,323 @@
-// export function AboutPage() {
-//   return (
-//     <div className="bg-shine-background-default text-shine-text-primary">
-//       <div className="container max-w-[1200px] mx-auto px-4 lg:px-0 pt-1 pb-10 md:pt-10 md:pb-14">
-//         <div className="grid grid-cols-1 gap-5 md:gap-[43px] mt-3 md:mt-[20px]">
-
-//           {/* Section 1 */}
-//           <div>
-//             <div className="uppercase font-bold text-base md:text-[26px] mt-5 text-shine-blue pl-1 border-l-[6px] border-shine-blue-light">
-//               30Shine - Điểm Tựa Cho Việc Lớn
-//             </div>
-//             <div className="text-sm md:text-lg mt-5 text-shine-blue flex flex-col gap-1">
-//               <div className="italic">"Hãy cho tôi một điểm tựa, tôi sẽ nâng cả thế giới." - Archimedes</div>
-//               <div>Mỗi người đàn ông đều có một hành trình riêng, một thế giới muốn chinh phục</div>
-//               <div>Có người đang tiến về đích, có người vẫn đang tìm hướng đi</div>
-//               <div>Có người biết chính xác điều mình muốn, có người đang từng bước khám phá</div>
-//               <div className="font-semibold">Dù anh đang ở đâu trên hành trình ấy – bản lĩnh và sự tự tin luôn có trong chính anh</div>
-//               <div>
-//                 30Shine không tạo ra chúng. <span className="font-semibold">Chúng tôi là điểm tựa</span>, giúp anh thể hiện trọn vẹn phong thái, khí chất và sẵn sàng cho những điều quan trọng phía trước
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Section 2 */}
-//           <div>
-//             <div className="uppercase font-bold text-base md:text-[26px] mt-5 text-shine-blue pl-1 border-l-[6px] border-shine-blue-light">
-//               Kiểu Tóc Đẹp Không Phải Đích Đến – Mà Là Điểm Khởi Đầu
-//             </div>
-//             <div className="text-sm md:text-lg mt-5 text-shine-blue flex flex-col gap-1">
-//               <div>
-//                 Một kiểu tóc đẹp <span className="font-semibold">không chỉ để ngắm nhìn – mà còn để cảm nhận:</span>
-//               </div>
-//               <div>
-//                 Cảm nhận sự <span className="font-semibold">thoải mái, tự tin, sẵn sàng</span>
-//               </div>
-//               <div>
-//                 Cảm nhận một phiên bản <span className="font-semibold">tốt hơn của chính mình</span>
-//               </div>
-//               <div>
-//                 Với gần <span className="font-semibold">150 salon trên toàn quốc</span>, công nghệ hiện đại và đội ngũ thợ tận tâm, 30Shine không chỉ mang đến một diện mạo mới.
-//                 <span className="font-semibold"> Chúng tôi giúp anh luôn trong trạng thái tốt nhất – để đón nhận bất kỳ điều gì đang chờ phía trước</span>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Section 3 */}
-//           <div>
-//             <div className="uppercase font-bold text-base md:text-[26px] mt-5 text-shine-blue pl-1 border-l-[6px] border-shine-blue-light">
-//               WILLS – Văn Hoá Tinh Thần Của Những Người Dám Tiến Lên
-//             </div>
-//             <div className="text-sm md:text-lg mt-5 text-shine-blue flex flex-col gap-1">
-//               <div>
-//                 Ở 30Shine, chúng tôi không chỉ tạo ra diện mạo tuyệt vời – chúng tôi phục vụ những người đàn ông muốn tốt hơn mỗi ngày
-//               </div>
-//               <div>
-//                 Dù anh đang <span className="font-semibold">bắt đầu, bứt phá hay khẳng định chính mình,</span> tinh thần
-//                 <span className="font-semibold"> WILLS</span> luôn đồng hành:
-//               </div>
-//               <ul className="list-disc pl-5 !mb-0">
-//                 <li><span className="font-semibold">W - Warrior</span> (Chiến binh) – Kiên cường, không lùi bước trước thử thách</li>
-//                 <li><span className="font-semibold">I - Intervention</span> (Can thiệp) – Không đợi thời điểm hoàn hảo, mà tạo ra nó</li>
-//                 <li><span className="font-semibold">L - Learning</span> (Ham học hỏi) – Phát triển không giới hạn, không ngừng nâng cấp bản thân</li>
-//                 <li><span className="font-semibold">L - Leadership</span> (Đổi mới) – Luôn sáng tạo, chủ động dẫn đầu sự thay đổi</li>
-//                 <li><span className="font-semibold">S - Sincerity</span> (Chân thành) – Minh bạch, đáng tin cậy, tạo dựng giá trị bền vững</li>
-//               </ul>
-//               <div className="font-semibold">
-//                 Không có đúng hay sai – chỉ có phiên bản tốt nhất của chính mình, và 30Shine ở đây để giúp anh tự tin thể hiện điều đó
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Section 4 */}
-//           <div>
-//             <div className="uppercase font-bold text-base md:text-[26px] mt-5 text-shine-blue pl-1 border-l-[6px] border-shine-blue-light">
-//               Sứ Mệnh – Tôn Vinh Đôi Bàn Tay Tài Hoa Người Thợ Việt
-//             </div>
-//             <div className="text-sm md:text-lg mt-5 text-shine-blue flex flex-col gap-1">
-//               <div>
-//                 30Shine không chỉ là điểm tựa giúp đàn ông thể hiện phong độ, mà còn mang trong mình một sứ mệnh lớn hơn:
-//               </div>
-//               <div className="font-semibold">
-//                 Tôn vinh và nâng tầm đôi bàn tay tài hoa của người thợ Việt trên bản đồ thế giới
-//               </div>
-//               <div>
-//                 Tay nghề con người Việt Nam không chỉ giỏi – mà có thể vươn xa
-//               </div>
-//               <div>
-//                 Bằng việc không ngừng đổi mới, nâng cao chất lượng dịch vụ và xây dựng môi trường phát triển chuyên nghiệp, 30Shine giúp người thợ Việt phát triển bản thân, nghề nghiệp và vị thế trong ngành tóc toàn cầu
-//               </div>
-//               <div className="font-semibold">
-//                 Từ bàn tay Việt – vươn tới những tầm cao mới
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Section 5 */}
-//           <div>
-//             <div className="uppercase font-bold text-base md:text-[26px] mt-5 text-shine-blue pl-1 border-l-[6px] border-shine-blue-light">
-//               Ai Cũng Có Việc Lớn Của Riêng Mình – Chỉ Cần Một Điểm Tựa
-//             </div>
-//             <div className="text-sm md:text-lg mt-5 text-shine-blue flex flex-col gap-1">
-//               <div>Không có lộ trình nào giống nhau</div>
-//               <div>Không có đích đến nào là duy nhất</div>
-//             </div>
-//           </div>
-
-//           {/* Section 6 */}
-//           <div>
-//             <div className="uppercase font-bold text-base md:text-[26px] mt-5 text-shine-blue pl-1 border-l-[6px] border-shine-blue-light">
-//               30Shine – Điểm Tựa Cho Việc Lớn
-//             </div>
-//             <div className="text-sm md:text-lg mt-5 text-shine-blue flex flex-col gap-1">
-//               <div>
-//                 Dù anh đang ở đâu trên hành trình <span className="font-semibold">– chỉ cần sẵn sàng, thế giới này là của anh</span>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+import { FaRocket, FaCut, FaFire, FaStar, FaDumbbell, FaRegHandshake } from 'react-icons/fa'; // Import icons
 
 export function AboutPage() {
     return (
         <div className="bg-gradient-to-b from-[#f6f8fc] to-[#eaf0fa] min-h-screen text-shine-text-primary">
-            <div className="container max-w-3xl mx-auto px-4 pt-6 pb-14">
-                <div className="flex flex-col gap-8">
-                    {/* Section 1 */}
-                    <section className="bg-white rounded-2xl shadow p-6 md:p-8 border-l-8 border-shine-blue-light">
-                        <h2 className="uppercase font-bold text-xl md:text-2xl text-shine-blue flex items-center gap-2 mb-3">
-                            <span>🚀</span> 30Shine - Điểm Tựa Cho Việc Lớn
-                        </h2>
-                        <div className="text-base md:text-lg text-shine-blue flex flex-col gap-2">
-                            <div className="italic">
-                                "Hãy cho tôi một điểm tựa, tôi sẽ nâng cả thế
-                                giới." - Archimedes
-                            </div>
-                            <div>
-                                Mỗi người đàn ông đều có một hành trình riêng,
-                                một thế giới muốn chinh phục
-                            </div>
-                            <div>
-                                Có người đang tiến về đích, có người vẫn đang
-                                tìm hướng đi
-                            </div>
-                            <div>
-                                Có người biết chính xác điều mình muốn, có người
-                                đang từng bước khám phá
-                            </div>
-                            <div className="font-semibold">
-                                Dù anh đang ở đâu trên hành trình ấy – bản lĩnh
-                                và sự tự tin luôn có trong chính anh
-                            </div>
-                            <div>
-                                30Shine không tạo ra chúng.{" "}
-                                <span className="font-semibold">
-                                    Chúng tôi là điểm tựa
-                                </span>
-                                , giúp anh thể hiện trọn vẹn phong thái, khí
-                                chất và sẵn sàng cho những điều quan trọng phía
-                                trước
+            {/* Hero Section */}
+            <section
+                className="relative bg-cover bg-center h-[450px] md:h-[550px] flex items-center justify-center text-white overflow-hidden"
+                style={{
+                    backgroundImage: `url("https://png.pngtree.com/thumb_back/fh260/background/20241116/pngtree-luxurious-modern-barber-shop-with-sleek-interior-design-image_16612337.jpg")`, // Ảnh Hero mới: Luxurious modern barber shop
+                }}
+            >
+                <div className="absolute inset-0 bg-black opacity-60"></div>
+                <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+                    <h1 className="text-4xl md:text-7xl font-extrabold mb-4 leading-tight drop-shadow-lg animate-fade-in-down">
+                        30Shine - Nơi Khởi Tạo Phong Thái Đàn Ông
+                    </h1>
+                    <p className="text-lg md:text-2xl italic font-light max-w-3xl mx-auto animate-fade-in-up">
+                        "Hãy cho tôi một điểm tựa, tôi sẽ nâng cả thế giới." -
+                        Archimedes. Chúng tôi là điểm tựa vững chắc cho mọi quý
+                        ông trên hành trình chinh phục những mục tiêu lớn.
+                    </p>
+                </div>
+            </section>
+
+            {/* Main Content */}
+            <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+
+                    {/* Section 1 - 30Shine - Điểm Tựa Cho Việc Lớn (Detailed) */}
+                    <section className="bg-white rounded-3xl shadow-xl p-8 md:p-10 border-l-8 border-shine-blue-light flex flex-col justify-between animate-slide-in-left">
+                        <div>
+                            <h2 className="uppercase font-bold text-2xl md:text-3xl text-shine-blue flex items-center gap-3 mb-5">
+                                {/* Kích thước icon điều chỉnh theo font chữ */}
+                                <FaRocket className="text-current text-[inherit]" /> 30Shine - Điểm Tựa Cho Việc Lớn
+                            </h2>
+                            <div className="text-base md:text-lg text-shine-blue flex flex-col gap-4 leading-relaxed">
+                                <div>
+                                    Mỗi người đàn ông đều có một hành trình riêng,
+                                    một thế giới muốn chinh phục. Từ những mục tiêu
+                                    nhỏ nhất đến những ước mơ vĩ đại, mỗi bước đi
+                                    đều cần sự tự tin và bản lĩnh.
+                                </div>
+                                <div>
+                                    Có người đang tiến về đích với quyết tâm cao độ,
+                                    có người vẫn đang tìm hướng đi cho con đường
+                                    riêng của mình. Có người biết chính xác điều
+                                    mình muốn và đang nỗ lực hết mình, có người
+                                    đang từng bước khám phá tiềm năng và định hình
+                                    tương lai.
+                                </div>
+                                <div className="font-semibold text-xl text-shine-blue-dark">
+                                    Dù anh đang ở đâu trên hành trình ấy – bản lĩnh
+                                    và sự tự tin luôn có trong chính anh, chờ được
+                                    khơi dậy.
+                                </div>
+                                <div>
+                                    30Shine không tạo ra chúng.{" "}
+                                    <span className="font-bold text-shine-blue-dark">
+                                        Chúng tôi là điểm tựa vững chắc
+                                    </span>
+                                    , một không gian lý tưởng giúp anh thể hiện
+                                    trọn vẹn phong thái, khí chất và sẵn sàng cho
+                                    những điều quan trọng phía trước, cho mọi cuộc
+                                    gặp gỡ, mọi quyết định.
+                                </div>
                             </div>
                         </div>
+                        <img
+                            src="https://chamsua.vn/wp-content/uploads/2024/12/99-hinh-anh-tho-cat-toc-chat-anh-barber-dep-va-chat-nhat-1-1.jpg" // Ảnh 1
+                            alt="Thợ cắt tóc chuyên nghiệp tại 30Shine"
+                            className="mt-8 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-300 w-full object-cover h-72" // Tăng chiều cao ảnh
+                        />
                     </section>
 
-                    {/* Section 2 */}
-                    <section className="bg-white rounded-2xl shadow p-6 md:p-8 border-l-8 border-[#7ea7e7]">
-                        <h2 className="uppercase font-bold text-xl md:text-2xl text-shine-blue flex items-center gap-2 mb-3">
-                            <span>💇‍♂️</span> Kiểu Tóc Đẹp Không Phải Đích Đến –
-                            Mà Là Điểm Khởi Đầu
-                        </h2>
-                        <div className="text-base md:text-lg text-shine-blue flex flex-col gap-2">
-                            <div>
-                                Một kiểu tóc đẹp{" "}
-                                <span className="font-semibold">
-                                    không chỉ để ngắm nhìn – mà còn để cảm nhận:
-                                </span>
-                            </div>
-                            <div>
-                                Cảm nhận sự{" "}
-                                <span className="font-semibold">
-                                    thoải mái, tự tin, sẵn sàng
-                                </span>
-                            </div>
-                            <div>
-                                Cảm nhận một phiên bản{" "}
-                                <span className="font-semibold">
-                                    tốt hơn của chính mình
-                                </span>
-                            </div>
-                            <div>
-                                Với gần{" "}
-                                <span className="font-semibold">
-                                    150 salon trên toàn quốc
-                                </span>
-                                , công nghệ hiện đại và đội ngũ thợ tận tâm,
-                                30Shine không chỉ mang đến một diện mạo mới.
-                                <span className="font-semibold">
-                                    {" "}
-                                    Chúng tôi giúp anh luôn trong trạng thái tốt
-                                    nhất – để đón nhận bất kỳ điều gì đang chờ
-                                    phía trước
-                                </span>
+                    {/* Section 2 - Kiểu Tóc Đẹp Không Phải Đích Đến – Mà Là Điểm Khởi Đầu */}
+                    <section className="bg-white rounded-3xl shadow-xl p-8 md:p-10 border-l-8 border-[#7ea7e7] flex flex-col justify-between animate-slide-in-right">
+                        <div>
+                            <h2 className="uppercase font-bold text-2xl md:text-3xl text-shine-blue flex items-center gap-3 mb-5">
+                                {/* Kích thước icon điều chỉnh theo font chữ */}
+                                <FaCut className="text-current text-[inherit]" /> Kiểu Tóc Đẹp Không Phải Đích Đến –
+                                Mà Là Điểm Khởi Đầu
+                            </h2>
+                            <div className="text-base md:text-lg text-shine-blue flex flex-col gap-4 leading-relaxed">
+                                <div>
+                                    Một kiểu tóc đẹp{" "}
+                                    <span className="font-bold text-shine-blue-dark">
+                                        không chỉ để ngắm nhìn trong gương – mà còn
+                                        để cảm nhận trọn vẹn từng khoảnh khắc:
+                                    </span>
+                                </div>
+                                <div>
+                                    Cảm nhận sự{" "}
+                                    <span className="font-bold text-shine-blue-dark">
+                                        thoải mái tối đa, tự tin tỏa sáng
+                                    </span>
+                                    trong mọi tình huống, và luôn sẵn sàng đối mặt
+                                    với mọi thử thách.
+                                </div>
+                                <div>
+                                    Cảm nhận một phiên bản{" "}
+                                    <span className="font-bold text-shine-blue-dark">
+                                        tốt hơn, chỉn chu hơn của chính mình
+                                    </span>
+                                    , một diện mạo mới mẻ tiếp thêm năng lượng.
+                                </div>
+                                <div>
+                                    Với gần{" "}
+                                    <span className="font-bold text-shine-blue-dark">
+                                        150 salon trên toàn quốc
+                                    </span>
+                                    , được trang bị công nghệ hiện đại và đội ngũ
+                                    thợ tận tâm, chuyên nghiệp, 30Shine không chỉ
+                                    mang đến một diện mạo mới mẻ cho anh.{" "}
+                                    <span className="font-bold text-shine-blue-dark">
+                                        Chúng tôi giúp anh luôn trong trạng thái
+                                        tốt nhất về cả tinh thần và ngoại hình –
+                                        để đón nhận bất kỳ điều gì đang chờ phía
+                                        trước với sự tự tin cao nhất.
+                                    </span>
+                                </div>
                             </div>
                         </div>
+                        <img
+                            src="https://classic.vn/wp-content/uploads/2022/11/van-hoa-barber-va-nghe-thuat-rau-toc-cho-quy-ong.jpg" // Ảnh 2
+                            alt="Khách hàng được chăm sóc tại barbershop"
+                            className="mt-8 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-300 w-full object-cover h-72" // Tăng chiều cao ảnh
+                        />
                     </section>
 
-                    {/* Section 3 */}
-                    <section className="bg-white rounded-2xl shadow p-6 md:p-8 border-l-8 border-[#f9c846]">
-                        <h2 className="uppercase font-bold text-xl md:text-2xl text-shine-blue flex items-center gap-2 mb-3">
-                            <span>🔥</span> WILLS – Văn Hoá Tinh Thần Của Những
-                            Người Dám Tiến Lên
-                        </h2>
-                        <div className="text-base md:text-lg text-shine-blue flex flex-col gap-2">
-                            <div>
-                                Ở 30Shine, chúng tôi không chỉ tạo ra diện mạo
-                                tuyệt vời – chúng tôi phục vụ những người đàn
-                                ông muốn tốt hơn mỗi ngày
-                            </div>
-                            <div>
-                                Dù anh đang{" "}
-                                <span className="font-semibold">
-                                    bắt đầu, bứt phá hay khẳng định chính mình,
-                                </span>{" "}
-                                tinh thần
-                                <span className="font-semibold">
-                                    {" "}
-                                    WILLS
-                                </span>{" "}
-                                luôn đồng hành:
-                            </div>
-                            <ul className="list-disc pl-6 mb-2">
-                                <li>
-                                    <span className="font-semibold">
-                                        W - Warrior
+                    {/* Section 3 - WILLS – Văn Hoá Tinh Thần Của Những Người Dám Tiến Lên */}
+                    <section className="bg-white rounded-3xl shadow-xl p-8 md:p-10 border-l-8 border-[#f9c846] flex flex-col justify-between lg:col-span-2 animate-slide-in-up">
+                        <div>
+                            <h2 className="uppercase font-bold text-2xl md:text-3xl text-shine-blue flex items-center gap-3 mb-5">
+                                {/* Kích thước icon điều chỉnh theo font chữ */}
+                                <FaFire className="text-current text-[inherit]" /> WILLS – Văn Hoá Tinh Thần Của Những
+                                Người Dám Tiến Lên
+                            </h2>
+                            <div className="text-base md:text-lg text-shine-blue flex flex-col gap-4 leading-relaxed">
+                                <div>
+                                    Ở 30Shine, chúng tôi không chỉ tạo ra diện mạo
+                                    tuyệt vời – chúng tôi phục vụ những người đàn
+                                    ông có tinh thần cầu tiến, luôn muốn tốt hơn
+                                    mỗi ngày, dám bứt phá khỏi giới hạn.
+                                </div>
+                                <div>
+                                    Dù anh đang{" "}
+                                    <span className="font-bold text-shine-blue-dark">
+                                        bắt đầu xây dựng sự nghiệp, bứt phá khỏi
+                                        vùng an toàn hay khẳng định chính mình
+                                    </span>
+                                    trên đỉnh cao, tinh thần
+                                    <span className="font-bold text-shine-blue-dark">
+                                        {" "}
+                                        WILLS
                                     </span>{" "}
-                                    (Chiến binh) – Kiên cường, không lùi bước
-                                    trước thử thách
-                                </li>
-                                <li>
-                                    <span className="font-semibold">
-                                        I - Intervention
-                                    </span>{" "}
-                                    (Can thiệp) – Không đợi thời điểm hoàn hảo,
-                                    mà tạo ra nó
-                                </li>
-                                <li>
-                                    <span className="font-semibold">
-                                        L - Learning
-                                    </span>{" "}
-                                    (Ham học hỏi) – Phát triển không giới hạn,
-                                    không ngừng nâng cấp bản thân
-                                </li>
-                                <li>
-                                    <span className="font-semibold">
-                                        L - Leadership
-                                    </span>{" "}
-                                    (Đổi mới) – Luôn sáng tạo, chủ động dẫn đầu
-                                    sự thay đổi
-                                </li>
-                                <li>
-                                    <span className="font-semibold">
-                                        S - Sincerity
-                                    </span>{" "}
-                                    (Chân thành) – Minh bạch, đáng tin cậy, tạo
-                                    dựng giá trị bền vững
-                                </li>
-                            </ul>
-                            <div className="font-semibold">
-                                Không có đúng hay sai – chỉ có phiên bản tốt
-                                nhất của chính mình, và 30Shine ở đây để giúp
-                                anh tự tin thể hiện điều đó
+                                    luôn đồng hành, là kim chỉ nam cho mọi hành động
+                                    của chúng tôi:
+                                </div>
+                                <ul className="list-disc pl-8 mb-4 space-y-2 text-lg">
+                                    <li>
+                                        <span className="font-bold text-shine-blue-dark">
+                                            W - Warrior
+                                        </span>{" "}
+                                        (Chiến binh) – Kiên cường, dũng cảm, không
+                                        lùi bước trước mọi thử thách, luôn tìm cách
+                                        vượt qua khó khăn.
+                                    </li>
+                                    <li>
+                                        <span className="font-bold text-shine-blue-dark">
+                                            I - Intervention
+                                        </span>{" "}
+                                        (Can thiệp) – Chủ động hành động, không đợi
+                                        thời điểm hoàn hảo, mà tạo ra nó, nắm bắt cơ
+                                        hội.
+                                    </li>
+                                    <li>
+                                        <span className="font-bold text-shine-blue-dark">
+                                            L - Learning
+                                        </span>{" "}
+                                        (Ham học hỏi) – Phát triển không giới hạn,
+                                        không ngừng nâng cấp bản thân, luôn tìm tòi
+                                        kiến thức mới.
+                                    </li>
+                                    <li>
+                                        <span className="font-bold text-shine-blue-dark">
+                                            L - Leadership
+                                        </span>{" "}
+                                        (Đổi mới) – Luôn sáng tạo, tiên phong, chủ
+                                        động dẫn đầu sự thay đổi, không ngừng cải
+                                        tiến.
+                                    </li>
+                                    <li>
+                                        <span className="font-bold text-shine-blue-dark">
+                                            S - Sincerity
+                                        </span>{" "}
+                                        (Chân thành) – Minh bạch, đáng tin cậy, xây
+                                        dựng mối quan hệ bền vững dựa trên sự thật
+                                        và trách nhiệm.
+                                    </li>
+                                </ul>
+                                <div className="font-bold text-xl text-shine-blue-dark mt-4">
+                                    Không có đúng hay sai – chỉ có phiên bản tốt
+                                    nhất của chính mình, và 30Shine ở đây để giúp
+                                    anh tự tin thể hiện điều đó, tự tin tỏa sáng.
+                                </div>
                             </div>
                         </div>
+                        <img
+                            src="https://top3.vn/uploads/source//skd1040/ca-canh/barbershop-6.jpg" // Ảnh 3 - Ảnh này sẽ được tăng chiều cao để đỡ bị méo
+                            alt="Không gian làm việc chuyên nghiệp tại 30Shine"
+                            className="mt-8 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-300 w-full object-cover h-80" // Tăng chiều cao ảnh cụ thể này
+                        />
                     </section>
 
-                    {/* Section 4 */}
-                    <section className="bg-white rounded-2xl shadow p-6 md:p-8 border-l-8 border-[#4fd1c5]">
-                        <h2 className="uppercase font-bold text-xl md:text-2xl text-shine-blue flex items-center gap-2 mb-3">
-                            <span>✂️</span> Sứ Mệnh – Tôn Vinh Đôi Bàn Tay Tài
-                            Hoa Người Thợ Việt
-                        </h2>
-                        <div className="text-base md:text-lg text-shine-blue flex flex-col gap-2">
-                            <div>
-                                30Shine không chỉ là điểm tựa giúp đàn ông thể
-                                hiện phong độ, mà còn mang trong mình một sứ
-                                mệnh lớn hơn:
-                            </div>
-                            <div className="font-semibold">
-                                Tôn vinh và nâng tầm đôi bàn tay tài hoa của
-                                người thợ Việt trên bản đồ thế giới
-                            </div>
-                            <div>
-                                Tay nghề con người Việt Nam không chỉ giỏi – mà
-                                có thể vươn xa
-                            </div>
-                            <div>
-                                Bằng việc không ngừng đổi mới, nâng cao chất
-                                lượng dịch vụ và xây dựng môi trường phát triển
-                                chuyên nghiệp, 30Shine giúp người thợ Việt phát
-                                triển bản thân, nghề nghiệp và vị thế trong
-                                ngành tóc toàn cầu
-                            </div>
-                            <div className="font-semibold">
-                                Từ bàn tay Việt – vươn tới những tầm cao mới
+                    {/* Section 4 - Sứ Mệnh – Tôn Vinh Đôi Bàn Tay Tài Hoa Người Thợ Việt */}
+                    <section className="bg-white rounded-3xl shadow-xl p-8 md:p-10 border-l-8 border-[#4fd1c5] flex flex-col justify-between animate-slide-in-left">
+                        <div>
+                            <h2 className="uppercase font-bold text-2xl md:text-3xl text-shine-blue flex items-center gap-3 mb-5">
+                                {/* Kích thước icon điều chỉnh theo font chữ */}
+                                <FaRegHandshake className="text-current text-[inherit]" /> Sứ Mệnh – Tôn Vinh Đôi Bàn Tay Tài
+                                Hoa Người Thợ Việt
+                            </h2>
+                            <div className="text-base md:text-lg text-shine-blue flex flex-col gap-4 leading-relaxed">
+                                <div>
+                                    30Shine không chỉ là điểm tựa giúp đàn ông thể
+                                    hiện phong độ, mà còn mang trong mình một sứ
+                                    mệnh cao cả hơn:
+                                </div>
+                                <div className="font-bold text-xl text-shine-blue-dark">
+                                    Tôn vinh và nâng tầm đôi bàn tay tài hoa của
+                                    người thợ Việt trên bản đồ ngành tóc thế giới.
+                                </div>
+                                <div>
+                                    Chúng tôi tin rằng tay nghề con người Việt Nam
+                                    không chỉ giỏi – mà có thể vươn xa, sánh ngang
+                                    với các chuyên gia tóc hàng đầu quốc tế.
+                                </div>
+                                <div>
+                                    Bằng việc không ngừng đổi mới công nghệ, nâng
+                                    cao chất lượng dịch vụ và xây dựng môi trường
+                                    phát triển chuyên nghiệp, công bằng, 30Shine
+                                    giúp người thợ Việt phát triển bản thân, nâng
+                                    cao tay nghề, khẳng định giá trị nghề nghiệp và
+                                    vị thế trong ngành tóc toàn cầu.
+                                </div>
+                                <div className="font-bold text-xl text-shine-blue-dark">
+                                    Từ bàn tay Việt – vươn tới những tầm cao mới,
+                                    mang lại sự tự hào cho đất nước.
+                                </div>
                             </div>
                         </div>
+                        <img
+                            src="https://images.pexels.com/photos/1319460/pexels-photo-1319460.jpeg" // Ảnh 4
+                            alt="Thợ cắt tóc thể hiện tài năng"
+                            className="mt-8 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-300 w-full object-cover h-72" // Tăng chiều cao ảnh
+                        />
                     </section>
 
-                    {/* Section 5 */}
-                    <section className="bg-white rounded-2xl shadow p-6 md:p-8 border-l-8 border-[#b794f4]">
-                        <h2 className="uppercase font-bold text-xl md:text-2xl text-shine-blue flex items-center gap-2 mb-3">
-                            <span>🌟</span> Ai Cũng Có Việc Lớn Của Riêng Mình –
-                            Chỉ Cần Một Điểm Tựa
-                        </h2>
-                        <div className="text-base md:text-lg text-shine-blue flex flex-col gap-2">
-                            <div>Không có lộ trình nào giống nhau</div>
-                            <div>Không có đích đến nào là duy nhất</div>
+                    {/* Section 5 - Ai Cũng Có Việc Lớn Của Riêng Mình – Chỉ Cần Một Điểm Tựa */}
+                    <section className="bg-white rounded-3xl shadow-xl p-8 md:p-10 border-l-8 border-[#b794f4] flex flex-col justify-between animate-slide-in-right">
+                        <div>
+                            <h2 className="uppercase font-bold text-2xl md:text-3xl text-shine-blue flex items-center gap-3 mb-5">
+                                {/* Kích thước icon điều chỉnh theo font chữ */}
+                                <FaStar className="text-current text-[inherit]" /> Ai Cũng Có Việc Lớn Của Riêng Mình –
+                                Chỉ Cần Một Điểm Tựa
+                            </h2>
+                            <div className="text-base md:text-lg text-shine-blue flex flex-col gap-4 leading-relaxed">
+                                <div>
+                                    Trong cuộc đời, không có lộ trình nào giống
+                                    nhau hoàn toàn. Mỗi người đều có con đường,
+                                    những thử thách và cơ hội riêng.
+                                </div>
+                                <div>
+                                    Không có đích đến nào là duy nhất. Mục tiêu của
+                                    anh hôm nay có thể là một khởi đầu mới cho ngày
+                                    mai, và 30Shine hiểu điều đó.
+                                </div>
+                                <div className="font-bold text-xl text-shine-blue-dark">
+                                    Mỗi hành trình là độc nhất, và 30Shine luôn sẵn
+                                    sàng đồng hành cùng anh, lắng nghe và hỗ trợ
+                                    để anh tự tin theo đuổi mọi ước mơ, dù lớn lao
+                                    hay giản dị.
+                                </div>
+                                <div>
+                                    Chúng tôi tin rằng, với sự chuẩn bị tốt nhất
+                                    về ngoại hình và tinh thần, anh sẽ luôn tự tin
+                                    vượt qua mọi giới hạn và chinh phục thành công.
+                                </div>
+                            </div>
                         </div>
+                        <img
+                            src="https://chamsua.vn/wp-content/uploads/2024/12/99-hinh-anh-tho-cat-toc-chat-anh-barber-dep-va-chat-nhat-1-1.jpg" // Lặp lại ảnh 1 cho section này hoặc tìm ảnh khác
+                            alt="Hành trình cá nhân và sự hỗ trợ"
+                            className="mt-8 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-300 w-full object-cover h-72" // Tăng chiều cao ảnh
+                        />
                     </section>
 
-                    {/* Section 6 */}
-                    <section className="bg-white rounded-2xl shadow p-6 md:p-8 border-l-8 border-shine-blue-light">
-                        <h2 className="uppercase font-bold text-xl md:text-2xl text-shine-blue flex items-center gap-2 mb-3">
-                            <span>💪</span> 30Shine – Điểm Tựa Cho Việc Lớn
+                    {/* Section 6 - 30Shine – Điểm Tựa Cho Việc Lớn (Conclusion) */}
+                    <section className="bg-white rounded-3xl shadow-xl p-8 md:p-10 border-l-8 border-shine-blue-light lg:col-span-2 animate-fade-in-up">
+                        <h2 className="uppercase font-bold text-2xl md:text-3xl text-shine-blue flex items-center gap-3 mb-5">
+                            {/* Kích thước icon điều chỉnh theo font chữ */}
+                            <FaDumbbell className="text-current text-[inherit]" /> 30Shine – Điểm Tựa Cho Việc Lớn
                         </h2>
-                        <div className="text-base md:text-lg text-shine-blue flex flex-col gap-2">
+                        <div className="text-base md:text-lg text-shine-blue flex flex-col gap-4 leading-relaxed text-center">
+                            <div className="font-extrabold text-2xl md:text-3xl text-shine-blue-dark">
+                                Dù anh đang ở đâu trên hành trình – chỉ cần sẵn
+                                sàng, thế giới này là của anh!
+                            </div>
                             <div>
-                                Dù anh đang ở đâu trên hành trình{" "}
-                                <span className="font-semibold">
-                                    – chỉ cần sẵn sàng, thế giới này là của anh
-                                </span>
+                                Hãy để 30Shine là người bạn đồng hành tin cậy,
+                                một nơi anh có thể tìm thấy sự chăm sóc chuyên
+                                nghiệp, đẳng cấp và một không gian thư giãn để
+                                tái tạo năng lượng. Chúng tôi giúp anh luôn tự
+                                tin tiến bước trên con đường chinh phục những
+                                điều lớn lao, tự tin đối diện với mọi thử thách
+                                và cơ hội mới.
+                            </div>
+                            <div className="font-semibold text-xl text-shine-blue-dark mt-4">
+                                Khám phá 30Shine ngay hôm nay để bắt đầu hành trình tỏa sáng của riêng anh!
                             </div>
                         </div>
                     </section>

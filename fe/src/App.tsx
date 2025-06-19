@@ -1,3 +1,4 @@
+// src/App.tsx
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 import routes from "@/config/routes";
 import { LoginPage } from "./pages/client/auth/Login";
@@ -9,13 +10,17 @@ import { Layout } from "./layout/Layout";
 import { HomePage } from "./pages/client/home/Home";
 import { AboutPage } from "./pages/client/about/About";
 import { ServiceComBo } from "./pages/client/servicss/ServiceCombo";
-import { ComboDetail } from "./pages/client/servicss/ComboDetail";
+import { ComboDetail }  from "./pages/client/servicss/ComboDetail";
 import { LocationPage } from "./pages/client/location/Location";
 import BookingForm from "./pages/client/booking/BookingForm";
 import { BookingHistory } from "./pages/client/booking/BookingHistory";
 import { BookingConfirmation } from "./pages/client/booking/BookingConfirmation";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { ScrollToTop } from "./hooks/useScrollTop";
+import { StoreReviewsPage } from "./pages/client/reviews/StoreReviewsPage"; // Import trang reviews mới
+
+import { ToastContainer } from 'react-toastify'; // Import ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Import CSS của react-toastify
 
 function App() {
     return (
@@ -69,6 +74,15 @@ function App() {
                         </Layout>
                     }
                 />
+                {/* --- Định tuyến cho trang đánh giá của cửa hàng --- */}
+                <Route
+                    path={routes.store_reviews}
+                    element={
+                        <Layout>
+                            <StoreReviewsPage />
+                        </Layout>
+                    }
+                />
                 <Route path="*" element={<ErrorPage />} />
 
                 {/* Protected routes */}
@@ -103,6 +117,19 @@ function App() {
                     />
                 </Route>
             </Routes>
+            
+            {/* Đặt ToastContainer ở đây để nó hiển thị trên toàn ứng dụng */}
+            <ToastContainer 
+                position="top-right" // Vị trí hiển thị (góc trên bên phải)
+                autoClose={3000}     // Tự động đóng sau 3 giây (3000ms)
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </BrowserRouter>
     );
 }

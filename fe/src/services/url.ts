@@ -45,6 +45,13 @@ const url = {
         GET_BY_USER: 'appointments/user/{email}', // Lấy lịch hẹn của người dùng
         CANCEL: 'appointments/{id}/cancel',
     },
+     REVIEW: {
+        CREATE: 'reviews', // POST /api/reviews
+        ADD_REPLY: 'reviews/{reviewId}/replies', // POST /api/reviews/{reviewId}/replies
+        GET_BY_STORE_FILTERED: 'reviews/store/{storeId}/filtered', // GET /api/reviews/store/{storeId}/filtered
+        GET_STORE_SUMMARY: 'reviews/store/{storeId}/summary', // GET /api/reviews/store/{storeId}/summary
+        EXISTS_BY_APPOINTMENT_ID: 'reviews/existsByAppointmentId', // GET /api/reviews/existsByAppointmentId?appointmentId={appointmentId}
+    }
 };
 
 export default url;

@@ -18,7 +18,10 @@ interface FormErrors {
 interface AuthResponse {
     token: string;
     role: string;
+     userId?: number; // THÊM TRƯỜNG NÀY
+    fullName?: string; // THÊM TRƯỜNG NÀY
     message?: string;
+    
 }
 
 export function LoginPage() {
@@ -93,9 +96,10 @@ export function LoginPage() {
         return valid;
     };
 
-    const handleLogin = async (e: React.FormEvent) => {
+     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         if (validateForm()) {
+            setLoading(true);
             try {
                 const response = await api.post<AuthResponse>(
                     url.AUTH.LOGIN,
@@ -103,6 +107,18 @@ export function LoginPage() {
                 );
                 localStorage.setItem("access_token", response.data.token);
                 localStorage.setItem("user_role", response.data.role);
+
+                // --- LƯU USER ID VÀ FULL NAME VÀO LOCAL STORAGE ---
+                if (response.data.userId !== undefined && response.data.fullName !== undefined) {
+                    localStorage.setItem("user", JSON.stringify({
+                        userId: response.data.userId,
+                        fullName: response.data.fullName,
+                        email: formData.email, // Email cũng quan trọng
+                    }));
+                } else {
+                    console.warn("Login API did not return userId or fullName.");
+                }
+
                 setNotification({
                     message: "Đăng nhập thành công!",
                     isSuccess: true,
@@ -110,9 +126,8 @@ export function LoginPage() {
                 setTimeout(() => {
                     if (response.data.role.includes("ROLE_CUSTOMER")) {
                         navigate(returnTo);
-                        // NEW: Chuyển hướng về returnTo
                     } else {
-                        navigate("/login");
+                        navigate("/");
                     }
                 }, 1000);
             } catch (error) {
@@ -122,6 +137,8 @@ export function LoginPage() {
                         error.response?.data?.message || error.message;
                 }
                 setNotification({ message: errorMessage, isSuccess: false });
+            } finally {
+                setLoading(false);
             }
         }
     };

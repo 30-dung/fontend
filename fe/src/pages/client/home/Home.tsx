@@ -512,7 +512,7 @@ export function HomePage() {
             )}
 
             <section>
-                <div className="mt-4 mx-auto max-w-7xl px-2 md:px-8">
+                <div className="mt-4 mx-auto max-w-7xl px-2 md:px-8 bg-white">
                     {/* Slide Show */}
                     <div className="slideshow mb-10">
                         <div className="relative w-full flex items-center justify-center rounded-2xl shadow-lg overflow-hidden">
