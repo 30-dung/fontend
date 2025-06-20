@@ -37,6 +37,10 @@ export function BookingHistory() {
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [selectedAppointmentForReview, setSelectedAppointmentForReview] = useState<Appointment | null>(null);
 
+    // --- State mới cho phân trang ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 6; // Số lượng item trên mỗi trang
+
     const navigate = useNavigate();
 
     // Helper function to format date and time
@@ -58,7 +62,7 @@ export function BookingHistory() {
                 return { text: "Đã xác nhận", bgColor: "#e0f7fa", textColor: "#00796b", icon: <FaCheckCircle className="mr-1" /> };
             case "PENDING":
                 return { text: "Chờ xác nhận", bgColor: "#fff3cd", textColor: "#b26a00", icon: <FaHourglassHalf className="mr-1" /> };
-            case "CANCELED": // Changed from CANCELLED to CANCELED to match updated status
+            case "CANCELED":
                 return { text: "Đã hủy", bgColor: "#fdecea", textColor: "#c62828", icon: <FaTimesCircle className="mr-1" /> };
             case "COMPLETED":
                 return { text: "Đã hoàn thành", bgColor: "#d4edda", textColor: "#155724", icon: <FaCheckCircle className="mr-1" /> };
@@ -86,19 +90,16 @@ export function BookingHistory() {
 
             const processedAppointments: Appointment[] = [];
             for (const item of response.data) {
-                // Ensure serviceName is always an array of strings
                 const serviceNamesArray = Array.isArray(item.storeService?.serviceName)
                     ? item.storeService.serviceName
                     : (item.storeService?.serviceName ? [item.storeService.serviceName] : []);
 
-                // Fetch review status
                 let hasReviewed = false;
                 try {
                     const hasReviewedResponse = await api.get(`${url.REVIEW.EXISTS_BY_APPOINTMENT_ID}?appointmentId=${item.appointmentId}`);
                     hasReviewed = hasReviewedResponse.data;
                 } catch (reviewErr) {
                     console.warn(`Could not fetch review status for appointment ${item.appointmentId}:`, reviewErr);
-                    // Continue even if review status can't be fetched
                 }
 
                 processedAppointments.push({
@@ -126,6 +127,7 @@ export function BookingHistory() {
             );
             setAppointments(sortedAppointments);
             setLoading(false);
+            setCurrentPage(1); // Reset về trang đầu tiên khi dữ liệu mới được tải
         } catch (err: any) {
             console.error("Error fetching appointment history:", err);
             setError(
@@ -148,7 +150,7 @@ export function BookingHistory() {
             setAppointments((prev) =>
                 prev.map((appt) =>
                     appt.appointmentId === confirmId
-                        ? { ...appt, status: "CANCELED" } // Ensure status is 'CANCELED' not 'CANCELLED' if BE sends 'CANCELED'
+                        ? { ...appt, status: "CANCELED" }
                         : appt
                 )
             );
@@ -172,14 +174,10 @@ export function BookingHistory() {
     const handleCloseReviewModal = () => {
         setIsReviewModalOpen(false);
         setSelectedAppointmentForReview(null);
-        // Đã bỏ fetchHistory() ở đây để tránh refresh toàn trang
-        // fetchHistory(); // Xóa hoặc comment dòng này
     };
 
     const handleReviewSubmitted = (success: boolean) => {
         if (success) {
-           
-            // Cập nhật trạng thái hasReviewed trực tiếp trong state
             if (selectedAppointmentForReview) {
                 setAppointments(prevAppointments =>
                     prevAppointments.map(appt =>
@@ -189,15 +187,32 @@ export function BookingHistory() {
                     )
                 );
             }
-        } else {
-            // setToast("Có lỗi xảy ra khi gửi đánh giá. Vui lòng thử lại.");
         }
-        handleCloseReviewModal(); // Đóng modal, không gây refresh toàn trang nữa
+        handleCloseReviewModal();
     };
 
     useEffect(() => {
         fetchHistory();
     }, []);
+
+    // --- Logic phân trang ---
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = appointments.slice(indexOfFirstItem, indexOfLastItem);
+
+    const totalPages = Math.ceil(appointments.length / itemsPerPage);
+
+    const paginate = (pageNumber: number) => {
+        if (pageNumber < 1 || pageNumber > totalPages) return; // Ngăn chặn trang không hợp lệ
+        setCurrentPage(pageNumber);
+    };
+
+    // Tạo mảng các số trang để hiển thị trên UI
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+    }
+    // --- Kết thúc Logic phân trang ---
 
     return (
         <div>
@@ -282,16 +297,16 @@ export function BookingHistory() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {appointments.map((appointment) => {
+                                    {/* Sử dụng currentItems thay vì appointments */}
+                                    {currentItems.map((appointment) => {
                                         const status = getStatusDisplay(appointment.status);
                                         return (
                                             <tr key={appointment.appointmentId} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-150">
                                                 <td className="py-3 px-4 text-sm text-gray-800 font-medium">{appointment.slug}</td>
                                                 <td className="py-3 px-4 text-sm text-gray-700">{appointment.storeName}</td>
                                                 <td className="py-3 px-4 text-sm text-gray-700">
-                                                    {/* Loại bỏ dấu chấm và hiển thị trên một dòng */}
                                                     {appointment.serviceName && appointment.serviceName.length > 0 ? (
-                                                        appointment.serviceName.join(', ') // Hoặc ' • ' nếu bạn thích dấu chấm giữa các dịch vụ
+                                                        appointment.serviceName.join(', ')
                                                     ) : (
                                                         'Không rõ'
                                                     )}
@@ -307,7 +322,7 @@ export function BookingHistory() {
                                                 </td>
                                                 <td className="py-3 px-4">
                                                     <span
-                                                        className="text-xs px-2 py-1 rounded-full font-semibold flex items-center justify-center whitespace-nowrap" // Đảm bảo trên 1 dòng
+                                                        className="text-xs px-2 py-1 rounded-full font-semibold flex items-center justify-center whitespace-nowrap"
                                                         style={{
                                                             background: status.bgColor,
                                                             color: status.textColor,
@@ -350,6 +365,43 @@ export function BookingHistory() {
                                     })}
                                 </tbody>
                             </table>
+
+                            {/* --- Phần phân trang --- */}
+                            {totalPages > 1 && (
+                                <nav className="flex justify-center mt-8">
+                                    <ul className="flex items-center space-x-2">
+                                        <li>
+                                            <button
+                                                onClick={() => paginate(currentPage - 1)}
+                                                className={`px-4 py-2 border rounded-lg ${currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-white text-blue-600 hover:bg-blue-100'}`}
+                                                disabled={currentPage === 1}
+                                            >
+                                                Trước
+                                            </button>
+                                        </li>
+                                        {pageNumbers.map(number => (
+                                            <li key={number}>
+                                                <button
+                                                    onClick={() => paginate(number)}
+                                                    className={`px-4 py-2 border rounded-lg ${currentPage === number ? 'bg-blue-600 text-white' : 'bg-white text-blue-600 hover:bg-blue-100'}`}
+                                                >
+                                                    {number}
+                                                </button>
+                                            </li>
+                                        ))}
+                                        <li>
+                                            <button
+                                                onClick={() => paginate(currentPage + 1)}
+                                                className={`px-4 py-2 border rounded-lg ${currentPage === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-white text-blue-600 hover:bg-blue-100'}`}
+                                                disabled={currentPage === totalPages}
+                                            >
+                                                Sau
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            )}
+                            {/* --- Kết thúc Phần phân trang --- */}
                         </div>
                     )}
                 </div>
