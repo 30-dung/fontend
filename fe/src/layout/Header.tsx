@@ -19,7 +19,26 @@ export function Header() {
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
-        if (token) {
+        // Also check for the 'user' object in localStorage to populate the header
+        const storedUser = localStorage.getItem("user");
+
+        if (token && storedUser) {
+            // Attempt to parse stored user data
+            try {
+                const parsedUser = JSON.parse(storedUser);
+                if (parsedUser.fullName) {
+                    setUser({
+                        fullName: parsedUser.fullName,
+                        topupBalance: parsedUser.topupBalance || 0, // Ensure topupBalance is handled
+                    });
+                    setIsLoading(false); // Set loading to false if user is found immediately
+                    return; // Exit to prevent re-fetching if data is complete
+                }
+            } catch (e) {
+                console.error("Failed to parse user data from localStorage:", e);
+                // If parsing fails, proceed to fetch or clear storage
+            }
+
             const fetchUserData = async () => {
                 setIsLoading(true);
                 try {
@@ -30,11 +49,20 @@ export function Header() {
                         fullName: response.data.fullName,
                         topupBalance: response.data.topupBalance || 0,
                     });
+                    // Update the 'user' item in localStorage as well, if fetched successfully
+                    localStorage.setItem("user", JSON.stringify({
+                        userId: response.data.userId, // Assuming userId comes from profile API
+                        fullName: response.data.fullName,
+                        email: response.data.email, // Assuming email comes from profile API
+                        topupBalance: response.data.topupBalance || 0,
+                    }));
                 } catch (error) {
                     console.error("Failed to fetch user data:", error);
+                    // Clear all related localStorage items on fetch failure
                     localStorage.removeItem("access_token");
                     localStorage.removeItem("user_role");
-                    localStorage.removeItem("token");
+                    localStorage.removeItem("token"); // Keep this if 'token' is used elsewhere
+                    localStorage.removeItem("user"); // Remove the user object
                     setUser(null);
                     navigate("/login");
                 } finally {
@@ -42,8 +70,11 @@ export function Header() {
                 }
             };
             fetchUserData();
+        } else {
+            setIsLoading(false); // No token or stored user, so not loading
+            setUser(null); // Ensure user state is null if not logged in
         }
-    }, []);
+    }, []); // Removed 'navigate' from dependencies to prevent re-triggering on navigation
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -73,10 +104,12 @@ export function Header() {
     const handleLogout = () => {
         localStorage.removeItem("access_token");
         localStorage.removeItem("user_role");
-        localStorage.removeItem("token");
-        setUser(null);
-        setIsDropdownOpen(false);
-        navigate("/login");
+        localStorage.removeItem("token"); // Keeping this for now based on your original code, but check if 'token' is truly a separate key from 'access_token'
+        localStorage.removeItem("user"); // *** ADDED: Remove the 'user' object from localStorage ***
+        setUser(null); // Clear user state in the component
+        setIsDropdownOpen(false); // Close dropdown
+        navigate("/login", { replace: true }); // Use replace to prevent back button from going to previous logged-in page
+        window.location.reload(); // *** ADDED: Force a full page reload to clear all React state ***
     };
 
     return (
@@ -85,13 +118,14 @@ export function Header() {
                 <nav className="nav-bar flex items-center justify-between py-2">
                     <div className="nav-bar__logo-main">
                         <NavLink to={routes.home} title="trang chủ">
-                            <img src={logo} className="h-14 w-auto" />
+                            <img src={logo} className="h-full w-full object-fill object-contain " alt="30 Shine Logo" />
                         </NavLink>
                     </div>
 
                     <button
                         className="md:hidden"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label="Toggle mobile menu"
                     >
                         <svg
                             className="w-6 h-6"
@@ -179,18 +213,17 @@ export function Header() {
                                         role="menu"
                                     >
                                         {/* <li
-                      role="menuitem"
-                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    >
-                      <NavLink
-                        to="/profile"
-                        className="block w-full"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        Thông tin tài khoản
-                       
-                      </NavLink>
-                    </li> */}
+                                            role="menuitem"
+                                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                        >
+                                            <NavLink
+                                                to="/profile"
+                                                className="block w-full"
+                                                onClick={() => setIsDropdownOpen(false)}
+                                            >
+                                                Thông tin tài khoản
+                                            </NavLink>
+                                        </li> */}
                                         <li
                                             role="menuitem"
                                             className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -210,13 +243,12 @@ export function Header() {
                                             role="menuitem"
                                             className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                                         >
-                                            <NavLink
-                                                to="/login"
-                                                className="block w-full"
+                                            <button // Changed NavLink to button for logout action
                                                 onClick={handleLogout}
+                                                className="block w-full text-left" // Style button like NavLink
                                             >
                                                 Đăng xuất
-                                            </NavLink>
+                                            </button>
                                         </li>
                                     </ul>
                                 )}

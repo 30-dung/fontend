@@ -28,7 +28,7 @@ export function Footer() {
                                 </span>
                             </div> */}
                             <h3 className="text-2xl font-bold tracking-wide">
-                                30 SHINE
+                                Four SHINE
                             </h3>
                         </div>
 
@@ -165,7 +165,7 @@ export function Footer() {
                                         Giờ mở cửa
                                     </p>
                                     <p className="text-white font-medium">
-                                        8:30 - 20:30 hàng ngày
+                                        7:00 - 23:00 hàng ngày
                                     </p>
                                 </div>
                             </li>
@@ -221,30 +221,9 @@ export function Footer() {
                 {/* Bottom section */}
                 <div className="mt-16 pt-8 border-t border-white-800">
                     <div className="flex flex-col md:flex-row justify-between items-center">
-                        <div className="flex items-center space-x-6 mb-4 md:mb-0">
-                            <img
-                                src="/payment-methods/visa.svg"
-                                alt="Visa"
-                                className="h-8 opacity-90 hover:opacity-100 transition-opacity"
-                            />
-                            <img
-                                src="/payment-methods/mastercard.svg"
-                                alt="Mastercard"
-                                className="h-8 opacity-90 hover:opacity-100 transition-opacity"
-                            />
-                            <img
-                                src="/payment-methods/momo.svg"
-                                alt="Momo"
-                                className="h-8 opacity-90 hover:opacity-100 transition-opacity"
-                            />
-                            <img
-                                src="/payment-methods/zalopay.svg"
-                                alt="ZaloPay"
-                                className="h-8 opacity-90 hover:opacity-100 transition-opacity"
-                            />
-                        </div>
+                        
 
-                        <div className="text-center md:text-right">
+                        <div className="">
                             <p className="text-gray-400 text-sm mb-2">
                                 © {new Date().getFullYear()} FPT Aptech
                                 semester 4 project.

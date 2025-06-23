@@ -27,7 +27,7 @@ export interface ReviewReplyRequest {
     userId: number;
     comment: string;
     isStoreReply?: boolean;
-    parentReplyId?: number | null; // THÊM TRƯỜNG NÀY
+    parentReplyId?: number | null; 
 }
 
 export interface ReviewReplyResponse {
@@ -37,11 +37,11 @@ export interface ReviewReplyResponse {
     comment: string;
     createdAt: string;
     isStoreReply: boolean;
-    parentReplyId?: number | null; // THÊM TRƯỜNG NÀY
-    childrenReplies?: ReviewReplyResponse[]; // THÊM TRƯỜNG NÀY
+    parentReplyId?: number | null; 
+    childrenReplies?: ReviewReplyResponse[]; 
 }
 
-export interface ReviewResponse { // Vẫn cần cho POST response
+export interface ReviewResponse { 
     reviewId: number;
     reviewer: UserInfo;
     appointmentId: number;
@@ -61,23 +61,23 @@ export interface ReviewResponse { // Vẫn cần cho POST response
 export interface EmployeeRatingSummary {
     employeeId: number;
     employeeName: string;
-    averageRating: number;
-    totalReviews: number;
+    averageRating: number; // Thêm trường này
+    totalReviews: number; // Thêm trường này
     avatarUrl?: string;
 }
 
 export interface ServiceRatingSummary {
     serviceId: number;
     serviceName: string;
-    averageRating: number;
-    totalReviews: number;
+    averageRating: number; // Thêm trường này
+    totalReviews: number; // Thêm trường này
     serviceImg?: string;
 }
 
 export interface OverallRating {
     storeId: number;
     storeName: string;
-    storeImageUrl?: string; // THÊM TRƯỜNG NÀY (để hiển thị ảnh Store)
+    storeImageUrl?: string; 
     averageRating: number;
     totalReviews: number;
     ratingDistribution: { [key: number]: number };
@@ -87,7 +87,7 @@ export interface OverallRating {
 
 // INTERFACE CHO DỮ LIỆU ĐÁNH GIÁ GOM NHÓM HIỂN THỊ TRÊN FRONTEND
 export interface CombinedReviewDisplayDTO {
-    mainReviewId: number; // ID của review chính (ví dụ: review STORE), dùng để reply
+    mainReviewId: number; 
     reviewer: UserInfo;
     appointmentId: number;
     appointmentSlug: string;
@@ -97,9 +97,9 @@ export interface CombinedReviewDisplayDTO {
     employeeId?: number;
     serviceName?: string;
     storeServiceId?: number;
-    storeRating?: number;
-    employeeRating?: number;
-    serviceRating?: number;
+    storeRating?: number; // Thêm trường này
+    employeeRating?: number; // Thêm trường này
+    serviceRating?: number; // Thêm trường này
     comment?: string;
     createdAt: string;
     replies: ReviewReplyResponse[];

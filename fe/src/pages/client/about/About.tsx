@@ -1,4 +1,7 @@
-import { FaRocket, FaCut, FaFire, FaStar, FaDumbbell, FaRegHandshake } from 'react-icons/fa'; // Import icons
+import routes from '@/config/routes';
+import { motion } from 'framer-motion';
+import { FaRocket, FaCut, FaFire, FaStar, FaDumbbell, FaRegHandshake, FaPhoneAlt } from 'react-icons/fa'; // Import icons
+import { Link } from 'react-router-dom';
 
 export function AboutPage() {
     return (
@@ -13,7 +16,7 @@ export function AboutPage() {
                 <div className="absolute inset-0 bg-black opacity-60"></div>
                 <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
                     <h1 className="text-4xl md:text-7xl font-extrabold mb-4 leading-tight drop-shadow-lg animate-fade-in-down">
-                        30Shine - Nơi Khởi Tạo Phong Thái Đàn Ông
+                        Four Shine - Nơi Khởi Tạo Phong Thái Đàn Ông
                     </h1>
                     <p className="text-lg md:text-2xl italic font-light max-w-3xl mx-auto animate-fade-in-up">
                         "Hãy cho tôi một điểm tựa, tôi sẽ nâng cả thế giới." -
@@ -27,12 +30,12 @@ export function AboutPage() {
             <div className="container mx-auto px-4 py-12 md:py-16 max-w-6xl">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
 
-                    {/* Section 1 - 30Shine - Điểm Tựa Cho Việc Lớn (Detailed) */}
+                    {/* Section 1 - Four Shine - Điểm Tựa Cho Việc Lớn (Detailed) */}
                     <section className="bg-white rounded-3xl shadow-xl p-8 md:p-10 border-l-8 border-shine-blue-light flex flex-col justify-between animate-slide-in-left">
                         <div>
                             <h2 className="uppercase font-bold text-2xl md:text-3xl text-shine-blue flex items-center gap-3 mb-5">
                                 {/* Kích thước icon điều chỉnh theo font chữ */}
-                                <FaRocket className="text-current text-[inherit]" /> 30Shine - Điểm Tựa Cho Việc Lớn
+                                <FaRocket className="text-current text-[inherit]" /> Four Shine - Điểm Tựa Cho Việc Lớn
                             </h2>
                             <div className="text-base md:text-lg text-shine-blue flex flex-col gap-4 leading-relaxed">
                                 <div>
@@ -55,7 +58,7 @@ export function AboutPage() {
                                     khơi dậy.
                                 </div>
                                 <div>
-                                    30Shine không tạo ra chúng.{" "}
+                                    Four Shine không tạo ra chúng.{" "}
                                     <span className="font-bold text-shine-blue-dark">
                                         Chúng tôi là điểm tựa vững chắc
                                     </span>
@@ -68,7 +71,7 @@ export function AboutPage() {
                         </div>
                         <img
                             src="https://chamsua.vn/wp-content/uploads/2024/12/99-hinh-anh-tho-cat-toc-chat-anh-barber-dep-va-chat-nhat-1-1.jpg" // Ảnh 1
-                            alt="Thợ cắt tóc chuyên nghiệp tại 30Shine"
+                            alt="Thợ cắt tóc chuyên nghiệp tại Four Shine"
                             className="mt-8 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-300 w-full object-cover h-72" // Tăng chiều cao ảnh
                         />
                     </section>
@@ -110,7 +113,7 @@ export function AboutPage() {
                                         150 salon trên toàn quốc
                                     </span>
                                     , được trang bị công nghệ hiện đại và đội ngũ
-                                    thợ tận tâm, chuyên nghiệp, 30Shine không chỉ
+                                    thợ tận tâm, chuyên nghiệp, Four Shine không chỉ
                                     mang đến một diện mạo mới mẻ cho anh.{" "}
                                     <span className="font-bold text-shine-blue-dark">
                                         Chúng tôi giúp anh luôn trong trạng thái
@@ -138,7 +141,7 @@ export function AboutPage() {
                             </h2>
                             <div className="text-base md:text-lg text-shine-blue flex flex-col gap-4 leading-relaxed">
                                 <div>
-                                    Ở 30Shine, chúng tôi không chỉ tạo ra diện mạo
+                                    Ở Four Shine, chúng tôi không chỉ tạo ra diện mạo
                                     tuyệt vời – chúng tôi phục vụ những người đàn
                                     ông có tinh thần cầu tiến, luôn muốn tốt hơn
                                     mỗi ngày, dám bứt phá khỏi giới hạn.
@@ -201,14 +204,14 @@ export function AboutPage() {
                                 </ul>
                                 <div className="font-bold text-xl text-shine-blue-dark mt-4">
                                     Không có đúng hay sai – chỉ có phiên bản tốt
-                                    nhất của chính mình, và 30Shine ở đây để giúp
+                                    nhất của chính mình, và Four Shine ở đây để giúp
                                     anh tự tin thể hiện điều đó, tự tin tỏa sáng.
                                 </div>
                             </div>
                         </div>
                         <img
                             src="https://top3.vn/uploads/source//skd1040/ca-canh/barbershop-6.jpg" // Ảnh 3 - Ảnh này sẽ được tăng chiều cao để đỡ bị méo
-                            alt="Không gian làm việc chuyên nghiệp tại 30Shine"
+                            alt="Không gian làm việc chuyên nghiệp tại Four Shine"
                             className="mt-8 rounded-xl shadow-md transform hover:scale-105 transition-transform duration-300 w-full object-cover h-80" // Tăng chiều cao ảnh cụ thể này
                         />
                     </section>
@@ -223,7 +226,7 @@ export function AboutPage() {
                             </h2>
                             <div className="text-base md:text-lg text-shine-blue flex flex-col gap-4 leading-relaxed">
                                 <div>
-                                    30Shine không chỉ là điểm tựa giúp đàn ông thể
+                                    Four Shine không chỉ là điểm tựa giúp đàn ông thể
                                     hiện phong độ, mà còn mang trong mình một sứ
                                     mệnh cao cả hơn:
                                 </div>
@@ -239,7 +242,7 @@ export function AboutPage() {
                                 <div>
                                     Bằng việc không ngừng đổi mới công nghệ, nâng
                                     cao chất lượng dịch vụ và xây dựng môi trường
-                                    phát triển chuyên nghiệp, công bằng, 30Shine
+                                    phát triển chuyên nghiệp, công bằng, Four Shine
                                     giúp người thợ Việt phát triển bản thân, nâng
                                     cao tay nghề, khẳng định giá trị nghề nghiệp và
                                     vị thế trong ngành tóc toàn cầu.
@@ -274,10 +277,10 @@ export function AboutPage() {
                                 <div>
                                     Không có đích đến nào là duy nhất. Mục tiêu của
                                     anh hôm nay có thể là một khởi đầu mới cho ngày
-                                    mai, và 30Shine hiểu điều đó.
+                                    mai, và Four Shine hiểu điều đó.
                                 </div>
                                 <div className="font-bold text-xl text-shine-blue-dark">
-                                    Mỗi hành trình là độc nhất, và 30Shine luôn sẵn
+                                    Mỗi hành trình là độc nhất, và Four Shine luôn sẵn
                                     sàng đồng hành cùng anh, lắng nghe và hỗ trợ
                                     để anh tự tin theo đuổi mọi ước mơ, dù lớn lao
                                     hay giản dị.
@@ -296,11 +299,11 @@ export function AboutPage() {
                         />
                     </section>
 
-                    {/* Section 6 - 30Shine – Điểm Tựa Cho Việc Lớn (Conclusion) */}
+                    {/* Section 6 - Four Shine – Điểm Tựa Cho Việc Lớn (Conclusion) */}
                     <section className="bg-white rounded-3xl shadow-xl p-8 md:p-10 border-l-8 border-shine-blue-light lg:col-span-2 animate-fade-in-up">
                         <h2 className="uppercase font-bold text-2xl md:text-3xl text-shine-blue flex items-center gap-3 mb-5">
                             {/* Kích thước icon điều chỉnh theo font chữ */}
-                            <FaDumbbell className="text-current text-[inherit]" /> 30Shine – Điểm Tựa Cho Việc Lớn
+                            <FaDumbbell className="text-current text-[inherit]" /> Four Shine – Điểm Tựa Cho Việc Lớn
                         </h2>
                         <div className="text-base md:text-lg text-shine-blue flex flex-col gap-4 leading-relaxed text-center">
                             <div className="font-extrabold text-2xl md:text-3xl text-shine-blue-dark">
@@ -308,7 +311,7 @@ export function AboutPage() {
                                 sàng, thế giới này là của anh!
                             </div>
                             <div>
-                                Hãy để 30Shine là người bạn đồng hành tin cậy,
+                                Hãy để Four Shine là người bạn đồng hành tin cậy,
                                 một nơi anh có thể tìm thấy sự chăm sóc chuyên
                                 nghiệp, đẳng cấp và một không gian thư giãn để
                                 tái tạo năng lượng. Chúng tôi giúp anh luôn tự
@@ -317,12 +320,28 @@ export function AboutPage() {
                                 và cơ hội mới.
                             </div>
                             <div className="font-semibold text-xl text-shine-blue-dark mt-4">
-                                Khám phá 30Shine ngay hôm nay để bắt đầu hành trình tỏa sáng của riêng anh!
+                                Khám phá Four Shine ngay hôm nay để bắt đầu hành trình tỏa sáng của riêng anh!
                             </div>
                         </div>
                     </section>
                 </div>
             </div>
+
+            {/* Nút CTA cố định */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="fixed bottom-6 right-6 z-50"
+            >
+                <Link
+                    to={routes.booking}
+                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
+                >
+                    <FaPhoneAlt className="mr-2" />
+                    Đặt lịch ngay
+                </Link>
+            </motion.div>
         </div>
     );
 }

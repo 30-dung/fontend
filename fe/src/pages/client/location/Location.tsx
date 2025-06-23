@@ -1,6 +1,6 @@
 // src/pages/client/location/Location.tsx
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from "@/services/api";
 import url from "@/services/url";
@@ -8,6 +8,8 @@ import routes from "@/config/routes";
 import StarRating from "@/components/reviews/StarRating";
 // Import thư viện react-select
 import Select from 'react-select';
+import { motion } from "framer-motion";
+import { FaPhoneAlt } from "react-icons/fa";
 
 interface Store {
     storeId: number;
@@ -243,7 +245,7 @@ export const LocationPage = () => {
         <div>
             {/* Full-width Image Banner */}
             <div
-                className="relative bg-cover bg-center h-80 flex items-center justify-center overflow-hidden w-full"
+                className="relative bg-cover bg-center from-blue-{#F3F4F6} h-80 flex items-center justify-center overflow-hidden w-full"
                 style={{ backgroundImage: `url('https://static.booksy.com/static/live/covers/barbers.jpg')` }}
             >
                 <div className="absolute inset-0 bg-black opacity-40 backdrop-filter backdrop-blur-sm"></div>
@@ -400,6 +402,21 @@ export const LocationPage = () => {
                     </div>
                 </div>
             </div>
+            {/* Nút CTA cố định */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="fixed bottom-6 right-6 z-50"
+            >
+                <Link
+                    to={routes.booking}
+                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
+                >
+                    <FaPhoneAlt className="mr-2" />
+                    Đặt lịch ngay
+                </Link>
+            </motion.div>
         </div>
     );
 };

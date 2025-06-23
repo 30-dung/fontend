@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "@/services/api";
 import url from "@/services/url";
+import { toast } from 'react-toastify'; // Import toast
+import routes from "@/config/routes";
 
 interface FormData {
     fullName: string;
@@ -31,8 +33,6 @@ export function RegisterPage() {
 
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [apiError, setApiError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
     const [formData, setFormData] = useState<FormData>({
         fullName: "",
         email: "",
@@ -60,7 +60,6 @@ export function RegisterPage() {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         setFormErrors({ ...formErrors, [name]: "" });
-        setApiError(null);
     };
 
     const validateForm = () => {
@@ -134,8 +133,6 @@ export function RegisterPage() {
         if (!validateForm()) return;
 
         setLoading(true);
-        setApiError(null);
-        setSuccess(null);
 
         try {
             console.log("Sending request with data:", formData);
@@ -152,23 +149,17 @@ export function RegisterPage() {
 
             if (response.status === 201 && response.data.token) {
                 localStorage.setItem("token", response.data.token);
-                setSuccess(
-                    "Đăng ký thành công! Đang chuyển đến trang đăng nhập..."
-                );
+                toast.success("Đăng ký thành công! Đang chuyển đến trang đăng nhập...", { autoClose: 2000 }); // Success toast
                 setTimeout(() => {
                     navigate("/login");
                 }, 1000);
             } else {
-                setApiError(
-                    "Đăng ký không thành công. Phản hồi không mong đợi."
-                );
+                toast.error("Đăng ký không thành công. Phản hồi không mong đợi.", { autoClose: 3000 }); // Error toast
             }
         } catch (err: any) {
             console.error("API error:", err);
-            setApiError(
-                err.response?.data?.role ||
-                    "Đăng ký không thành công. Vui lòng kiểm tra mạng hoặc cài đặt CORS."
-            );
+            const errorMessage = err.response?.data?.role || "Đăng ký không thành công. Vui lòng kiểm tra mạng hoặc cài đặt CORS.";
+            toast.error(errorMessage, { autoClose: 3000 }); // Error toast
         } finally {
             setLoading(false);
         }
@@ -177,32 +168,12 @@ export function RegisterPage() {
     return (
         <section className="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
             <div className="w-full max-w-2xl px-6 py-8 mx-auto">
-                <a
-                    href="#"
-                    className="flex items-center justify-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-                >
-                    <img
-                        className="w-8 h-8 mr-2"
-                        src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-                        alt="logo"
-                    />
-                    Flowbite
-                </a>
+                
                 <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center">
                             Tạo tài khoản
                         </h1>
-                        {apiError && (
-                            <p className="text-sm text-red-600 text-center">
-                                {apiError}
-                            </p>
-                        )}
-                        {success && (
-                            <p className="text-sm text-green-600 text-center">
-                                {success}
-                            </p>
-                        )}
                         {loading && (
                             <p className="text-sm text-gray-600 text-center">
                                 Đang tải...
@@ -327,28 +298,6 @@ export function RegisterPage() {
                                         </p>
                                     )}
                                 </div>
-                                {/* <div>
-                  <label
-                    htmlFor="membershipType"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >
-                    Membership Type
-                  </label>
-                  <select
-                    name="membershipType"
-                    id="membershipType"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    value={formData.membershipType}
-                    onChange={handleChange}
-                  >
-                    <option value="REGULAR">Regular</option>
-                    <option value="PREMIUM">Premium</option>
-                    <option value="VIP">VIP</option>
-                  </select>
-                  {formErrors.membershipType && (
-                    <p className="text-sm text-red-600">{formErrors.membershipType}</p>
-                  )}
-                </div> */}
                             </div>
                             <div className="flex items-center">
                                 <input
@@ -400,7 +349,7 @@ export function RegisterPage() {
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
                                 Bạn đã có tài khoản?{" "}
                                 <Link
-                                    to="/login"
+                                    to={routes.login}
                                     className="font-medium text-blue-600 hover:underline dark:text-blue-500"
                                 >
                                     Đăng nhập tại đây

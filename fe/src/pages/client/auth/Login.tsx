@@ -4,6 +4,7 @@ import axios from "axios";
 import api from "@/services/api";
 import url from "@/services/url";
 import routes from "@/config/routes";
+import { toast } from 'react-toastify'; // Import toast
 
 interface FormData {
     email: string;
@@ -18,16 +19,15 @@ interface FormErrors {
 interface AuthResponse {
     token: string;
     role: string;
-     userId?: number; // THÊM TRƯỜNG NÀY
-    fullName?: string; // THÊM TRƯỜNG NÀY
+    userId?: number;
+    fullName?: string;
     message?: string;
-    
 }
 
 export function LoginPage() {
     const navigate = useNavigate();
-    const [searchParams] = useSearchParams(); // NEW: Lấy query parameters
-    const returnTo = searchParams.get("returnTo") || "/"; // NEW: Lấy returnTo, mặc định là "/"
+    const [searchParams] = useSearchParams();
+    const returnTo = searchParams.get("returnTo") || "/";
 
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -39,10 +39,6 @@ export function LoginPage() {
         email: "",
         password: "",
     });
-    const [notification, setNotification] = useState<{
-        message: string;
-        isSuccess: boolean;
-    } | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem("access_token");
@@ -50,13 +46,12 @@ export function LoginPage() {
         if (token && role) {
             if (role.includes("ROLE_CUSTOMER")) {
                 navigate(returnTo);
-                // NEW: Chuyển hướng về returnTo
             } else {
                 navigate("/login");
             }
         }
         setLoading(false);
-    }, [navigate, returnTo]); // NEW: Thêm returnTo vào dependencies
+    }, [navigate, returnTo]);
 
     const handleTogglePassword = () => {
         setShowPassword(!showPassword);
@@ -66,7 +61,6 @@ export function LoginPage() {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         setFormErrors({ ...formErrors, [name]: "" });
-        setNotification(null);
     };
 
     const validateForm = () => {
@@ -96,7 +90,7 @@ export function LoginPage() {
         return valid;
     };
 
-     const handleLogin = async (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         if (validateForm()) {
             setLoading(true);
@@ -108,35 +102,31 @@ export function LoginPage() {
                 localStorage.setItem("access_token", response.data.token);
                 localStorage.setItem("user_role", response.data.role);
 
-                // --- LƯU USER ID VÀ FULL NAME VÀO LOCAL STORAGE ---
                 if (response.data.userId !== undefined && response.data.fullName !== undefined) {
                     localStorage.setItem("user", JSON.stringify({
                         userId: response.data.userId,
                         fullName: response.data.fullName,
-                        email: formData.email, // Email cũng quan trọng
+                        email: formData.email,
                     }));
                 } else {
                     console.warn("Login API did not return userId or fullName.");
                 }
 
-                setNotification({
-                    message: "Đăng nhập thành công!",
-                    isSuccess: true,
-                });
+                toast.success("Đăng nhập thành công!", { autoClose: 2000 }); // Success toast
                 setTimeout(() => {
                     if (response.data.role.includes("ROLE_CUSTOMER")) {
                         navigate(returnTo);
                     } else {
                         navigate("/");
                     }
-                }, 1000);
+                }, 0);
             } catch (error) {
                 let errorMessage = "Đã xảy ra lỗi trong quá trình đăng nhập";
                 if (axios.isAxiosError(error)) {
                     errorMessage =
                         error.response?.data?.message || error.message;
                 }
-                setNotification({ message: errorMessage, isSuccess: false });
+                toast.error(errorMessage, { autoClose: 3000 }); // Error toast
             } finally {
                 setLoading(false);
             }
@@ -146,17 +136,7 @@ export function LoginPage() {
     return (
         <section className="bg-gray-50 dark:bg-gray-900">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                <a
-                    href="#"
-                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-                >
-                    <img
-                        className="w-8 h-8 mr-2"
-                        src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-                        alt="logo"
-                    />
-                    Flowbite
-                </a>
+               
                 <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -251,17 +231,6 @@ export function LoginPage() {
                                     Quên mật khẩu?
                                 </Link>
                             </div>
-                            {notification && (
-                                <p
-                                    className={`text-sm p-2 rounded ${
-                                        notification.isSuccess
-                                            ? "text-green-500 bg-green-100"
-                                            : "text-red-500 bg-red-100"
-                                    }`}
-                                >
-                                    {notification.message}
-                                </p>
-                            )}
                             <button
                                 type="submit"
                                 disabled={loading}
@@ -272,10 +241,19 @@ export function LoginPage() {
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                 Bạn chưa có tài khoản?{" "}
                                 <Link
-                                    to="/register"
+                                    to={routes.register}
                                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                                 >
                                     Đăng ký
+                                </Link>
+                            </p>
+                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                               
+                                <Link
+                                    to={routes.home}
+                                    className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                >
+                                   Về trang chủ
                                 </Link>
                             </p>
                         </form>

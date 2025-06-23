@@ -98,7 +98,7 @@ export function ServiceComBo() {
 
 
 
-    <main className="relative bg-gray-50">
+    <main className="relative from-blue-{#F3F4F6}">
       <section>
         <div className="mx-4 md:mx-24 mb-6 md:mb-12">
 

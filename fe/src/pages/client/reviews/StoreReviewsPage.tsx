@@ -1,6 +1,6 @@
 // src/pages/client/reviews/StoreReviewsPage.tsx
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import api from '@/services/api';
 import url from '@/services/url';
 import {
@@ -10,7 +10,9 @@ import {
     ReviewReplyResponse,
 } from '@/types/review';
 import CombinedReviewCard from '@/components/reviews/CombinedReviewCard';
-import { FaStar, FaChevronLeft, FaChevronRight, FaFilter, FaComments } from 'react-icons/fa';
+import { FaStar, FaChevronLeft, FaChevronRight, FaFilter, FaComments, FaPhoneAlt } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import routes from '@/config/routes';
 
 const getCurrentUserId = (): number | null => {
     try {
@@ -84,12 +86,12 @@ export const StoreReviewsPage: React.FC = () => {
             setTotalPages(reviewsResponse.data.totalPages);
 
             // Fetch summary only once or less frequently if it's static
-            if (!overallRating) { // Only fetch if not already loaded to reduce requests
-                const summaryResponse = await api.get<OverallRating>(
-                    url.REVIEW.GET_STORE_SUMMARY.replace('{storeId}', parsedStoreId.toString())
-                );
-                setOverallRating(summaryResponse.data);
-            }
+            // Sẽ luôn fetch để cập nhật rating trung bình
+            const summaryResponse = await api.get<OverallRating>(
+                url.REVIEW.GET_STORE_SUMMARY.replace('{storeId}', parsedStoreId.toString())
+            );
+            setOverallRating(summaryResponse.data);
+
 
         } catch (err: any) {
             console.error('Error fetching reviews:', err.response?.data || err.message);
@@ -105,7 +107,8 @@ export const StoreReviewsPage: React.FC = () => {
     }, [parsedStoreId, currentPage, selectedEmployee, selectedService, selectedRating]);
 
     const handleReplySubmitted = (appointmentId: number, newReply: ReviewReplyResponse) => {
-        fetchReviewsAndSummary();
+        // Sau khi gửi reply, cần tải lại đánh giá để cập nhật hiển thị cây reply
+        fetchReviewsAndSummary(); 
     };
 
     const formatReviewCount = (count: number | undefined): string => {
@@ -117,6 +120,7 @@ export const StoreReviewsPage: React.FC = () => {
     };
 
     // Logic cho slideshow Stylist
+    // Lấy dữ liệu averageRating từ employeeRatings
     const filteredEmployees = overallRating?.employeeRatings?.filter(emp => emp.totalReviews > 0) || [];
     const totalEmployeeSlides = Math.ceil(filteredEmployees.length / employeesPerPage);
 
@@ -133,6 +137,7 @@ export const StoreReviewsPage: React.FC = () => {
     const employeesToDisplay = filteredEmployees.slice(startIndexEmployee, endIndexEmployee);
 
     // Logic cho slideshow Dịch vụ
+    // Lấy dữ liệu averageRating từ serviceRatings
     const filteredServices = overallRating?.serviceRatings?.filter(svc => svc.totalReviews > 0) || [];
     const totalServiceSlides = Math.ceil(filteredServices.length / servicesPerPage);
 
@@ -150,7 +155,7 @@ export const StoreReviewsPage: React.FC = () => {
 
     // Render chính của component
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen from-blue-{#F3F4F6} bg-white">
             <div className="container mx-auto px-4 py-8 max-w-6xl">
                 
                 {/* Hero Section - Store Image & Overview (NO SHADOW) */}
@@ -437,6 +442,21 @@ export const StoreReviewsPage: React.FC = () => {
                     )}
                 </div>
             </div>
+            {/* Nút CTA cố định */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="fixed bottom-6 right-6 z-50"
+            >
+                <Link
+                    to={routes.booking}
+                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
+                >
+                    <FaPhoneAlt className="mr-2" />
+                    Đặt lịch ngay
+                </Link>
+            </motion.div>
         </div>
     );
 };

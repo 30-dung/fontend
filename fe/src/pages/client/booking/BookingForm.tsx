@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"; // Import useRef
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
     FaStore,
     FaCut,
@@ -9,13 +9,16 @@ import {
     FaChevronDown,
     FaChevronUp,
     FaArrowLeft,
-    // FaStar, // Không cần import FaStar nếu không dùng rating
+    FaPhoneAlt,
+    FaStar, // Cần import FaStar để hiển thị sao
 } from "react-icons/fa";
 import { SelectStore } from "@/components/booking/SelectStore";
 import { SelectService } from "@/components/booking/SelectService";
 import url from "@/services/url";
 import api from "@/services/api";
 import routes from "@/config/routes";
+import { motion } from "framer-motion";
+import StarRating from "@/components/reviews/StarRating"; // Import StarRating component
 
 interface Store {
     storeId: number;
@@ -37,6 +40,8 @@ interface Employee {
     email: string;
     phoneNumber: string;
     avatarUrl?: string;
+    averageRating: number; // Thêm trường đánh giá trung bình
+    totalReviews: number;  // Thêm trường tổng số đánh giá
 }
 
 interface WorkingTimeSlot {
@@ -56,6 +61,8 @@ interface StoreService {
         serviceImg: string;
     };
     price: number;
+    averageRating: number; // Thêm trường đánh giá trung bình cho StoreService
+    totalReviews: number;  // Thêm trường tổng số đánh giá cho StoreService
 }
 
 export default function BookingForm() {
@@ -223,6 +230,8 @@ export default function BookingForm() {
                     email: stylist.email,
                     phoneNumber: stylist.phoneNumber,
                     avatarUrl: stylist.avatarUrl,
+                    averageRating: stylist.averageRating || 0, // Lấy averageRating
+                    totalReviews: stylist.totalReviews || 0, // Lấy totalReviews
                 }));
                 setStylists(shuffleArray(mappedStylists)); // Sắp xếp ngẫu nhiên ngay khi fetch
             } catch (err: any) {
@@ -430,7 +439,7 @@ export default function BookingForm() {
     const showNavigationButtons = stylists.length > stylistsPerPage; // Chỉ hiển thị nút khi stylist nhiều hơn số item trên 1 trang
 
     return (
-        <div className="w-full max-w-full mx-auto bg-gray-100 min-h-screen flex flex-col font-sans">
+        <div className="w-full max-w-full mx-auto from-blue-{#F3F4F6} min-h-screen flex flex-col font-sans">
             {step === 0 && (
                 <>
                     {/* Banner ảnh lớn và tiêu đề */}
@@ -628,11 +637,20 @@ export default function BookingForm() {
                                                                                 )}
                                                                             </div>
 
-                                                                            {/* Overlay và tên stylist */}
-                                                                            <div className="absolute bottom-0 left-0 right-0 z-10 px-2 py-1 bg-gradient-to-t from-black via-black/70 to-transparent flex items-start text-white">
+                                                                            {/* Overlay, tên stylist, và Rating */}
+                                                                            <div className="absolute bottom-0 left-0 right-0 z-10 px-2 py-1 bg-gradient-to-t from-black via-black/70 to-transparent flex flex-col items-start text-white">
                                                                                 <span className="font-bold text-base text-left w-full truncate">
                                                                                     {stylist.fullName}
                                                                                 </span>
+                                                                                {/* Hiển thị số sao đánh giá */}
+                                                                                {stylist.totalReviews > 0 ? (
+                                                                                    <div className="flex items-center text-xs mt-1">
+                                                                                        <StarRating initialRating={stylist.averageRating} readOnly starSize={10} />
+                                                                                        <span className="ml-1">({stylist.totalReviews})</span>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <span className="text-xs text-gray-300 mt-1">Chưa có đánh giá</span>
+                                                                                )}
                                                                             </div>
                                                                         </div>
                                                                     ))}
@@ -861,6 +879,23 @@ export default function BookingForm() {
                     setStep={setStep}
                 />
             )}
+
+             {/* Nút CTA cố định */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="fixed bottom-6 right-6 z-50"
+            >
+                <Link
+                    to={routes.booking}
+                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
+                >
+                    <FaPhoneAlt className="mr-2" />
+                    Đặt lịch ngay
+                </Link>
+            </motion.div>
         </div>
+        
     );
 }

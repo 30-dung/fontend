@@ -3,7 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { Service } from "../../pages/client/booking/BookingForm";
 import api from "@/services/api";
 import url from "@/services/url";
-import { FaSearch, FaClock, FaArrowLeft } from "react-icons/fa"; // Import icons
+import { FaSearch, FaClock, FaArrowLeft, FaStar } from "react-icons/fa";
+import StarRating from "@/components/reviews/StarRating";
 
 interface StoreService {
     storeServiceId: number;
@@ -15,6 +16,8 @@ interface StoreService {
         serviceImg: string;
     };
     price: number;
+    averageRating: number;
+    totalReviews: number;
 }
 
 interface SelectServiceProps {
@@ -32,10 +35,13 @@ export function SelectService({
 }: SelectServiceProps) {
     const [searchParams, setSearchParams] = useSearchParams();
     const storeId = localStorage.getItem("storeId") || salonId;
-    const selectedServicesIds = JSON.parse(
-        localStorage.getItem("selectedServices") || "[]"
+    // Khi chỉ cho phép chọn 1 dịch vụ, chúng ta sẽ lưu ID của dịch vụ đó, hoặc null nếu không có.
+    const selectedServiceIdFromLS = JSON.parse(
+        localStorage.getItem("selectedServiceId") || "null"
     );
+
     const [services, setServices] = useState<StoreService[]>([]);
+    // selectedServicesState giờ chỉ giữ 1 hoặc 0 dịch vụ
     const [selectedServicesState, setSelectedServicesState] = useState<
         StoreService[]
     >([]);
@@ -54,23 +60,38 @@ export function SelectService({
                 const response = await api.get(
                     `${url.STORE_SERVICE.GET_BY_STORE}/${storeId}`
                 );
-                setServices(response.data);
+                const mappedServices: StoreService[] = response.data.map((s: any) => ({
+                    ...s,
+                    averageRating: s.averageRating || 0,
+                    totalReviews: s.totalReviews || 0,
+                }));
+                setServices(mappedServices);
                 setError(null);
 
-                const savedServices = response.data.filter((s: StoreService) =>
-                    selectedServicesIds.includes(s.storeServiceId)
-                );
-                setSelectedServicesState(savedServices);
-                setSelectedServices(
-                    savedServices.map((s: StoreService) => ({
-                        storeServiceId: s.storeServiceId,
-                        service: {
-                            serviceName: s.service.serviceName,
-                            durationMinutes: s.service.durationMinutes,
-                        },
-                        price: s.price,
-                    }))
-                );
+                // Khôi phục dịch vụ đã chọn từ localStorage
+                if (selectedServiceIdFromLS !== null) {
+                    const savedService = mappedServices.find(
+                        (s: StoreService) => s.storeServiceId === selectedServiceIdFromLS
+                    );
+                    if (savedService) {
+                        setSelectedServicesState([savedService]);
+                        setSelectedServices([
+                            {
+                                storeServiceId: savedService.storeServiceId,
+                                service: {
+                                    serviceName: savedService.service.serviceName,
+                                    durationMinutes: savedService.service.durationMinutes,
+                                },
+                                price: savedService.price,
+                            },
+                        ]);
+                    }
+                } else {
+                    // Đảm bảo state được reset nếu không có dịch vụ nào trong localStorage
+                    setSelectedServicesState([]);
+                    setSelectedServices([]);
+                }
+
             } catch (err: any) {
                 setError(
                     err.response?.data?.message ||
@@ -81,26 +102,32 @@ export function SelectService({
             }
         };
         fetchServices();
-    }, [storeId, setSelectedServices]);
+    }, [storeId, setSelectedServices, selectedServiceIdFromLS]); // Thêm selectedServiceIdFromLS vào dependency array
 
     const handleSelectService = (service: StoreService) => {
-        setSelectedServicesState((prev) =>
-            prev.find((s) => s.storeServiceId === service.storeServiceId)
-                ? prev.filter(
-                      (s) => s.storeServiceId !== service.storeServiceId
-                  )
-                : [...prev, service]
+        // Kiểm tra xem dịch vụ hiện tại đã được chọn chưa
+        const isAlreadySelected = selectedServicesState.some(
+            (s) => s.storeServiceId === service.storeServiceId
         );
+
+        if (isAlreadySelected) {
+            // Nếu dịch vụ này đã được chọn, bỏ chọn nó
+            setSelectedServicesState([]); // Bỏ chọn tất cả (chỉ có 1 mà thôi)
+        } else {
+            // Nếu dịch vụ này chưa được chọn, chọn nó và bỏ chọn bất kỳ dịch vụ nào khác
+            setSelectedServicesState([service]);
+        }
     };
 
     const handleConfirm = () => {
         if (selectedServicesState.length === 0) {
-            setError("Vui lòng chọn ít nhất một dịch vụ");
+            setError("Vui lòng chọn một dịch vụ"); // Đổi thông báo lỗi
             return;
         }
+        // Lưu ID của dịch vụ duy nhất đã chọn vào localStorage
         localStorage.setItem(
-            "selectedServices",
-            JSON.stringify(selectedServicesState.map((s) => s.storeServiceId))
+            "selectedServiceId",
+            JSON.stringify(selectedServicesState[0].storeServiceId)
         );
         setSelectedServices(
             selectedServicesState.map((s: StoreService) => ({
@@ -127,7 +154,7 @@ export function SelectService({
     );
 
     return (
-        <div className="w-full min-h-screen bg-gray-100 font-sans flex flex-col items-center">
+        <div className="w-full min-h-screen from-blue-{#F3F4F6} font-sans flex flex-col items-center">
             {/* Banner ảnh lớn */}
             <div
                 className="relative bg-cover bg-center w-full flex items-center justify-center overflow-hidden object-cover "
@@ -140,14 +167,13 @@ export function SelectService({
             </div>
 
             {/* Khung trắng lớn chứa toàn bộ nội dung chính (bao gồm cả phần tổng thanh toán) */}
-            {/* Đã loại bỏ `pb-[FIXED_FOOTER_HEIGHT_PX]px` vì footer giờ là sticky, không fixed toàn màn hình */}
             <div className="container mx-auto max-w-5xl -mt-16 md:-mt-20 relative z-20 px-4 mb-8">
                 <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
 
                     {/* Header với nút quay lại và tiêu đề "Chọn dịch vụ" */}
                     <div className="flex items-center justify-between mb-6">
                         <button
-                            onClick={() => setStep(0)} // Adjust step based on your BookingForm logic
+                            onClick={() => setStep(0)}
                             className="text-[#15397F] hover:text-[#1e4bb8] transition duration-200 p-2 rounded-full hover:bg-gray-200"
                         >
                             <FaArrowLeft className="w-5 h-5" />
@@ -155,7 +181,7 @@ export function SelectService({
                         <h2 className="text-2xl md:text-3xl font-bold text-center text-[#15397F] flex-grow">
                             Dịch vụ có sẵn
                         </h2>
-                        <div className="w-7 h-7"></div> {/* Placeholder to center the title */}
+                        <div className="w-7 h-7"></div>
                     </div>
 
                     {/* Thanh tìm kiếm */}
@@ -197,7 +223,7 @@ export function SelectService({
                                     <div
                                         key={service.storeServiceId}
                                         className={`bg-white rounded-lg shadow-md overflow-hidden flex flex-col cursor-pointer
-                                            ${selectedServicesState.find((s) => s.storeServiceId === service.storeServiceId) ? 'border-2 border-[#15397F]' : 'border border-gray-200'}
+                                            ${selectedServicesState.some(s => s.storeServiceId === service.storeServiceId) ? 'border-2 border-[#15397F]' : 'border border-gray-200'}
                                             hover:shadow-lg transition transform hover:scale-105 duration-300`}
                                         onClick={() => handleSelectService(service)}
                                     >
@@ -219,12 +245,24 @@ export function SelectService({
                                                     {service.service.durationMinutes}p
                                                 </div>
                                             </div>
-                                            
+
                                             {service.service.description && (
                                                 <p className="text-xs text-gray-600 mb-2 line-clamp-2 leading-snug">
                                                     {service.service.description}
                                                 </p>
                                             )}
+
+                                            {/* Hiển thị Rating của dịch vụ */}
+                                            <div className="flex items-center text-sm mb-2">
+                                                {service.totalReviews > 0 ? (
+                                                    <>
+                                                        <StarRating initialRating={service.averageRating} readOnly starSize={14} />
+                                                        <span className="ml-1 text-gray-600">({service.totalReviews})</span>
+                                                    </>
+                                                ) : (
+                                                    <span className="text-xs text-gray-400">Chưa có đánh giá</span>
+                                                )}
+                                            </div>
 
                                             <div className="mt-auto pt-2 border-t border-gray-100">
                                                 <span className="text-sm font-bold text-gray-900 block mb-1">
@@ -235,7 +273,7 @@ export function SelectService({
                                                 </span>
                                                 <button
                                                     className={`w-full text-white font-semibold text-sm px-3 py-1.5 rounded-lg transition duration-200 ease-in-out ${
-                                                        selectedServicesState.find(
+                                                        selectedServicesState.some(
                                                             (s) =>
                                                                 s.storeServiceId ===
                                                                 service.storeServiceId
@@ -248,13 +286,13 @@ export function SelectService({
                                                         handleSelectService(service);
                                                     }}
                                                 >
-                                                    {selectedServicesState.find(
+                                                    {selectedServicesState.some(
                                                         (s) =>
                                                             s.storeServiceId ===
                                                             service.storeServiceId
                                                     )
                                                         ? "Đã chọn"
-                                                        : "Thêm dịch vụ"}
+                                                        : "Chọn dịch vụ"} {/* Đổi text button */}
                                                 </button>
                                             </div>
                                         </div>
@@ -278,9 +316,9 @@ export function SelectService({
                                 Tổng thanh toán
                             </span>
                             <span className="text-xl font-bold text-green-700">
-                                {selectedServicesState
-                                    .reduce((sum, s) => sum + s.price, 0)
-                                    .toLocaleString("vi-VN")}{" "}
+                                {selectedServicesState.length > 0
+                                    ? selectedServicesState[0].price.toLocaleString("vi-VN")
+                                    : "0"}{" "} {/* Chỉ hiển thị giá của dịch vụ đã chọn */}
                                 VND
                             </span>
                         </div>

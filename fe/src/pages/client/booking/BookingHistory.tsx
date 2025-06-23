@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import api from "@/services/api";
 import url from "@/services/url";
 import ReviewFormModal from "@/components/reviews/ReviewFormModal";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import routes from '@/config/routes';
+import { toast } from 'react-toastify'; // Import toast
 
 // Import các icons cần thiết từ react-icons
-import { FaCheckCircle, FaHourglassHalf, FaTimesCircle, FaInfoCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaHourglassHalf, FaTimesCircle, FaInfoCircle, FaPhoneAlt } from 'react-icons/fa';
+import { motion } from "framer-motion";
 
 
 // Cập nhật interface Appointment để khớp với AppointmentResponse từ BE
@@ -32,7 +34,7 @@ export function BookingHistory() {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [toast, setToast] = useState<string | null>(null);
+    // const [toast, setToast] = useState<string | null>(null); // Remove this state
     const [confirmId, setConfirmId] = useState<number | null>(null);
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [selectedAppointmentForReview, setSelectedAppointmentForReview] = useState<Appointment | null>(null);
@@ -154,13 +156,13 @@ export function BookingHistory() {
                         : appt
                 )
             );
-            setToast("Hủy lịch hẹn thành công!");
+            toast.success("Hủy lịch hẹn thành công!"); // Success toast notification
         } catch (err: any) {
             console.error("Error canceling appointment:", err);
-            setError(err.response?.data?.message || "Không thể hủy lịch hẹn.");
+            toast.error(err.response?.data?.message || "Không thể hủy lịch hẹn."); // Error toast notification
         } finally {
             setConfirmId(null);
-            setTimeout(() => setToast(null), 3000);
+            // No need for setTimeout with toast, it handles auto-closing
         }
     };
 
@@ -186,7 +188,10 @@ export function BookingHistory() {
                             : appt
                     )
                 );
+                toast.success("Đánh giá của bạn đã được gửi thành công!"); // Toast for successful review
             }
+        } else {
+            toast.error("Có lỗi xảy ra khi gửi đánh giá."); // Toast for failed review
         }
         handleCloseReviewModal();
     };
@@ -218,7 +223,7 @@ export function BookingHistory() {
         <div>
             {/* Banner đầu trang giống Location.tsx */}
             <div
-                className="relative bg-cover bg-center h-64 md:h-80 flex items-center justify-center overflow-hidden w-full"
+                className="relative bg-cover bg-center h-64 from-blue-{#F3F4F6} md:h-80 flex items-center justify-center overflow-hidden w-full"
                 style={{ backgroundImage: `url('https://static.booksy.com/static/live/covers/barbers.jpg')` }}
             >
                 <div className="absolute inset-0 bg-black opacity-40 backdrop-filter backdrop-blur-sm"></div>
@@ -227,12 +232,12 @@ export function BookingHistory() {
                 </h1>
             </div>
 
-            {/* Toast notification */}
-            {toast && (
+            {/* No need for custom toast state anymore, react-toastify handles it */}
+            {/* {toast && (
                 <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg z-50 animate-fade-in">
                     {toast}
                 </div>
-            )}
+            )} */}
             {/* Modal xác nhận hủy */}
             {confirmId !== null && (
                 <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
@@ -406,6 +411,21 @@ export function BookingHistory() {
                     )}
                 </div>
             </div>
+            {/* Nút CTA cố định */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="fixed bottom-6 right-6 z-50"
+            >
+                <Link
+                    to={routes.booking}
+                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
+                >
+                    <FaPhoneAlt className="mr-2" />
+                    Đặt lịch ngay
+                </Link>
+            </motion.div>
         </div>
     );
 }

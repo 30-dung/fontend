@@ -1,18 +1,25 @@
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import {
     FaArrowRight,
     FaArrowLeft,
     FaStar,
-    FaCut,
-    FaSpa,
     FaPhoneAlt,
+    FaMapMarkerAlt,
+    FaSearch,
+    FaLocationArrow,
+    FaGem,
 } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
-import { motion } from "framer-motion"; // Thêm framer-motion để tạo animation
+import { motion } from "framer-motion";
 import axios from "axios";
+import api from "@/services/api";
+import url from "@/services/url";
+
+import StarRating from "@/components/reviews/StarRating";
 import routes from "@/config/routes";
-// định dạng interface data
+
+
 interface Category {
     id: number;
     name: string;
@@ -27,18 +34,39 @@ interface Service {
     description: string;
 }
 
-//API giả lập
-const API_BASE_URL = "/mockData.json"; //sau thay api thật vào đây
+interface Store {
+    storeId: number;
+    storeImages: string;
+    storeName: string;
+    phoneNumber: string;
+    cityProvince: string;
+    district: string;
+    openingTime: string;
+    closingTime: string;
+    description: string;
+    averageRating: number | string;
+    createdAt: string;
+}
+
+const MOCK_API_BASE_URL = "/mockData.json";
 
 export function HomePage() {
+    const navigate = useNavigate();
+
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const images: string[] = [
-        "https://i.pinimg.com/originals/0a/bd/24/0abd24d18060a97095c90d6afa948860.png",
-        "https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474104mgc/hinh-anh-mat-troi-your-name_082100134.jpg",
-        "https://i.pinimg.com/originals/f4/91/be/f491be409b7f2101b73bc44d84eca03f.jpg",
+        "https://kings-barber.co.uk/wp-content/uploads/2021/09/IMG_7032.jpg",
+        "https://wallpapers.com/images/hd/silver-barber-pole-w7wzw5y557gtnoh8.jpg",
+        "https://wallpapercave.com/wp/wp1946275.jpg",
+        "https://www.hairbutlers.com/wp-content/uploads/2017/06/barber.jpg",
+        "https://thebarberylurgan.com/wp-content/uploads/2020/09/barber-background.jpg",
+        "https://wallpapers.com/images/hd/barber-shop-background-fdzbrcqzti71st72.jpg",
+        "https://static.vecteezy.com/system/resources/previews/035/449/083/non_2x/ai-generated-barbershop-table-with-barber-tools-barbershop-interior-background-free-photo.jpg",
+        "https://png.pngtree.com/background/20230612/original/pngtree-barbershop-with-chairs-in-traditional-styles-and-mirrors-in-front-picture-image_3372710.jpg",
+        "https://static.vecteezy.com/system/resources/thumbnails/046/840/400/small_2x/busy-barber-shop-with-brick-wall-and-chairs-ai-generated-photo.jpeg",
+        "https://static.vecteezy.com/system/resources/thumbnails/037/236/476/small_2x/ai-generated-barbershop-advertisment-background-with-copy-space-free-photo.jpg"
     ];
 
-    // Tự động chuyển slide
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -56,127 +84,8 @@ export function HomePage() {
         );
     };
 
-    // State cho PhoneInput
-    const [phone, setPhone] = useState<string>("");
-    const [error, setError] = useState<string>("");
-
-    // State cho hiệu ứng ngôi sao
     const [highlightedStars, setHighlightedStars] = useState<number[]>([]);
 
-    // Dữ liệu giả lập cho Testimonials
-    const testimonials = [
-        {
-            name: "Nguyễn Văn A",
-            comment: "Dịch vụ rất chuyên nghiệp, tôi rất hài lòng!",
-            rating: 5,
-            image: "https://via.placeholder.com/50",
-        },
-        {
-            name: "Trần Thị B",
-            comment: "Không gian thư giãn, nhân viên thân thiện!",
-            rating: 4,
-            image: "https://via.placeholder.com/50",
-        },
-        {
-            name: "Lê Minh C",
-            comment: "Cắt tóc đẹp, giá cả hợp lý!",
-            rating: 5,
-            image: "https://via.placeholder.com/50",
-        },
-    ];
-
-    // Dữ liệu giả lập cho "Tại sao chọn chúng tôi"
-    const whyChooseUs = [
-        {
-            icon: <FaCut />,
-            title: "Đội ngũ chuyên nghiệp",
-            description: "Các stylist giàu kinh nghiệm, được đào tạo bài bản.",
-        },
-        {
-            icon: <FaSpa />,
-            title: "Không gian sang trọng",
-            description: "Môi trường thư giãn, sạch sẽ và hiện đại.",
-        },
-        {
-            icon: <FaStar />,
-            title: "Dịch vụ chất lượng",
-            description:
-                "Cam kết mang lại trải nghiệm tốt nhất cho khách hàng.",
-        },
-    ];
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        if (/^\d*$/.test(value) && value.length <= 10) {
-            setPhone(value);
-            setError("");
-        }
-    };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const validPrefixes = [
-            "032",
-            "033",
-            "034",
-            "035",
-            "036",
-            "037",
-            "038",
-            "039",
-            "070",
-            "076",
-            "077",
-            "078",
-            "079",
-            "081",
-            "082",
-            "083",
-            "084",
-            "085",
-            "086",
-            "056",
-            "058",
-            "059",
-            "088",
-            "089",
-            "090",
-            "091",
-            "092",
-            "093",
-            "094",
-            "095",
-            "096",
-            "097",
-            "098",
-            "099",
-        ];
-
-        if (phone.length !== 10) {
-            setError("Anh vui lòng nhập số điện thoại hợp lệ giúp em nhé!");
-        } else {
-            const prefix = phone.substring(0, 3);
-            if (!validPrefixes.includes(prefix)) {
-                setError("Anh vui lòng nhập số điện thoại hợp lệ giúp em nhé!");
-            } else {
-                setError("");
-                alert("Số điện thoại hợp lệ: " + phone);
-                setPhone("");
-            }
-        }
-    };
-
-    // Tự động ẩn thông báo sau 5 giây
-    useEffect(() => {
-        if (error) {
-            const timer = setTimeout(() => {
-                setError("");
-            }, 5000);
-            return () => clearTimeout(timer);
-        }
-    }, [error]);
-
-    // Tự động sáng các ngôi sao lần lượt và reset khi đủ 5 sao
     useEffect(() => {
         const interval = setInterval(() => {
             setHighlightedStars((prev) => {
@@ -187,31 +96,104 @@ export function HomePage() {
             });
         }, 1000);
         return () => clearInterval(interval);
-    }, []);
+    }, [highlightedStars]);
 
-    // Animation variants cho hiệu ứng fade-in
-    const sectionVariants = {
-        hidden: { opacity: 0, y: 50 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [displayedStores, setDisplayedStores] = useState<Store[]>([]);
+    const [allStores, setAllStores] = useState<Store[]>([]);
+    const [storeSearchError, setStoreSearchError] = useState<string>("");
+    const [storesLoading, setStoresLoading] = useState<boolean>(true);
+
+    // New state for store slideshow
+    const [currentStoreSlideIndex, setCurrentStoreSlideIndex] = useState<number>(0);
+
+    const getRandomStores = (storesList: Store[], count: number) => {
+        if (!storesList || storesList.length === 0) return [];
+        const shuffled = [...storesList].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, count);
     };
 
-    //hooks State data API
+    useEffect(() => {
+        const fetchAllStores = async () => {
+            setStoresLoading(true);
+            try {
+                const response = await api.get<Store[]>(url.STORE.ALL);
+                if (response.data && Array.isArray(response.data)) {
+                    setAllStores(response.data);
+                    setDisplayedStores(getRandomStores(response.data, 3));
+                    setStoreSearchError("");
+                } else {
+                    setAllStores([]);
+                    setDisplayedStores([]);
+                    setStoreSearchError("Không tìm thấy dữ liệu salon.");
+                }
+            } catch (err) {
+                console.error("Error fetching all stores:", err);
+                setAllStores([]);
+                setDisplayedStores([]);
+                setStoreSearchError("Không thể tải danh sách salon. Vui lòng thử lại sau.");
+            } finally {
+                setStoresLoading(false);
+            }
+        };
+        fetchAllStores();
+    }, []);
+
+    const handleStoreSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        setStoresLoading(true);
+        setCurrentStoreSlideIndex(0); // Reset slide index on new search
+
+        if (!searchTerm.trim()) {
+            setDisplayedStores(getRandomStores(allStores, 3));
+            setStoreSearchError("");
+            setStoresLoading(false);
+            return;
+        }
+
+        const lowerCaseSearchTerm = searchTerm.trim().toLowerCase();
+        const filtered = allStores.filter(store =>
+            store.storeName.toLowerCase().includes(lowerCaseSearchTerm) ||
+            store.cityProvince.toLowerCase().includes(lowerCaseSearchTerm) ||
+            store.district.toLowerCase().includes(lowerCaseSearchTerm) ||
+            (store.description && store.description.toLowerCase().includes(lowerCaseSearchTerm))
+        );
+
+        if (filtered.length > 0) {
+            setDisplayedStores(filtered);
+            setStoreSearchError("");
+        } else {
+            setDisplayedStores([]);
+            setStoreSearchError(`Không tìm thấy salon nào cho "${searchTerm}". Vui lòng thử từ khóa khác.`);
+        }
+        setStoresLoading(false);
+    };
+
+    // Store slideshow navigation
+    const nextStoreSlide = () => {
+        setCurrentStoreSlideIndex((prevIndex) => (prevIndex + 1) % displayedStores.length);
+    };
+
+    const prevStoreSlide = () => {
+        setCurrentStoreSlideIndex((prevIndex) => (prevIndex - 1 + displayedStores.length) % displayedStores.length);
+    };
+
     const [categories, setCategories] = useState<Category[]>([]);
     const [services, setServices] = useState<Service[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [errorAPI, setErrorAPI] = useState<string>("");
-    //API call bằng Axios giả lập
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get(API_BASE_URL);
+                const res = await axios.get(MOCK_API_BASE_URL);
                 setCategories(res.data.categories);
                 setServices(res.data.services);
                 setErrorAPI("");
             } catch (error) {
-                console.error("Error fetching data:", error);
-                setErrorAPI("Không thể tải dữ liệu từ API");
+                console.error("Error fetching mock data for services:", error);
+                setErrorAPI("Không thể tải dữ liệu dịch vụ. Vui lòng kiểm tra file mockData.json.");
             } finally {
                 setLoading(false);
             }
@@ -219,300 +201,72 @@ export function HomePage() {
         fetchData();
     }, []);
 
+    const sectionVariants = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+    };
+
+    const galleryRef = useRef<HTMLDivElement>(null);
+
+    const galleryImages: string[] = [
+        "https://www.gento.vn/wp-content/uploads/2023/05/toc-layer-nam-dep-9.jpg",
+        "https://cdn.24h.com.vn/upload/1-2021/images/2021-01-14/25-Kieu-toc-nam-Han-Quoc-2021-dep-chuan-soai-ca-phu-hop-voi-moi-guong-mat-toc-nam-han-quoc-6-1610590636-715-width600height601.jpg",
+        "https://cdn.vuahanghieu.com/unsafe/0x0/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/news/content/2023/10/30-kieu-toc-nam-ngan-dep-tre-trung-hop-voi-nhieu-dang-mat-30-jpg-1696494186-05102023152306.jpg",
+        "https://menhairstylist.com/wp-content/uploads/2017/06/top-knot-men-undercut.jpg",
+        "https://i.pinimg.com/736x/28/3d/11/283d114d386380f0cf90828eb3788bdc.jpg",
+        "https://th.bing.com/th/id/OIP.gpbapqQ4bCNLjLIzTrXM3AHaHa?rs=1&pid=ImgDetMain&cb=idpwebp2&o=7&rm=3",
+        "https://tiki.vn/blog/wp-content/uploads/2023/01/1WJxMmYJqHsrfvnOJjD_3aaqAhnQFYgM3DI7C6MKlw8TzltVsjzRlfs3Z_IvD2IGZIHv1iz83b3gVydhfmlDiFCR-hkcIOHTMc6_tXxhYEcLRJY84ejt2UWj4tImXgQykJLiWR56fSzyuztcqE4owWI.png",
+        "https://th.bing.com/th/id/R.0e539ee45fef995042e8aa5ff5de6d19?rik=GbaHhe4%2fI5nJHw&pid=ImgRaw&r=0",
+    ];
+
+ 
+    useEffect(() => {
+        const galleryElement = galleryRef.current;
+        if (!galleryElement) return;
+
+        let scrollInterval: NodeJS.Timeout;
+        const scrollStep = 1; // Số pixel cuộn mỗi bước nhỏ
+        const scrollSpeedMs = 50; // Tốc độ cuộn (ms giữa các bước)
+
+        const startScrolling = () => {
+            scrollInterval = setInterval(() => {
+                // Kiểm tra xem đã cuộn đến cuối chưa
+                if (galleryElement.scrollLeft + galleryElement.clientWidth >= galleryElement.scrollWidth) {
+                    // Nếu đã đến cuối, reset về đầu một cách mượt mà
+                    galleryElement.scrollTo({
+                        left: 0,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    // Cuộn về phía trước
+                    galleryElement.scrollLeft += scrollStep;
+                }
+            }, scrollSpeedMs);
+        };
+
+        const stopScrolling = () => {
+            clearInterval(scrollInterval);
+        };
+
+      
+        startScrolling();
+
+      
+
+        return () => {
+            stopScrolling(); 
+        };
+    }, [galleryImages]); 
+
+    
+
+
     return (
-        // <main className="relative bg-gray-50">
-        //     {" "}
-        //     {/* Thêm background nhẹ */}
-        //     {/* Thông báo lỗi ở đầu trang */}
-        //     {error && (
-        //         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-200 text-red-800 text-sm p-3 rounded-md flex justify-between items-center w-11/12 max-w-md z-50">
-        //             <p>{error}</p>
-        //             <button
-        //                 onClick={() => setError("")}
-        //                 className="text-red-800 font-bold"
-        //             >
-        //                 ✕
-        //             </button>
-        //         </div>
-        //     )}
-        //     <section>
-        //         <div className="mt-4 mx-4 md:mx-20">
-        //             {/* Slide Show */}
-        //             <div className="slideshow">
-        //                 <div className="relative w-full flex items-center justify-center">
-        //                     <img
-        //                         className="w-full h-[410px] object-cover rounded-xl"
-        //                         src={images[currentIndex]}
-        //                         alt="Slide"
-        //                     />
-        //                     <button
-        //                         onClick={prevSlide}
-        //                         className="absolute left-0 top-1/2 transform -translate-y-1/2 text-white/30 text-4xl p-4"
-        //                     >
-        //                         <FaArrowLeft />
-        //                     </button>
-        //                     <button
-        //                         onClick={nextSlide}
-        //                         className="absolute right-0 top-1/2 transform -translate-y-1/2 text-white/30 text-4xl p-4"
-        //                     >
-        //                         <FaArrowRight />
-        //                     </button>
-        //                 </div>
-        //             </div>
+        <main className="relative bg-gradient-to-b from-blue-{#F3F4F6} to-white min-h-screen">
 
-        //             {/* Services - Đặt lịch và đánh giá */}
-        //             <motion.div
-        //                 initial="hidden"
-        //                 whileInView="visible"
-        //                 viewport={{ once: true }}
-        //                 variants={sectionVariants}
-        //                 className="service mx-4 md:mx-24"
-        //             >
-        //                 <div className="pt-10">
-        //                     <div className="flex justify-center p-6">
-        //                         <div className="flex flex-col md:flex-row gap-4 w-full max-w-5xl">
-        //                             {/* Box Đặt lịch */}
-        //                             <div className="bg-blue-900 text-white rounded-xl p-6 flex flex-col justify-between w-full md:w-2/3 shadow-lg">
-        //                                 <div>
-        //                                     <h2 className="text-lg font-bold mb-2">
-        //                                         ĐẶT LỊCH GIỮ CHỖ CHỈ 30 GIÂY
-        //                                     </h2>
-        //                                     <p className="text-sm mb-4">
-        //                                         Cắt xong trả tiền, hủy lịch
-        //                                         không sao
-        //                                     </p>
-        //                                 </div>
-        //                                 <form onSubmit={handleSubmit}>
-        //                                     <div className="flex gap-2">
-        //                                         <input
-        //                                             type="text"
-        //                                             value={phone}
-        //                                             onChange={handleChange}
-        //                                             placeholder="Nhập SĐT Để Đặt Lịch"
-        //                                             className="flex-1 p-2 rounded-md text-black focus:outline-none focus:ring-0 focus:border-transparent"
-        //                                         />
-        //                                         <button
-        //                                             type="submit"
-        //                                             className="bg-white text-blue-900 font-bold py-2 px-4 rounded-md hover:bg-gray-200 transition"
-        //                                         >
-        //                                             ĐẶT LỊCH NGAY
-        //                                         </button>
-        //                                     </div>
-        //                                 </form>
-        //                             </div>
-
-        //                             {/* Box Đánh giá */}
-        //                             <div className="bg-white rounded-xl p-6 w-full md:w-1/3 shadow-lg">
-        //                                 <h3 className="text-sm font-bold text-blue-900 mb-2">
-        //                                     MỜI BẠN ĐÁNH GIÁ CHẤT LƯỢNG PHỤC VỤ
-        //                                 </h3>
-        //                                 <p className="text-xs text-gray-600 mb-4">
-        //                                     Phản hồi của bạn sẽ giúp chúng tôi
-        //                                     cải thiện chất lượng dịch vụ tốt hơn
-        //                                 </p>
-        //                                 <Link to={routes.about}>
-        //                                     <div className="flex space-x-1">
-        //                                         {[...Array(5)].map(
-        //                                             (_, index) => (
-        //                                                 <svg
-        //                                                     key={index}
-        //                                                     xmlns="http://www.w3.org/2000/svg"
-        //                                                     className={`w-6 h-6 transition-colors duration-300 ease-in-out ${
-        //                                                         highlightedStars.includes(
-        //                                                             index
-        //                                                         )
-        //                                                             ? "text-yellow-400"
-        //                                                             : "text-gray-300"
-        //                                                     }`}
-        //                                                     viewBox="0 0 20 20"
-        //                                                     fill="currentColor"
-        //                                                 >
-        //                                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.946a1 1 0 00.95.69h4.15c.969 0 1.371 1.24.588 1.81l-3.36 2.44a1 1 0 00-.364 1.118l1.286 3.946c.3.921-.755 1.688-1.54 1.118l-3.36-2.44a1 1 0 00-1.176 0l-3.36 2.44c-.784.57-1.838-.197-1.54-1.118l1.287-3.946a1 1 0 00-.364-1.118l-3.36-2.44c-.783-.57-.38-1.81.588-1.81h4.15a1 1 0 00.95-.69l1.287-3.946z" />
-        //                                                 </svg>
-        //                                             )
-        //                                         )}
-        //                                     </div>
-        //                                 </Link>
-        //                             </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //             </motion.div>
-
-        //             {/* Hiển thị loading hoặc dữ liệu */}
-        //             {loading ? (
-        //                 <div className="text-center py-10">
-        //                     <p className="text-lg text-gray-600">
-        //                         Đang tải dữ liệu...
-        //                     </p>
-        //                 </div>
-        //             ) : (
-        //                 <>
-        //                     {/* Tự động render các section dựa trên categories */}
-        //                     {categories.map((category) => (
-        //                         <motion.div
-        //                             key={category.id}
-        //                             initial="hidden"
-        //                             whileInView="visible"
-        //                             viewport={{ once: true }}
-        //                             variants={sectionVariants}
-        //                             className="services-section mx-4 md:mx-24 mt-8~"
-        //                         >
-        //                             <h2 className="text-xl font-bold text-blue-900 mb-6">
-        //                                 {category.name}
-        //                             </h2>
-        //                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        //                                 {services
-        //                                     .filter(
-        //                                         (service) =>
-        //                                             service.categoryId ===
-        //                                             category.id
-        //                                     )
-        //                                     .map((service) => (
-        //                                         <div
-        //                                             key={service.id}
-        //                                             className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-        //                                         >
-        //                                             <div className="relative overflow-hidden">
-        //                                                 <img
-        //                                                     src={service.image}
-        //                                                     alt={service.name}
-        //                                                     className="w-full h-48 object-cover object-top transform transition-transform duration-300 hover:scale-110"
-        //                                                 />
-        //                                             </div>
-        //                                             <div className="p-4">
-        //                                                 <h3 className=" text-lg font-semibold text-blue-900 mb-2">
-        //                                                     {service.name}
-        //                                                 </h3>
-        //                                                 <p className="text-sm text-gray-600 mb-3">
-        //                                                     {service.price}
-        //                                                 </p>
-        //                                                 <Link
-        //                                                     to={`${routes.services_combo.replace(":id", service.id.toString())}`}
-        //                                                     className="flex items-center text-blue-600 hover:text-blue-800"
-        //                                                 >
-        //                                                     <span className="text-sm font-medium text-blue-900">
-        //                                                         Tìm hiểu thêm
-        //                                                     </span>
-        //                                                     <FiArrowRight className="ml-2 text-blue-900" />
-        //                                                 </Link>
-        //                                             </div>
-        //                                         </div>
-        //                                     ))}
-        //                             </div>
-        //                         </motion.div>
-        //                     ))}
-        //                 </>
-        //             )}
-
-        //             {/* Section Đánh giá khách hàng (Testimonials) */}
-        //             <motion.div
-        //                 initial="hidden"
-        //                 whileInView="visible"
-        //                 viewport={{ once: true }}
-        //                 variants={sectionVariants}
-        //                 className="testimonials mx-4 md:mx-24 mt-10 py-10 bg-white rounded-xl shadow-lg"
-        //             >
-        //                 <h2 className="text-xl font-bold text-blue-900 mb-6 text-center">
-        //                     KHÁCH HÀNG NÓI GÌ VỀ CHÚNG TÔI
-        //                 </h2>
-        //                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        //                     {testimonials.map((testimonial, index) => (
-        //                         <div
-        //                             key={index}
-        //                             className="flex flex-col items-center p-4 bg-gray-100 rounded-lg"
-        //                         >
-        //                             <img
-        //                                 src={testimonial.image}
-        //                                 alt={testimonial.name}
-        //                                 className="w-12 h-12 rounded-full mb-3"
-        //                             />
-        //                             <h3 className="text-base font-semibold text-gray-800">
-        //                                 {testimonial.name}
-        //                             </h3>
-        //                             <div className="flex my-2">
-        //                                 {[...Array(testimonial.rating)].map(
-        //                                     (_, i) => (
-        //                                         <FaStar
-        //                                             key={i}
-        //                                             className="text-yellow-400"
-        //                                         />
-        //                                     )
-        //                                 )}
-        //                             </div>
-        //                             <p className="text-sm text-gray-600 text-center">
-        //                                 {testimonial.comment}
-        //                             </p>
-        //                         </div>
-        //                     ))}
-        //                 </div>
-        //             </motion.div>
-
-        //             {/* Section Tại sao chọn chúng tôi (Why Choose Us) */}
-        //             <motion.div
-        //                 initial="hidden"
-        //                 whileInView="visible"
-        //                 viewport={{ once: true }}
-        //                 variants={sectionVariants}
-        //                 className="why-choose-us mx-4 md:mx-24 mt-10 py-10 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl"
-        //             >
-        //                 <h2 className="text-xl font-bold text-blue-900 mb-6 text-center">
-        //                     TẠI SAO CHỌN CHÚNG TÔI
-        //                 </h2>
-        //                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        //                     {whyChooseUs.map((reason, index) => (
-        //                         <div
-        //                             key={index}
-        //                             className="flex flex-col items-center p-4"
-        //                         >
-        //                             <div className="text-4xl text-blue-600 mb-3">
-        //                                 {reason.icon}
-        //                             </div>
-        //                             <h3 className="text-lg font-semibold text-gray-800 mb-2">
-        //                                 {reason.title}
-        //                             </h3>
-        //                             <p className="text-sm text-gray-600 text-center">
-        //                                 {reason.description}
-        //                             </p>
-        //                         </div>
-        //                     ))}
-        //                 </div>
-        //             </motion.div>
-        //         </div>
-        //     </section>
-        //     {/* Nút CTA cố định */}
-        //     <motion.div
-        //         initial={{ opacity: 0 }}
-        //         animate={{ opacity: 1 }}
-        //         transition={{ duration: 1 }}
-        //         className="fixed bottom-6 right-6"
-        //     >
-        //         <Link
-        //             to="/book-now"
-        //             className="flex items-center bg-shine-primary text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition animate-bounce"
-        //         >
-        //             <FaPhoneAlt className="mr-2" />
-        //             Đặt lịch ngay
-        //         </Link>
-        //     </motion.div>
-        // </main>
-
-        <main className="relative bg-gradient-to-b from-blue-50 to-white min-h-screen">
-            {/* Thông báo lỗi ở đầu trang */}
-            {error && (
-                <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-200 text-red-800 text-sm p-3 rounded-md flex justify-between items-center w-11/12 max-w-md z-50 shadow-lg">
-                    <p>{error}</p>
-                    <button
-                        onClick={() => setError("")}
-                        className="text-red-800 font-bold"
-                    >
-                        ✕
-                    </button>
-                </div>
-            )}
 
             <section>
-                <div className="mt-4 mx-auto max-w-7xl px-2 md:px-8 bg-white">
+                <div className="mt-4 mx-auto max-w-7xl px-2 md:px-8">
                     {/* Slide Show */}
                     <div className="slideshow mb-10">
                         <div className="relative w-full flex items-center justify-center rounded-2xl shadow-lg overflow-hidden">
@@ -521,31 +275,23 @@ export function HomePage() {
                                 src={images[currentIndex]}
                                 alt="Slide"
                             />
-                            <button
+
+                            {/* Clickable areas for prev/next slide */}
+                            <div
+                                className="absolute top-0 left-0 w-1/2 h-full cursor-pointer z-10"
                                 onClick={prevSlide}
-                                className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white/60 text-3xl p-2 bg-black/20 rounded-full hover:bg-black/40 transition"
-                            >
-                                <FaArrowLeft />
-                            </button>
-                            <button
+                                aria-label="Previous slide"
+                            ></div>
+                            <div
+                                className="absolute top-0 right-0 w-1/2 h-full cursor-pointer z-10"
                                 onClick={nextSlide}
-                                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white/60 text-3xl p-2 bg-black/20 rounded-full hover:bg-black/40 transition"
-                            >
-                                <FaArrowRight />
-                            </button>
-                            {/* Dots */}
-                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                                {images.map((_, idx) => (
-                                    <span
-                                        key={idx}
-                                        className={`w-3 h-3 rounded-full ${currentIndex === idx ? "bg-blue-600" : "bg-white/60"} border border-blue-200`}
-                                    />
-                                ))}
-                            </div>
+                                aria-label="Next slide"
+                            ></div>
+
                         </div>
                     </div>
 
-                    {/* Đặt lịch & Đánh giá */}
+                    {/* START OF REVERTED & MODIFIED SECTION: "Đặt lịch & Đánh giá" */}
                     <motion.div
                         initial="hidden"
                         whileInView="visible"
@@ -553,45 +299,33 @@ export function HomePage() {
                         variants={sectionVariants}
                         className="flex flex-col md:flex-row gap-6 w-full max-w-5xl mx-auto mb-12"
                     >
-                        {/* Box Đặt lịch */}
+                        {/* Box Đặt lịch (Chỉ còn nút) */}
                         <div className="bg-blue-900 text-white rounded-2xl p-8 flex flex-col justify-between w-full md:w-2/3 shadow-xl">
                             <div>
                                 <h2 className="text-xl font-bold mb-2">
                                     ĐẶT LỊCH GIỮ CHỖ CHỈ 30 GIÂY
                                 </h2>
-                                <p className="text-base mb-4">
-                                    Cắt xong trả tiền, hủy lịch không sao
+                                <p className="text-base mb-6">
+                                    Cắt xong trả tiền, hủy lịch không sao. Tiện lợi, nhanh chóng, không chờ đợi!
                                 </p>
                             </div>
-                            <form onSubmit={handleSubmit}>
-                                <div className="flex gap-2">
-                                    <input
-                                        type="text"
-                                        value={phone}
-                                        onChange={handleChange}
-                                        placeholder="Nhập SĐT Để Đặt Lịch"
-                                        className="flex-1 p-3 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-blue-300"
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="bg-white text-blue-900 font-bold py-3 px-6 rounded-md hover:bg-blue-100 transition"
-                                    >
-                                        ĐẶT LỊCH NGAY
-                                    </button>
-                                </div>
-                            </form>
+                            <Link
+                                to="/book-now"
+                                className="w-full bg-white text-blue-900 font-bold py-3 px-6 rounded-md hover:bg-blue-100 transition text-center text-lg"
+                            >
+                                ĐẶT LỊCH NGAY
+                            </Link>
                         </div>
 
-                        {/* Box Đánh giá */}
+                        {/* Box Đánh giá (Giữ nguyên hiển thị, đổi Link) */}
                         <div className="bg-white rounded-2xl p-8 w-full md:w-1/3 shadow-xl flex flex-col justify-between">
                             <h3 className="text-base font-bold text-blue-900 mb-2">
                                 MỜI BẠN ĐÁNH GIÁ CHẤT LƯỢNG PHỤC VỤ
                             </h3>
                             <p className="text-xs text-gray-600 mb-4">
-                                Phản hồi của bạn sẽ giúp chúng tôi cải thiện
-                                chất lượng dịch vụ tốt hơn
+                                Phản hồi chân thành của bạn sẽ giúp chúng tôi không ngừng cải thiện và mang lại trải nghiệm tốt hơn nữa.
                             </p>
-                            <Link to={routes.about}>
+                            <Link to={routes.bookingHistorey} className="block hover:underline">
                                 <div className="flex space-x-1">
                                     {[...Array(5)].map((_, index) => (
                                         <FaStar
@@ -600,19 +334,26 @@ export function HomePage() {
                                         />
                                     ))}
                                 </div>
+                                <p className="text-sm text-blue-600 mt-2">Xem thêm đánh giá</p>
                             </Link>
                         </div>
                     </motion.div>
+                    {/* END OF REVERTED & MODIFIED SECTION */}
 
-                    {/* Hiển thị loading hoặc dữ liệu */}
+                    {/* Hiển thị loading hoặc dữ liệu Services (từ mockData) */}
                     {loading ? (
                         <div className="text-center py-10">
-                            <p className="text-lg text-gray-600">
-                                Đang tải dữ liệu...
+                            <p className="text-lg text-gray-600 animate-pulse">
+                                Đang tải dữ liệu dịch vụ...
                             </p>
                         </div>
                     ) : (
                         <>
+                            {errorAPI && (
+                                <div className="text-center py-10 text-red-600">
+                                    <p>{errorAPI}</p>
+                                </div>
+                            )}
                             {/* Render các section dựa trên categories */}
                             {categories.map((category) => (
                                 <motion.div
@@ -623,8 +364,8 @@ export function HomePage() {
                                     variants={sectionVariants}
                                     className="mx-auto max-w-6xl mt-12"
                                 >
-                                    <h2 className="text-2xl font-bold text-blue-900 mb-6">
-                                        {category.name}
+                                    <h2 className="text-2xl font-bold text-blue-900 mb-6 text-center md:text-left">
+                                        {category.name.toUpperCase()}
                                     </h2>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                                         {services
@@ -646,20 +387,23 @@ export function HomePage() {
                                                         />
                                                     </div>
                                                     <div className="p-5 flex-1 flex flex-col">
-                                                        <h3 className="text-lg font-semibold text-blue-900 mb-2">
+                                                        <h3 className="text-xl font-semibold text-blue-900 mb-2">
                                                             {service.name}
                                                         </h3>
-                                                        <p className="text-base text-gray-600 mb-3">
+                                                        <p className="text-lg text-gray-700 font-bold mb-1">
                                                             {service.price}
                                                         </p>
+                                                        <p className="text-sm text-gray-500 mb-3 line-clamp-3">
+                                                            {service.description || "Dịch vụ được thực hiện bởi đội ngũ chuyên gia, mang lại vẻ ngoài hoàn hảo và tự tin cho bạn."}
+                                                        </p>
                                                         <Link
-                                                            to={`${routes.services_combo.replace(":id", service.id.toString())}`}
-                                                            className="flex items-center text-blue-600 hover:text-blue-800 mt-auto"
+                                                           to={`${routes.services_combo.replace(":id", service.id.toString())}`}
+                                                            className="flex items-center text-blue-600 hover:text-blue-800 mt-auto group"
                                                         >
-                                                            <span className="text-sm font-medium text-blue-900">
+                                                            <span className="text-sm font-medium text-blue-900 group-hover:underline">
                                                                 Tìm hiểu thêm
                                                             </span>
-                                                            <FiArrowRight className="ml-2 text-blue-900" />
+                                                            <FiArrowRight className="ml-2 text-blue-900 group-hover:translate-x-1 transition-transform" />
                                                         </Link>
                                                     </div>
                                                 </div>
@@ -670,79 +414,289 @@ export function HomePage() {
                         </>
                     )}
 
-                    {/* Section Đánh giá khách hàng (Testimonials) */}
+                    {/* SECTION: VỀ CHUỖI SALON CỦA CHÚNG TÔI */}
                     <motion.div
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
                         variants={sectionVariants}
-                        className="mx-auto max-w-6xl mt-16 py-10 bg-white rounded-2xl shadow-xl"
+                        className="mx-auto max-w-6xl mt-20 py-12 bg-white rounded-2xl shadow-xl flex flex-col md:flex-row items-center gap-10 px-6"
                     >
-                        <h2 className="text-2xl font-bold text-blue-900 mb-8 text-center">
-                            KHÁCH HÀNG NÓI GÌ VỀ CHÚNG TÔI
-                        </h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                            {testimonials.map((testimonial, index) => (
-                                <div
-                                    key={index}
-                                    className="flex flex-col items-center p-6 bg-blue-50 rounded-xl shadow"
-                                >
-                                    <img
-                                        src={testimonial.image}
-                                        alt={testimonial.name}
-                                        className="w-14 h-14 rounded-full mb-3 border-2 border-blue-200"
-                                    />
-                                    <h3 className="text-base font-semibold text-gray-800">
-                                        {testimonial.name}
-                                    </h3>
-                                    <div className="flex my-2">
-                                        {[...Array(testimonial.rating)].map(
-                                            (_, i) => (
-                                                <FaStar
-                                                    key={i}
-                                                    className="text-yellow-400"
-                                                />
-                                            )
-                                        )}
-                                    </div>
-                                    <p className="text-sm text-gray-600 text-center">
-                                        {testimonial.comment}
-                                    </p>
-                                </div>
-                            ))}
+                        <div className="md:w-1/2">
+                            <motion.img
+                                src="https://kings-barber.co.uk/wp-content/uploads/2021/09/IMG_7032.jpg"
+                                alt="Hệ thống salon"
+                                className="rounded-2xl shadow-lg w-full h-auto object-cover md:h-[400px]"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.8 }}
+                            />
+                        </div>
+                        <div className="md:w-1/2 text-center md:text-left">
+                            <h2 className="text-3xl font-bold text-blue-900 mb-4 leading-tight">
+                                Hệ Thống Salon Tóc Chuyên Nghiệp Hàng Đầu
+                            </h2>
+                            <p className="text-base text-gray-700 mb-6 leading-relaxed">
+                                Với nhiều năm kinh nghiệm và nhiều chi nhánh trên toàn quốc, Four Shine tự hào là điểm đến tin cậy cho hàng triệu khách hàng tìm kiếm sự hoàn hảo trong phong cách tóc. Chúng tôi cam kết mang đến chất lượng dịch vụ đồng bộ, không gian đẳng cấp và trải nghiệm làm đẹp vượt trội tại mọi cửa hàng.
+                            </p>
+                            <ul className="text-gray-600 mb-6 space-y-2">
+                                <li className="flex items-center">
+                                    <FaGem className="text-blue-600 mr-2" />
+                                    Chất lượng dịch vụ đồng bộ tại mọi chi nhánh.
+                                </li>
+                                <li className="flex items-center">
+                                    <FaGem className="text-blue-600 mr-2" />
+                                    Đội ngũ stylist được đào tạo chuyên sâu và bài bản.
+                                </li>
+                                <li className="flex items-center">
+                                    <FaGem className="text-blue-600 mr-2" />
+                                    Không gian sang trọng, hiện đại và thân thiện.
+                                </li>
+                            </ul>
+                            <Link
+                                to={routes.about}
+                                className="inline-flex items-center bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+                            >
+                                Tìm hiểu thêm về hệ thống
+                                <FiArrowRight className="ml-2" />
+                            </Link>
                         </div>
                     </motion.div>
 
-                    {/* Section Tại sao chọn chúng tôi (Why Choose Us) */}
+                    {/* SECTION: MẠNG LƯỚI CỬA HÀNG (RANDOM BAN ĐẦU & TÌM KIẾM ĐƠN GIẢN) */}
                     <motion.div
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
                         variants={sectionVariants}
-                        className="mx-auto max-w-6xl mt-16 py-10 bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl shadow-xl"
+                        className="mx-auto max-w-6xl mt-20 py-12 bg-white rounded-2xl shadow-xl px-6 text-center"
                     >
-                        <h2 className="text-2xl font-bold text-blue-900 mb-8 text-center">
-                            TẠI SAO CHỌN CHÚNG TÔI
+                        <h2 className="text-3xl font-bold text-blue-900 mb-4">
+                            Mạng Lưới Cửa Hàng Toàn Quốc
                         </h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                            {whyChooseUs.map((reason, index) => (
-                                <div
-                                    key={index}
-                                    className="flex flex-col items-center p-6 bg-white rounded-xl shadow"
-                                >
-                                    <div className="text-5xl text-blue-600 mb-4">
-                                        {reason.icon}
+                        <p className="text-base text-gray-700 mb-8 max-w-3xl mx-auto">
+                            Dù bạn ở đâu,Four Shine luôn sẵn sàng phục vụ. Hãy tìm chi nhánh gần nhất để trải nghiệm dịch vụ đẳng cấp!
+                        </p>
+
+                        {/* Thanh tìm kiếm đơn giản */}
+                        <form onSubmit={handleStoreSearch} className="flex justify-center mb-10">
+                            <div className="relative w-full max-w-md">
+                                <input
+                                    type="text"
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    placeholder="Tìm kiếm salon theo tên, thành phố, hoặc quận..."
+                                    className="w-full p-3 pl-10 rounded-full border border-blue-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all shadow-sm focus:outline-none"
+                                />
+                                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                <button type="submit" className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition">
+                                    <FaLocationArrow />
+                                </button>
+                            </div>
+                        </form>
+
+                        {storeSearchError && <p className="text-sm text-red-500 mb-6">{storeSearchError}</p>}
+
+                        {/* Store Listings (sẽ hiển thị random 3 hoặc kết quả tìm kiếm) */}
+                        {storesLoading ? (
+                            <div className="text-center text-gray-500 py-8">
+                                <p className="text-lg text-gray-600 animate-pulse">Đang tải danh sách salon...</p>
+                            </div>
+                        ) : displayedStores.length > 0 ? (
+                            <>
+                                {displayedStores.length > 3 ? (
+                                    <div className="relative">
+                                        <div className="flex justify-center items-center overflow-hidden">
+                                            {/* Only show one store at a time for slideshow */}
+                                            <div className="w-full max-w-md">
+                                                {displayedStores[currentStoreSlideIndex] && (
+                                                    <div
+                                                        key={displayedStores[currentStoreSlideIndex].storeId}
+                                                        className="bg-white rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col mx-auto" // Added mx-auto for centering
+                                                    >
+                                                        <img
+                                                            src={displayedStores[currentStoreSlideIndex].storeImages || "https://via.placeholder.com/150"}
+                                                            alt={displayedStores[currentStoreSlideIndex].storeName}
+                                                            className="w-full h-48 object-cover"
+                                                        />
+                                                        <div className="p-5 text-left flex-grow flex flex-col">
+                                                            <h3 className="text-xl font-semibold text-blue-900 mb-2">
+                                                                {displayedStores[currentStoreSlideIndex].storeName}
+                                                            </h3>
+                                                            <p className="text-sm text-gray-600 mb-2 flex items-center">
+                                                                <FaMapMarkerAlt className="mr-2 text-blue-500" /> {displayedStores[currentStoreSlideIndex].district}, {displayedStores[currentStoreSlideIndex].cityProvince}
+                                                            </p>
+                                                            <p className="text-sm text-gray-600 mb-3 flex items-center">
+                                                                <FaPhoneAlt className="mr-2 text-blue-500" /> {displayedStores[currentStoreSlideIndex].phoneNumber}
+                                                            </p>
+                                                            {displayedStores[currentStoreSlideIndex].averageRating !== undefined && (
+                                                                <div className="flex items-center mb-3">
+                                                                    <StarRating
+                                                                        initialRating={
+                                                                            typeof displayedStores[currentStoreSlideIndex].averageRating === 'string'
+                                                                                ? Math.round(parseFloat(displayedStores[currentStoreSlideIndex].averageRating))
+                                                                                : Math.round(Number(displayedStores[currentStoreSlideIndex].averageRating))
+                                                                        }
+                                                                        readOnly
+                                                                        starSize={18}
+                                                                    />
+                                                                    <span className="text-sm text-gray-700 ml-2 font-semibold">
+                                                                        ({
+                                                                            typeof displayedStores[currentStoreSlideIndex].averageRating === 'string'
+                                                                                ? parseFloat(displayedStores[currentStoreSlideIndex].averageRating).toFixed(1)
+                                                                                : Number(displayedStores[currentStoreSlideIndex].averageRating).toFixed(1)
+                                                                        })
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                            <p className="text-sm text-gray-500 line-clamp-2 mb-4 flex-grow">
+                                                                {displayedStores[currentStoreSlideIndex].description}
+                                                            </p>
+                                                            <div className="mt-auto pt-4 border-t border-gray-100 flex justify-center gap-2">
+                                                                <button
+                                                                    onClick={() => navigate(`/booking?salonId=${displayedStores[currentStoreSlideIndex].storeId}`)}
+                                                                    className="inline-flex justify-center items-center bg-blue-700 text-white font-bold py-2 px-4 rounded-md shadow hover:bg-blue-800 transition-colors text-sm"
+                                                                >
+                                                                    <FaPhoneAlt className="mr-2" /> Đặt lịch
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => navigate(routes.store_reviews.replace(':storeId', displayedStores[currentStoreSlideIndex].storeId.toString()))}
+                                                                    className="inline-flex justify-center items-center bg-purple-600 text-white font-bold py-2 px-4 rounded-md shadow hover:bg-purple-700 transition-colors text-sm"
+                                                                >
+                                                                    <FaStar className="mr-2" /> Xem ĐG
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Navigation buttons for store slideshow */}
+                                        <button
+                                            onClick={prevStoreSlide}
+                                            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none z-10 ml-4"
+                                            aria-label="Previous store"
+                                        >
+                                            <FaArrowLeft />
+                                        </button>
+                                        <button
+                                            onClick={nextStoreSlide}
+                                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none z-10 mr-4"
+                                            aria-label="Next store"
+                                        >
+                                            <FaArrowRight />
+                                        </button>
                                     </div>
-                                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                                        {reason.title}
-                                    </h3>
-                                    <p className="text-base text-gray-600 text-center">
-                                        {reason.description}
-                                    </p>
+                                ) : (
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+                                        {displayedStores.map((store) => (
+                                            <div
+                                                key={store.storeId}
+                                                className="bg-white rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col"
+                                            >
+                                                <img
+                                                    src={store.storeImages || "https://via.placeholder.com/150"}
+                                                    alt={store.storeName}
+                                                    className="w-full h-48 object-cover"
+                                                />
+                                                <div className="p-5 text-left flex-grow flex flex-col">
+                                                    <h3 className="text-xl font-semibold text-blue-900 mb-2">
+                                                        {store.storeName}
+                                                    </h3>
+                                                    <p className="text-sm text-gray-600 mb-2 flex items-center">
+                                                        <FaMapMarkerAlt className="mr-2 text-blue-500" /> {store.district}, {store.cityProvince}
+                                                    </p>
+                                                    <p className="text-sm text-gray-600 mb-3 flex items-center">
+                                                        <FaPhoneAlt className="mr-2 text-blue-500" /> {store.phoneNumber}
+                                                    </p>
+                                                    {store.averageRating !== undefined && (
+                                                        <div className="flex items-center mb-3">
+                                                            <StarRating
+                                                                initialRating={
+                                                                    typeof store.averageRating === 'string'
+                                                                        ? Math.round(parseFloat(store.averageRating))
+                                                                        : Math.round(Number(store.averageRating))
+                                                                }
+                                                                readOnly
+                                                                starSize={18}
+                                                            />
+                                                            <span className="text-sm text-gray-700 ml-2 font-semibold">
+                                                                ({
+                                                                    typeof store.averageRating === 'string'
+                                                                        ? parseFloat(store.averageRating).toFixed(1)
+                                                                        : Number(store.averageRating).toFixed(1)
+                                                                })
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                    <p className="text-sm text-gray-500 line-clamp-2 mb-4 flex-grow">
+                                                        {store.description}
+                                                    </p>
+                                                    <div className="mt-auto pt-4 border-t border-gray-100 flex justify-center gap-2">
+                                                        <button
+                                                            onClick={() => navigate(`/booking?salonId=${store.storeId}`)}
+                                                            className="inline-flex justify-center items-center bg-blue-700 text-white font-bold py-2 px-4 rounded-md shadow hover:bg-blue-800 transition-colors text-sm"
+                                                        >
+                                                            <FaPhoneAlt className="mr-2" /> Đặt lịch
+                                                        </button>
+                                                        <button
+                                                            onClick={() => navigate(routes.store_reviews.replace(':storeId', store.storeId.toString()))}
+                                                            className="inline-flex justify-center items-center bg-purple-600 text-white font-bold py-2 px-4 rounded-md shadow hover:bg-purple-700 transition-colors text-sm"
+                                                        >
+                                                            <FaStar className="mr-2" /> Xem ĐG
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <div className="text-center text-gray-500 py-8">
+                                Hiện chưa có salon nào trong khu vực này.
+                            </div>
+                        )}
+
+
+                    </motion.div>
+
+                    {/* NEW SECTION: Image Gallery - Auto-scrolling carousel */}
+                    <motion.div
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.2 }}
+                        variants={sectionVariants}
+                        className="mx-auto max-w-7xl mt-20 mb-10 py-10 bg-white rounded-2xl shadow-xl overflow-hidden"
+                    >
+                        <h2 className="text-3xl font-bold text-blue-900 mb-8 text-center">
+                            Thư Viện Ảnh Của Chúng Tôi
+                        </h2>
+                        {/* Modified gallery container */}
+                        <div
+                            ref={galleryRef}
+                            // Removed onMouseEnter and onMouseLeave
+                            className="flex overflow-x-hidden space-x-6 pb-4 px-4 scroll-smooth" // Removed custom-scroll-bar and cursor styles
+                        >
+                            {/* Duplicate images to create an infinite loop effect */}
+                            {[...galleryImages, ...galleryImages].map((imageUrl, index) => (
+                                <div
+                                    key={index} // Use index here as keys for duplicated images, assuming unique enough for carousel purpose
+                                    className="flex-shrink-0 w-80 h-96 bg-gray-200 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
+                                >
+                                    <img
+                                        src={imageUrl}
+                                        alt={`Gallery image ${index + 1}`}
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
                             ))}
                         </div>
+                        {/* Removed the mouse wheel instruction text */}
                     </motion.div>
+                    {/* KẾT THÚC PHẦN MỚI */}
+
                 </div>
             </section>
 
@@ -755,7 +709,7 @@ export function HomePage() {
             >
                 <Link
                     to="/book-now"
-                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition animate-bounce"
+                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
                 >
                     <FaPhoneAlt className="mr-2" />
                     Đặt lịch ngay

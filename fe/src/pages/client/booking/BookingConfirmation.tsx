@@ -64,7 +64,7 @@ export function BookingConfirmation() {
     const firstAppointment = appointments.length > 0 ? appointments[0] : null;
 
     return (
-        <div className="w-full bg-gray-50 font-sans p-6 md:p-8 flex flex-col items-center min-h-screen"> 
+        <div className="w-full from-blue-{#F3F4F6} font-sans p-6 md:p-8 flex flex-col items-center min-h-screen"> 
             <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 w-full max-w-lg">
                 <div className="text-center mb-6">
                     <FaCheckCircle className="text-green-500 text-6xl mx-auto mb-3 animate-bounce-in" />

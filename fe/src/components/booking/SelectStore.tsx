@@ -116,7 +116,7 @@ export function SelectStore({ salonId, phone, setStep }: SelectStoreProps) {
     };
 
     return (
-        <div className="w-full min-h-screen bg-gray-100 font-sans flex flex-col items-center">
+        <div className="w-full min-h-screen from-blue-{#F3F4F6} font-sans flex flex-col items-center">
             {/* Full-width Image Banner */}
             <div
                 className="relative bg-cover bg-center w-full flex items-center justify-center overflow-hidden"

@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import api from "@/services/api";
 import url from "@/services/url";
+import { toast } from 'react-toastify'; // Import toast
+import routes from "@/config/routes";
 
 // Define the shape of formData and formErrors
 interface FormData {
@@ -11,11 +13,6 @@ interface FormData {
 
 interface FormErrors {
     email: string;
-}
-
-interface Notification {
-    message: string;
-    isSuccess: boolean;
 }
 
 export function ForgotPasswordPage() {
@@ -27,13 +24,11 @@ export function ForgotPasswordPage() {
     const [formErrors, setFormErrors] = useState<FormErrors>({
         email: "",
     });
-    const [notification, setNotification] = useState<Notification | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
         setFormErrors({ ...formErrors, [name]: "" });
-        setNotification(null);
     };
 
     const validateForm = () => {
@@ -59,7 +54,7 @@ export function ForgotPasswordPage() {
                 const response = await api.post(url.AUTH.FORGOT_PASSWORD, {
                     email: formData.email,
                 });
-                setNotification({ message: response.data, isSuccess: true });
+                toast.success(response.data, { autoClose: 2000 }); // Success toast
                 setTimeout(() => {
                     navigate(`/reset_password?email=${formData.email}`);
                 }, 2000);
@@ -69,7 +64,7 @@ export function ForgotPasswordPage() {
                 if (axios.isAxiosError(error)) {
                     errorMessage = error.response?.data || error.message;
                 }
-                setNotification({ message: errorMessage, isSuccess: false });
+                toast.error(errorMessage, { autoClose: 3000 }); // Error toast
             }
         }
     };
@@ -77,17 +72,7 @@ export function ForgotPasswordPage() {
     return (
         <section className="bg-gray-50 dark:bg-gray-900">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                <a
-                    href="#"
-                    className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
-                >
-                    <img
-                        className="w-8 h-8 mr-2"
-                        src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-                        alt="logo"
-                    />
-                    30Shine
-                </a>
+               
                 <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
                     <h2 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         Đổi mật khẩu
@@ -144,17 +129,6 @@ export function ForgotPasswordPage() {
                                 </label>
                             </div>
                         </div>
-                        {notification && (
-                            <p
-                                className={`text-sm p-2 rounded ${
-                                    notification.isSuccess
-                                        ? "text-green-500 bg-green-100"
-                                        : "text-red-500 bg-red-100"
-                                }`}
-                            >
-                                {notification.message}
-                            </p>
-                        )}
                         <button
                             type="submit"
                             className="w-full text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-900 dark:hover:bg-blue-800 dark:focus:ring-blue-800 disabled:opacity-50"
@@ -164,7 +138,7 @@ export function ForgotPasswordPage() {
                         <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                             Quay lại{" "}
                             <Link
-                                to="/login"
+                                to={routes.login}
                                 className="font-medium text-blue-600 hover:underline dark:text-blue-500"
                             >
                                 Đăng nhập

@@ -101,7 +101,7 @@ export function ComboDetail() {
     // Hiển thị khi có lỗi hoặc không tìm thấy combo
     if (error || !comboDetail) {
         return (
-            <div className="flex justify-center items-center h-screen">
+            <div className="flex justify-center from-blue-{#F3F4F6} items-center h-screen">
                 <p className="text-lg text-red-600">{error || "Không tìm thấy chi tiết combo!"}</p>
                 <Link to="/" className="text-shine-primary ml-4">
                     Quay lại trang chủ
@@ -116,7 +116,7 @@ export function ComboDetail() {
          
             <main>
                 <section>
-                    <div className="mt-4 mx-4 md:mx-48 mb-6 md:mb-12">
+                    <div className="mt-4 mx-4 md:mx-48 from-blue-{#F3F4F6} mb-6 md:mb-12">
 
 
                         {/* Thông tin combo */}
