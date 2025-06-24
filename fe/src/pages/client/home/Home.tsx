@@ -310,7 +310,7 @@ export function HomePage() {
                                 </p>
                             </div>
                             <Link
-                                to="/book-now"
+                                to={routes.booking}
                                 className="w-full bg-white text-blue-900 font-bold py-3 px-6 rounded-md hover:bg-blue-100 transition text-center text-lg"
                             >
                                 ĐẶT LỊCH NGAY
