@@ -708,7 +708,7 @@ export function HomePage() {
                 className="fixed bottom-6 right-6 z-50"
             >
                 <Link
-                    to="/book-now"
+                    to={routes.booking}
                     className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
                 >
                     <FaPhoneAlt className="mr-2" />

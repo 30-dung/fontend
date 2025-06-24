@@ -255,7 +255,7 @@ export function Header() {
                             </div>
                         ) : (
                             <div className="login-button">
-                                <NavLink to="/login">
+                                <NavLink to={routes.login}>
                                     <span className="rounded border border-shine-primary px-4 py-1.5 text-shine-primary hover:bg-shine-primary hover:text-white">
                                         Đăng nhập
                                     </span>
