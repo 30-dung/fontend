@@ -177,6 +177,13 @@ export function Header() {
                                     </span>
                                 </NavLink>
                             </li>
+                            <li className="menu-item">
+                                <NavLink to={routes.contact_feedback}>
+                                    <span className="menu-item-text pointer hover:text-shine-secondary">
+                                        Liên hệ
+                                    </span>
+                                </NavLink>
+                            </li>
                         </ul>
                     </div>
 
@@ -238,6 +245,7 @@ export function Header() {
                                                 Lịch sử tạo dáng
                                             </NavLink>
                                         </li>
+                                        
 
                                         <li
                                             role="menuitem"

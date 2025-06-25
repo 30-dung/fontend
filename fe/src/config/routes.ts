@@ -19,7 +19,8 @@ const routes = {
     // --- Bổ sung route cho trang đánh giá của cửa hàng ---
     store_reviews: '/stores/:storeId/reviews', // Trang đánh giá tổng thể của cửa hàng
     stylistAndTime: '/stylist-and-time',
-    bookingConfirmation: '/booking-confirmation'
+    bookingConfirmation: '/booking-confirmation',
+    contact_feedback: '/contact',
 }
 
 export default routes;

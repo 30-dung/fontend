@@ -51,6 +51,9 @@ const url = {
         GET_BY_STORE_FILTERED: 'reviews/store/{storeId}/filtered', // GET /api/reviews/store/{storeId}/filtered
         GET_STORE_SUMMARY: 'reviews/store/{storeId}/summary', // GET /api/reviews/store/{storeId}/summary
         EXISTS_BY_APPOINTMENT_ID: 'reviews/existsByAppointmentId', // GET /api/reviews/existsByAppointmentId?appointmentId={appointmentId}
+    },
+     FEEDBACK: {
+        SUBMIT: 'feedback/submit', 
     }
 };
 

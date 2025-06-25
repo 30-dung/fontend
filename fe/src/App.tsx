@@ -17,10 +17,13 @@ import { BookingHistory } from "./pages/client/booking/BookingHistory";
 import { BookingConfirmation } from "./pages/client/booking/BookingConfirmation";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { ScrollToTop } from "./hooks/useScrollTop";
-import { StoreReviewsPage } from "./pages/client/reviews/StoreReviewsPage"; // Import trang reviews mới
+import { StoreReviewsPage } from "./pages/client/reviews/StoreReviewsPage";
 
-import { ToastContainer } from 'react-toastify'; // Import ToastContainer
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS của react-toastify
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// --- Import trang ContactPage mới ---
+import ContactPage from "@/pages/client/contact/ContactPage";
 
 function App() {
     return (
@@ -74,7 +77,6 @@ function App() {
                         </Layout>
                     }
                 />
-                {/* --- Định tuyến cho trang đánh giá của cửa hàng --- */}
                 <Route
                     path={routes.store_reviews}
                     element={
@@ -83,9 +85,18 @@ function App() {
                         </Layout>
                     }
                 />
+                {/* --- Thêm route cho trang ContactPage --- */}
+                <Route
+                    path={routes.contact_feedback}
+                    element={
+                        <Layout>
+                            <ContactPage />
+                        </Layout>
+                    }
+                />
                 <Route path="*" element={<ErrorPage />} />
 
-                {/* Protected routes */}
+                {/* Protected routes (giữ nguyên cho các tính năng khác của bạn) */}
                 <Route
                     element={
                         <ProtectedRoute allowedRoles={["ROLE_CUSTOMER"]} />
@@ -118,10 +129,9 @@ function App() {
                 </Route>
             </Routes>
             
-            {/* Đặt ToastContainer ở đây để nó hiển thị trên toàn ứng dụng */}
-            <ToastContainer 
-                position="top-right" // Vị trí hiển thị (góc trên bên phải)
-                autoClose={3000}     // Tự động đóng sau 3 giây (3000ms)
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick
