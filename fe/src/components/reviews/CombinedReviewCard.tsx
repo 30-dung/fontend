@@ -6,6 +6,7 @@ import api from '@/services/api';
 import url from '@/services/url';
 import ReviewReplyItem from './ReviewReplyItem';
 import { FaStar } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 interface CombinedReviewCardProps {
     combinedReview: CombinedReviewDisplayDTO;
@@ -22,16 +23,16 @@ const CombinedReviewCard: React.FC<CombinedReviewCardProps> = ({ combinedReview,
     const handleReplySubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!currentUserId) {
-            setError('Bạn cần đăng nhập để trả lời đánh giá.');
+            toast.error('Bạn cần đăng nhập để trả lời đánh giá.');
             return;
         }
         if (!replyComment.trim()) {
-            setError('Vui lòng nhập nội dung trả lời.');
+            toast.error('Vui lòng nhập nội dung trả lời.');
             return;
         }
 
         if (combinedReview.mainReviewId === undefined || combinedReview.mainReviewId === null) {
-            setError('Lỗi: Không tìm thấy ID đánh giá chính để trả lời.');
+            toast.error('Lỗi: Không tìm thấy ID đánh giá chính để trả lời.');
             console.error("CombinedReviewCard: mainReviewId is null/undefined for reply:", combinedReview);
             return;
         }
@@ -63,15 +64,15 @@ const CombinedReviewCard: React.FC<CombinedReviewCardProps> = ({ combinedReview,
 
     const handleReplyToReply = async (parentReplyId: number, replyText: string) => {
         if (!currentUserId) {
-            alert('Bạn cần đăng nhập để trả lời.');
+            toast.error('Bạn cần đăng nhập để trả lời.');
             return;
         }
         if (!replyText.trim()) {
-            alert('Vui lòng nhập nội dung trả lời.');
+            toast.error('Vui lòng nhập nội dung trả lời.');
             return;
         }
         if (combinedReview.mainReviewId === undefined || combinedReview.mainReviewId === null) {
-            alert('Lỗi: Không tìm thấy ID đánh giá chính để trả lời.');
+            toast.error('Lỗi: Không tìm thấy ID đánh giá chính để trả lời.');
             return;
         }
 
@@ -90,7 +91,7 @@ const CombinedReviewCard: React.FC<CombinedReviewCardProps> = ({ combinedReview,
             onReplySubmitted(combinedReview.appointmentId, response.data);
         } catch (err: any) {
             console.error('Error submitting reply to reply:', err.response?.data || err.message);
-            alert(err.response?.data?.message || 'Không thể gửi trả lời.');
+            toast.error(err.response?.data?.message || 'Không thể gửi trả lời.');
         } finally {
             setLoading(false);
         }
@@ -107,50 +108,44 @@ const CombinedReviewCard: React.FC<CombinedReviewCardProps> = ({ combinedReview,
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-200 hover:shadow-lg">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-200 hover:shadow-lg border border-soft-gray">
             <div className="p-5">
                 <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0">
-                        <img
-                            src={combinedReview.reviewer.profilePicUrl || 'https://via.placeholder.com/60/cbd5e1?text=U'}
-                            alt={combinedReview.reviewer.fullName}
-                            className="w-14 h-14 rounded-full object-cover shadow-sm"
-                        />
-                    </div>
+                   
                     <div className="flex-grow">
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                            <p className="font-semibold text-gray-800 text-lg">{combinedReview.reviewer.fullName}</p>
-                            <span className="text-sm text-gray-500 mt-1 sm:mt-0">{formatDateTime(combinedReview.createdAt)}</span>
+                            <p className="font-semibold text-dark-brown text-lg">{combinedReview.reviewer.fullName}</p>
+                            <span className="text-sm text-medium-gray mt-1 sm:mt-0">{formatDateTime(combinedReview.createdAt)}</span>
                         </div>
 
                         {/* Store Rating */}
                         {combinedReview.storeRating !== undefined && (
                             <div className="flex items-center mt-2">
                                 <StarRating initialRating={combinedReview.storeRating} readOnly starSize={18} />
-                                <span className="text-sm text-gray-600 ml-2 font-medium">Đánh giá cửa hàng</span>
+                                <span className="text-sm text-medium-gray ml-2 font-medium">Đánh giá cửa hàng</span>
                             </div>
                         )}
 
                         {/* Stylist and Service Info */}
-                        <div className="mt-3 space-y-2 text-sm text-gray-700">
+                        <div className="mt-3 space-y-2 text-sm text-medium-gray">
                             {combinedReview.employeeName && combinedReview.employeeRating !== undefined && (
                                 <div className="flex items-center">
-                                    <span className="text-gray-600 mr-2">Stylist:</span>
-                                    <span className="font-medium text-gray-800 mr-2">{combinedReview.employeeName}</span>
+                                    <span className="text-medium-gray mr-2">Stylist:</span>
+                                    <span className="font-medium text-dark-brown mr-2">{combinedReview.employeeName}</span>
                                     <StarRating initialRating={combinedReview.employeeRating} readOnly starSize={14} />
                                 </div>
                             )}
                             {combinedReview.serviceName && combinedReview.serviceRating !== undefined && (
                                 <div className="flex items-center">
-                                    <span className="text-gray-600 mr-2">Dịch vụ:</span>
-                                    <span className="font-medium text-gray-800 mr-2">{combinedReview.serviceName}</span>
+                                    <span className="text-medium-gray mr-2">Dịch vụ:</span>
+                                    <span className="font-medium text-dark-brown mr-2">{combinedReview.serviceName}</span>
                                     <StarRating initialRating={combinedReview.serviceRating} readOnly starSize={14} />
                                 </div>
                             )}
                         </div>
 
                         {combinedReview.comment && (
-                            <p className="text-gray-700 mt-4 text-base leading-relaxed bg-gray-50 p-3 rounded-md">
+                            <p className="text-dark-brown mt-4 text-base leading-relaxed bg-soft-gray p-3 rounded-md">
                                 {combinedReview.comment}
                             </p>
                         )}
@@ -177,7 +172,8 @@ const CombinedReviewCard: React.FC<CombinedReviewCardProps> = ({ combinedReview,
                     <div className="mt-4 ml-14">
                         <button
                             onClick={() => setShowReplyForm(!showReplyForm)}
-                            className="text-blue-700 hover:text-blue-800 text-sm font-medium flex items-center transition-colors px-3 py-1 rounded-lg bg-blue-100 hover:bg-blue-200"
+                            // Đã sửa class cho nút "Trả lời"
+                            className="text-dark-brown hover:text-light-cream text-sm font-medium flex items-center transition-colors px-3 py-1 rounded-lg bg-soft-gray hover:bg-dark-brown" /* Thay đổi màu nền mặc định, màu chữ mặc định, và hiệu ứng hover */
                         >
                             {showReplyForm ? (
                                 <>
@@ -196,12 +192,12 @@ const CombinedReviewCard: React.FC<CombinedReviewCardProps> = ({ combinedReview,
                             )}
                         </button>
                         {showReplyForm && (
-                            <form onSubmit={handleReplySubmit} className="mt-3 bg-gray-50 p-4 rounded-lg shadow-sm"> {/* Added shadow-sm for the form */}
+                            <form onSubmit={handleReplySubmit} className="mt-3 bg-soft-gray p-4 rounded-lg shadow-sm">
                                 <textarea
                                     value={replyComment}
                                     onChange={(e) => setReplyComment(e.target.value)}
                                     rows={3}
-                                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                    className="w-full px-3 py-2 text-sm border border-soft-gray rounded-md focus:outline-none focus:ring-2 focus:ring-accent-gold focus:border-transparent resize-none text-dark-brown"
                                     placeholder="Viết phản hồi của bạn..."
                                     disabled={replyLoading}
                                 ></textarea>
@@ -210,13 +206,13 @@ const CombinedReviewCard: React.FC<CombinedReviewCardProps> = ({ combinedReview,
                                     <button
                                         type="button"
                                         onClick={() => setShowReplyForm(false)}
-                                        className="px-4 py-2 text-sm text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+                                        className="px-4 py-2 text-sm text-dark-brown bg-soft-gray rounded-md hover:bg-medium-gray transition-colors"
                                     >
                                         Hủy
                                     </button>
                                     <button
                                         type="submit"
-                                        className="px-4 py-2 text-sm text-white bg-blue-700 rounded-md hover:bg-blue-800 transition-colors disabled:bg-blue-400"
+                                        className="px-4 py-2 text-sm text-light-cream bg-black-soft rounded-md hover:bg-dark-brown transition-colors disabled:bg-soft-gray"
                                         disabled={replyLoading}
                                     >
                                         {replyLoading ? 'Đang gửi...' : 'Gửi phản hồi'}

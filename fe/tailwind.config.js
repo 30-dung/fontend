@@ -4,68 +4,64 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        // 'Merriweather' sẽ là font mặc định cho sans-serif, phù hợp cho nội dung
+        sans: ['Merriweather', 'serif'], //
+        // 'Playfair Display' sẽ là font cho tiêu đề mang phong cách cổ điển
+        serif: ['Playfair Display', 'serif'], //
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
-        // 30shine color palette
-        shine: {
-          primary: "#15397F",
-          secondary: "#FFCC33",
-          blue: {
-            DEFAULT: "#15397F",
-            dark: "#2C3B5C",
-            light: "#A0C9EB",
-            lighter: "#C4D1DF",
-          },
-          background: {
-            DEFAULT: "#F5F5F7",
-            gray: "#ECECEC",
-            footer: "#15397F",
-          },
-          text: {
-            primary: "#15397F",
-            secondary: "#666666",
-            gray: "#96A7B6",
-            white: "#FFFFFF",
-          },
-        },
-        // Original default colors
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        // Định nghĩa các màu sắc theo phong cách mộc mạc cổ điển, có điểm nhấn đen
+        'light-cream': '#F8F7F3', // Nền chính: Trắng kem
+        'soft-gray': '#EAEAEA',   // Nền phụ, viền nhẹ: Xám nhạt
+        'dark-brown': '#4A3B31',  // Màu chữ đậm, tiêu đề: Nâu đen
+        'medium-gray': '#6B7280', // Màu chữ phụ: Xám trung bình
+        'black-soft': '#1A1A1A',  // Màu đen mềm mại làm điểm nhấn
+        'accent-gold': '#B8860B', // Vàng đồng/vàng cổ điển làm điểm nhấn
+        'accent-terracotta': '#A0522D', // Nâu đất nung làm điểm nhấn thứ cấp
+        'text-on-accent': '#FFFFFF', // Màu chữ trên các nền điểm nhấn
+         'accent-gold': '#B8860B', // Vàng đồng/vàng cổ điển
+    'accent-gold-rgb': '184, 134, 11', // Dạng RGB cho việc dùng opacity
+
+        // Cập nhật các biến gốc của shadcn/ui hoặc các thư viện khác để phù hợp với theme mới
+        background: "var(--light-cream)", //
+        foreground: "var(--dark-brown)", //
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "#FFFFFF", // Giữ card là trắng tinh nếu muốn độ tương phản cao
+          foreground: "var(--dark-brown)", //
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "#FFFFFF", //
+          foreground: "var(--dark-brown)", //
         },
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "var(--black-soft)", // Các nút hành động chính, tiêu đề quan trọng
+          foreground: "var(--light-cream)", // Chữ trên nền primary
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "var(--soft-gray)", // Nền các khối phụ, hover nhẹ
+          foreground: "var(--dark-brown)", // Chữ trên nền secondary
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "var(--soft-gray)", //
+          foreground: "var(--medium-gray)", //
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "var(--accent-gold)", // Màu điểm nhấn chính
+          foreground: "var(--text-on-accent)", //
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "hsl(0 84.2% 60.2%)", // Giữ nguyên màu đỏ cảnh báo nếu cần
+          foreground: "hsl(0 0% 98%)", //
         },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        border: "var(--soft-gray)", // Màu border
+        input: "var(--soft-gray)", //
+        ring: "var(--accent-gold)", // Màu ring focus cho input
         chart: {
           1: "hsl(var(--chart-1))",
           2: "hsl(var(--chart-2))",

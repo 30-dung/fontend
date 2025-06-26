@@ -52,43 +52,30 @@ const ReviewReplyItem: React.FC<ReviewReplyItemProps> = ({ reply, currentUserId,
             className={`relative pl-4`}
         >
             <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 mt-0.5">
-                    <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden shadow-sm">
-                        {reply.replier.profilePicUrl ? (
-                            <img
-                                src={reply.replier.profilePicUrl}
-                                alt={reply.replier.fullName}
-                                className="w-full h-full object-cover"
-                            />
-                        ) : (
-                            <span className="text-sm text-gray-500 font-medium">
-                                {reply.replier.fullName.charAt(0).toUpperCase()}
-                            </span>
-                        )}
-                    </div>
-                </div>
+                
                 <div className="flex-grow">
                     <div className="flex items-baseline justify-between mb-1">
                         <div className="flex items-center">
-                            <span className="text-sm font-semibold text-gray-800 mr-2">
+                            <span className="text-sm font-semibold text-dark-brown mr-2">
                                 {reply.replier.fullName}
                             </span>
                             {reply.isStoreReply && (
-                                <span className="text-xs px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full font-medium">
+                                <span className="text-xs px-2 py-0.5 bg-accent-gold/20 text-accent-gold rounded-full font-medium">
                                     Cửa hàng
                                 </span>
                             )}
                         </div>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-medium-gray">
                             {formatDateTime(reply.createdAt)}
                         </span>
                     </div>
-                    <p className="text-sm text-gray-700 leading-relaxed">{reply.comment}</p>
+                    <p className="text-sm text-medium-gray leading-relaxed">{reply.comment}</p>
 
                     {currentUserId && (
                         <button
                             onClick={() => setShowReplyForm(!showReplyForm)}
-                            className="text-xs text-blue-700 hover:text-blue-800 mt-2 flex items-center transition-colors px-2 py-1 rounded-lg bg-blue-100 hover:bg-blue-200"
+                            // Đã sửa class cho nút "Trả lời"
+                            className="text-dark-brown hover:text-light-cream mt-2 flex items-center transition-colors px-2 py-1 rounded-lg bg-soft-gray hover:bg-dark-brown" /* Thay đổi màu nền mặc định, màu chữ mặc định, và hiệu ứng hover */
                         >
                             <FaReply className="mr-1" size={10} />
                             {showReplyForm ? 'Hủy' : 'Trả lời'}
@@ -98,12 +85,12 @@ const ReviewReplyItem: React.FC<ReviewReplyItemProps> = ({ reply, currentUserId,
             </div>
 
             {showReplyForm && (
-                <form onSubmit={handleReplySubmit} className="mt-3 ml-12 bg-gray-50 p-3 rounded-lg shadow-sm"> {/* Added shadow-sm for the form */}
+                <form onSubmit={handleReplySubmit} className="mt-3 ml-12 bg-soft-gray p-3 rounded-lg shadow-sm">
                     <textarea
                         value={replyText}
                         onChange={(e) => setReplyText(e.target.value)}
                         rows={2}
-                        className="w-full px-3 py-2 text-sm border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+                        className="w-full px-3 py-2 text-sm border-soft-gray rounded-md focus:outline-none focus:ring-1 focus:ring-accent-gold resize-none text-dark-brown"
                         placeholder="Viết phản hồi của bạn..."
                         disabled={loading}
                     ></textarea>
@@ -112,13 +99,13 @@ const ReviewReplyItem: React.FC<ReviewReplyItemProps> = ({ reply, currentUserId,
                         <button
                             type="button"
                             onClick={() => setShowReplyForm(false)}
-                            className="px-3 py-1 text-sm text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+                            className="px-3 py-1 text-sm text-dark-brown bg-soft-gray rounded-md hover:bg-medium-gray transition-colors"
                         >
                             Hủy
                         </button>
                         <button
                             type="submit"
-                            className="px-3 py-1 text-sm text-white bg-blue-700 rounded-md hover:bg-blue-800 transition-colors disabled:bg-blue-400"
+                            className="px-3 py-1 text-sm text-light-cream bg-black-soft rounded-md hover:bg-dark-brown transition-colors disabled:bg-soft-gray"
                             disabled={loading}
                         >
                             {loading ? 'Đang gửi...' : 'Gửi'}

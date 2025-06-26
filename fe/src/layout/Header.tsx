@@ -194,7 +194,8 @@ export function Header() {
                             <div className="user-menu" ref={dropdownRef}>
                                 <button
                                     onClick={toggleDropdown}
-                                    className="flex items-center space-x-2 rounded border border-shine-primary px-4 py-1.5 text-shine-primary hover:bg-shine-primary hover:text-white"
+                                    className="flex items-center space-x-2 rounded border border-dark-brown px-4 py-1.5 transition-colors
+                                                   hover:bg-dark-brown hover:text-light-cream"
                                     aria-expanded={isDropdownOpen}
                                     aria-label="User menu"
                                 >
@@ -264,7 +265,8 @@ export function Header() {
                         ) : (
                             <div className="login-button">
                                 <NavLink to={routes.login}>
-                                    <span className="rounded border border-shine-primary px-4 py-1.5 text-shine-primary hover:bg-shine-primary hover:text-white">
+                                    <span className="rounded border border-dark-brown px-4 py-1.5 text-dark-brown transition-colors
+                                                   hover:bg-dark-brown hover:text-light-cream">
                                         Đăng nhập
                                     </span>
                                 </NavLink>

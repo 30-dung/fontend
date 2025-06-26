@@ -4,6 +4,10 @@ import { toast } from 'react-toastify';
 import api from '@/services/api';
 import url from '@/services/url';
 import MapEmbed from '@/components/contact/MapEmbed'; // SỬA ĐỔI DÒNG NÀY
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { FaPhoneAlt } from 'react-icons/fa';
+import routes from '@/config/routes';
 // import backgroundImage from '@/assets/images/contact-header-bg.jpg';
 
 // Định nghĩa interface cho user profile được lưu trong localStorage
@@ -72,39 +76,39 @@ const ContactPage: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center">
+        <div className="min-h-screen bg-light-cream flex flex-col items-center"> {/* Thay bg-gray-100 thành bg-light-cream */}
             {/* Phần Banner/Header ảnh lớn */}
             <div
                 className="w-full h-96 bg-cover bg-center flex items-center justify-center relative"
                 style={{ backgroundImage: `url('https://img.freepik.com/premium-photo/barber-sitting-front-mirror-looking-reflection-his-client_376548-1527.jpg')` }}
             >
                 <div className="absolute inset-0 bg-black opacity-50"></div>
-                <h1 className="text-5xl font-bold text-white z-10 text-shadow-lg">LIÊN HỆ VỚI CHÚNG TÔI</h1>
+                <h1 className="text-5xl font-bold text-white z-10 text-shadow-lg font-serif">LIÊN HỆ VỚI CHÚNG TÔI</h1> {/* Thêm font-serif */}
             </div>
 
             {/* Phần nội dung chính: Tiêu đề và 2 cột */}
             <div className="container mx-auto px-4 py-12 max-w-6xl">
-                <h2 className="text-4xl font-extrabold text-gray-900 text-center mb-12 relative">
+                <h2 className="text-4xl font-extrabold text-dark-brown text-center mb-12 relative font-serif"> {/* Thay text-gray-900 thành text-dark-brown, thêm font-serif */}
                     GỬI GÓP Ý HOẶC THẮC MẮC
-                    <span className="block w-24 h-1 bg-indigo-600 mx-auto mt-4 rounded"></span>
+                    <span className="block w-24 h-1 bg-accent-gold mx-auto mt-4 rounded"></span> {/* Thay bg-indigo-600 thành bg-accent-gold */}
                 </h2>
 
                 <div className="flex flex-col lg:flex-row gap-10 items-start">
                     {/* Cột trái: Form Góp ý */}
-                    <div className="w-full lg:w-1/2 bg-white p-8 rounded-xl shadow-lg z-10 border border-gray-200">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                    <div className="w-full lg:w-1/2 bg-white p-8 rounded-xl shadow-lg z-10 border border-soft-gray"> {/* Thay border-gray-200 thành border-soft-gray */}
+                        <h3 className="text-2xl font-bold text-dark-brown mb-6 text-center font-serif"> {/* Thay text-gray-900 thành text-dark-brown, thêm font-serif */}
                             Biểu mẫu Góp ý
                         </h3>
                         <form className="space-y-6" onSubmit={handleSubmit}>
                             <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Tên của bạn</label>
+                                <label htmlFor="name" className="block text-sm font-medium text-medium-gray">Tên của bạn</label> {/* Thay text-gray-700 thành text-medium-gray */}
                                 <input
                                     id="name"
                                     name="name"
                                     type="text"
                                     autoComplete="name"
                                     required
-                                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-300 ease-in-out"
+                                    className="mt-1 block w-full px-4 py-2 border border-soft-gray rounded-md shadow-sm placeholder-medium-gray text-dark-brown focus:outline-none focus:ring-accent-gold focus:border-accent-gold sm:text-sm transition duration-300 ease-in-out" 
                                     placeholder="Nguyễn Văn A"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
@@ -112,14 +116,14 @@ const ContactPage: React.FC = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email của bạn</label>
+                                <label htmlFor="email" className="block text-sm font-medium text-medium-gray">Email của bạn</label> {/* Thay text-gray-700 thành text-medium-gray */}
                                 <input
                                     id="email"
                                     name="email"
                                     type="email"
                                     autoComplete="email"
                                     required
-                                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-300 ease-in-out"
+                                    className="mt-1 block w-full px-4 py-2 border border-soft-gray rounded-md shadow-sm placeholder-medium-gray text-dark-brown focus:outline-none focus:ring-accent-gold focus:border-accent-gold sm:text-sm transition duration-300 ease-in-out" 
                                     placeholder="email@example.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -127,13 +131,13 @@ const ContactPage: React.FC = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="comment" className="block text-sm font-medium text-gray-700">Nội dung góp ý</label>
+                                <label htmlFor="comment" className="block text-sm font-medium text-medium-gray">Nội dung góp ý</label> {/* Thay text-gray-700 thành text-medium-gray */}
                                 <textarea
                                     id="comment"
                                     name="comment"
                                     rows={6}
                                     required
-                                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-300 ease-in-out"
+                                    className="mt-1 block w-full px-4 py-2 border border-soft-gray rounded-md shadow-sm placeholder-medium-gray text-dark-brown focus:outline-none focus:ring-accent-gold focus:border-accent-gold sm:text-sm transition duration-300 ease-in-out" 
                                     placeholder="Chia sẻ góp ý hoặc thắc mắc của bạn..."
                                     value={comment}
                                     onChange={(e) => setComment(e.target.value)}
@@ -143,11 +147,11 @@ const ContactPage: React.FC = () => {
                             <div>
                                 <button
                                     type="submit"
-                                    className="w-full flex justify-center py-3 px-6 border border-transparent rounded-md shadow-sm text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 ease-in-out"
+                                    className="w-full flex justify-center py-3 px-6 border border-transparent rounded-md shadow-sm text-lg font-semibold text-text-on-accent bg-black-soft hover:bg-dark-brown focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-gold disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 ease-in-out" /* Thay đổi text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 thành các màu theme */
                                     disabled={loading}
                                 >
                                     {loading ? (
-                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-text-on-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"> {/* Đảm bảo màu spinner */}
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
@@ -161,15 +165,29 @@ const ContactPage: React.FC = () => {
                     {/* Cột phải: Bản đồ */}
                     <div className="w-full lg:w-1/2 flex flex-col items-center justify-center">
                         <MapEmbed address="99 Xuân Thủy, Cầu Giấy, Hà Nội" />
-                        <p className="text-center text-gray-700 text-lg mt-4 font-medium">
+                        <p className="text-center text-dark-brown text-lg mt-4 font-medium"> {/* Thay text-gray-700 thành text-dark-brown */}
                            Trụ sở chính - 99 Xuân Thủy, Làng vòng, Cầu Giấy, Hà Nội
                         </p>
-                        <p className="text-center text-gray-600 text-sm mt-1">
+                        <p className="text-center text-medium-gray text-sm mt-1"> {/* Thay text-gray-600 thành text-medium-gray */}
                             Hotline: 0379999999
                         </p>
                     </div>
                 </div>
             </div>
+             <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 1 }}
+                            className="fixed bottom-6 right-6 z-50"
+                        >
+                            <Link
+                                to={routes.booking}
+                                className="flex items-center bg-black-soft text-light-cream font-bold py-3 px-7 rounded-full shadow-xl hover:bg-dark-brown transition-all duration-300" /* Đổi màu sắc nút CTA */
+                            >
+                                <FaPhoneAlt className="mr-2" />
+                                Đặt lịch ngay
+                            </Link>
+                        </motion.div>
         </div>
     );
 };

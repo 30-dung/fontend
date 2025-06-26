@@ -5,7 +5,7 @@ import url from "@/services/url";
 import ReviewFormModal from "@/components/reviews/ReviewFormModal";
 import { Link, useNavigate } from 'react-router-dom';
 import routes from '@/config/routes';
-import { toast } from 'react-toastify'; // Import toast
+import { toast } from 'react-toastify';
 
 // Import các icons cần thiết từ react-icons
 import { FaCheckCircle, FaHourglassHalf, FaTimesCircle, FaInfoCircle, FaPhoneAlt } from 'react-icons/fa';
@@ -16,12 +16,12 @@ import { motion } from "framer-motion";
 interface Appointment {
     appointmentId: number;
     slug: string;
-    storeId: number; // Từ AppointmentResponse.StoreServiceDetail
+    storeId: number;
     storeName: string;
-    serviceName: string[]; // Từ AppointmentResponse.StoreServiceDetail
-    employeeId: number; // Từ AppointmentResponse.EmployeeDetail
+    serviceName: string[];
+    employeeId: number;
     employeeName: string;
-    storeServiceId: number; // Từ AppointmentResponse.StoreServiceDetail
+    storeServiceId: number;
     startTime: string;
     endTime: string;
     status: string;
@@ -34,18 +34,15 @@ export function BookingHistory() {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    // const [toast, setToast] = useState<string | null>(null); // Remove this state
     const [confirmId, setConfirmId] = useState<number | null>(null);
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
     const [selectedAppointmentForReview, setSelectedAppointmentForReview] = useState<Appointment | null>(null);
 
-    // --- State mới cho phân trang ---
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6; // Số lượng item trên mỗi trang
+    const itemsPerPage = 4;
 
     const navigate = useNavigate();
 
-    // Helper function to format date and time
     const formatDateTime = (isoString: string) => {
         return new Date(isoString).toLocaleString('vi-VN', {
             year: 'numeric',
@@ -57,17 +54,16 @@ export function BookingHistory() {
         });
     };
 
-    // Helper function to get status display with icon
     const getStatusDisplay = (status: string) => {
         switch (status) {
             case "CONFIRMED":
-                return { text: "Đã xác nhận", bgColor: "#e0f7fa", textColor: "#00796b", icon: <FaCheckCircle className="mr-1" /> };
+                return { text: "Đã xác nhận", bgColor: "#e8f5e9", textColor: "#2e7d32", icon: <FaCheckCircle className="mr-1" /> }; // Màu xanh lá nhẹ
             case "PENDING":
-                return { text: "Chờ xác nhận", bgColor: "#fff3cd", textColor: "#b26a00", icon: <FaHourglassHalf className="mr-1" /> };
+                return { text: "Chờ xác nhận", bgColor: "#fff8e1", textColor: "#ff8f00", icon: <FaHourglassHalf className="mr-1" /> }; // Màu vàng cam nhẹ
             case "CANCELED":
-                return { text: "Đã hủy", bgColor: "#fdecea", textColor: "#c62828", icon: <FaTimesCircle className="mr-1" /> };
+                return { text: "Đã hủy", bgColor: "#ffebee", textColor: "#d32f2f", icon: <FaTimesCircle className="mr-1" /> }; // Màu đỏ nhẹ
             case "COMPLETED":
-                return { text: "Đã hoàn thành", bgColor: "#d4edda", textColor: "#155724", icon: <FaCheckCircle className="mr-1" /> };
+                return { text: "Đã hoàn thành", bgColor: "#e3f2fd", textColor: "#1976d2", icon: <FaCheckCircle className="mr-1" /> }; // Màu xanh dương nhẹ
             default:
                 return { text: status, bgColor: "#f3f4f6", textColor: "#374151", icon: <FaInfoCircle className="mr-1" /> };
         }
@@ -129,7 +125,7 @@ export function BookingHistory() {
             );
             setAppointments(sortedAppointments);
             setLoading(false);
-            setCurrentPage(1); // Reset về trang đầu tiên khi dữ liệu mới được tải
+            setCurrentPage(1);
         } catch (err: any) {
             console.error("Error fetching appointment history:", err);
             setError(
@@ -156,13 +152,12 @@ export function BookingHistory() {
                         : appt
                 )
             );
-            toast.success("Hủy lịch hẹn thành công!"); // Success toast notification
+            toast.success("Hủy lịch hẹn thành công!");
         } catch (err: any) {
             console.error("Error canceling appointment:", err);
-            toast.error(err.response?.data?.message || "Không thể hủy lịch hẹn."); // Error toast notification
+            toast.error(err.response?.data?.message || "Không thể hủy lịch hẹn.");
         } finally {
             setConfirmId(null);
-            // No need for setTimeout with toast, it handles auto-closing
         }
     };
 
@@ -188,10 +183,10 @@ export function BookingHistory() {
                             : appt
                     )
                 );
-                toast.success("Đánh giá của bạn đã được gửi thành công!"); // Toast for successful review
+                toast.success("Đánh giá của bạn đã được gửi thành công!");
             }
         } else {
-            toast.error("Có lỗi xảy ra khi gửi đánh giá."); // Toast for failed review
+            toast.error("Có lỗi xảy ra khi gửi đánh giá.");
         }
         handleCloseReviewModal();
     };
@@ -200,7 +195,6 @@ export function BookingHistory() {
         fetchHistory();
     }, []);
 
-    // --- Logic phân trang ---
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = appointments.slice(indexOfFirstItem, indexOfLastItem);
@@ -208,52 +202,44 @@ export function BookingHistory() {
     const totalPages = Math.ceil(appointments.length / itemsPerPage);
 
     const paginate = (pageNumber: number) => {
-        if (pageNumber < 1 || pageNumber > totalPages) return; // Ngăn chặn trang không hợp lệ
+        if (pageNumber < 1 || pageNumber > totalPages) return;
         setCurrentPage(pageNumber);
     };
 
-    // Tạo mảng các số trang để hiển thị trên UI
     const pageNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
         pageNumbers.push(i);
     }
-    // --- Kết thúc Logic phân trang ---
 
     return (
-        <div>
+        <div className="min-h-screen bg-light-cream font-sans"> {/* Thay from-blue-{#F3F4F6} thành bg-light-cream */}
             {/* Banner đầu trang giống Location.tsx */}
             <div
-                className="relative bg-cover bg-center h-64 from-blue-{#F3F4F6} md:h-80 flex items-center justify-center overflow-hidden w-full"
+                className="relative bg-cover bg-center h-64 md:h-80 flex items-center justify-center overflow-hidden w-full"
                 style={{ backgroundImage: `url('https://static.booksy.com/static/live/covers/barbers.jpg')` }}
             >
                 <div className="absolute inset-0 bg-black opacity-40 backdrop-filter backdrop-blur-sm"></div>
-                <h1 className="relative text-white text-4xl md:text-5xl font-bold z-10 text-center px-4">
+                <h1 className="relative text-white text-4xl md:text-5xl font-bold z-10 text-center px-4 font-serif"> {/* Thêm font-serif */}
                     Lịch sử đặt lịch của bạn
                 </h1>
             </div>
 
-            {/* No need for custom toast state anymore, react-toastify handles it */}
-            {/* {toast && (
-                <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg z-50 animate-fade-in">
-                    {toast}
-                </div>
-            )} */}
             {/* Modal xác nhận hủy */}
             {confirmId !== null && (
                 <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-xs text-center">
-                        <p className="mb-6 text-base text-gray-800 font-semibold">
+                        <p className="mb-6 text-base text-dark-brown font-semibold"> {/* Thay text-gray-800 thành text-dark-brown */}
                             Bạn có chắc muốn hủy lịch hẹn này?
                         </p>
                         <div className="flex justify-center gap-4">
                             <button
-                                className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 font-semibold transition"
+                                className="px-4 py-2 bg-soft-gray text-dark-brown rounded-lg hover:bg-medium-gray hover:text-light-cream font-semibold transition" /* Đổi màu nút */
                                 onClick={handleCancelModal}
                             >
                                 Không
                             </button>
                             <button
-                                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 font-semibold transition"
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition" /* Giữ màu đỏ cho hủy nhưng đồng bộ hover */
                                 onClick={handleConfirmCancel}
                             >
                                 Hủy lịch
@@ -275,52 +261,51 @@ export function BookingHistory() {
 
             <div className="container mx-auto max-w-5xl -mt-20 relative z-10 px-4 mb-12">
                 <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
-                    <h2 className="text-3xl font-bold text-center text-blue-900 mb-8">
+                    <h2 className="text-3xl font-bold text-dark-brown text-center mb-8 font-serif"> {/* Thay text-blue-900 thành text-dark-brown, thêm font-serif */}
                         Chi tiết lịch sử đặt lịch
                     </h2>
                     {loading ? (
-                        <div className="text-center text-gray-500 py-8">Đang tải lịch sử đặt lịch...</div>
+                        <div className="text-center text-medium-gray py-8">Đang tải lịch sử đặt lịch...</div>
                     ) : error ? (
-                        <div className="text-center text-red-500 py-8">{error}</div>
+                        <div className="text-center text-red-600 py-8">{error}</div>
                     ) : appointments.length === 0 ? (
-                        <div className="text-center text-gray-500 py-8">
+                        <div className="text-center text-medium-gray py-8">
                             Chưa có lịch đặt nào
                         </div>
                     ) : (
                         <div className="overflow-x-auto custom-scrollbar-table">
-                            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
-                                <thead className="bg-gray-100 border-b border-gray-200">
+                            <table className="min-w-full bg-white border border-soft-gray rounded-lg shadow-sm"> {/* Thay border-gray-200 thành border-soft-gray */}
+                                <thead className="bg-soft-gray border-b border-soft-gray"> {/* Thay bg-gray-100 border-gray-200 thành bg-soft-gray border-soft-gray */}
                                     <tr>
-                                        <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Mã lịch</th>
-                                        <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Cửa hàng</th>
-                                        <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Dịch vụ</th>
-                                        <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Stylist</th>
-                                        <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Thời gian</th>
-                                        <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Tổng tiền</th>
-                                        <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Trạng thái</th>
-                                        <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Hành động</th>
+                                        <th className="py-3 px-4 text-left text-sm font-semibold text-dark-brown">Mã lịch</th> {/* Thay text-gray-700 thành text-dark-brown */}
+                                        <th className="py-3 px-4 text-left text-sm font-semibold text-dark-brown">Cửa hàng</th> {/* Thay text-gray-700 thành text-dark-brown */}
+                                        <th className="py-3 px-4 text-left text-sm font-semibold text-dark-brown">Dịch vụ</th> {/* Thay text-gray-700 thành text-dark-brown */}
+                                        <th className="py-3 px-4 text-left text-sm font-semibold text-dark-brown">Stylist</th> {/* Thay text-gray-700 thành text-dark-brown */}
+                                        <th className="py-3 px-4 text-left text-sm font-semibold text-dark-brown">Thời gian</th> {/* Thay text-gray-700 thành text-dark-brown */}
+                                        <th className="py-3 px-4 text-left text-sm font-semibold text-dark-brown">Tổng tiền</th> {/* Thay text-gray-700 thành text-dark-brown */}
+                                        <th className="py-3 px-4 text-left text-sm font-semibold text-dark-brown">Trạng thái</th> {/* Thay text-gray-700 thành text-dark-brown */}
+                                        <th className="py-3 px-4 text-left text-sm font-semibold text-dark-brown">Hành động</th> {/* Thay text-gray-700 thành text-dark-brown */}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {/* Sử dụng currentItems thay vì appointments */}
                                     {currentItems.map((appointment) => {
                                         const status = getStatusDisplay(appointment.status);
                                         return (
-                                            <tr key={appointment.appointmentId} className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-150">
-                                                <td className="py-3 px-4 text-sm text-gray-800 font-medium">{appointment.slug}</td>
-                                                <td className="py-3 px-4 text-sm text-gray-700">{appointment.storeName}</td>
-                                                <td className="py-3 px-4 text-sm text-gray-700">
+                                            <tr key={appointment.appointmentId} className="border-b border-soft-gray last:border-b-0  transition-colors duration-150"> {/* Thay border-gray-100 hover:bg-gray-50 thành border-soft-gray hover:bg-soft-gray */}
+                                                <td className="py-3 px-4 text-sm text-dark-brown font-medium">{appointment.slug}</td> {/* Thay text-gray-800 thành text-dark-brown */}
+                                                <td className="py-3 px-4 text-sm text-medium-gray">{appointment.storeName}</td> {/* Thay text-gray-700 thành text-medium-gray */}
+                                                <td className="py-3 px-4 text-sm text-medium-gray"> {/* Thay text-gray-700 thành text-medium-gray */}
                                                     {appointment.serviceName && appointment.serviceName.length > 0 ? (
                                                         appointment.serviceName.join(', ')
                                                     ) : (
                                                         'Không rõ'
                                                     )}
                                                 </td>
-                                                <td className="py-3 px-4 text-sm text-gray-700">{appointment.employeeName}</td>
-                                                <td className="py-3 px-4 text-sm text-gray-700 whitespace-nowrap">
+                                                <td className="py-3 px-4 text-sm text-medium-gray">{appointment.employeeName}</td> {/* Thay text-gray-700 thành text-medium-gray */}
+                                                <td className="py-3 px-4 text-sm text-medium-gray whitespace-nowrap"> {/* Thay text-gray-700 thành text-medium-gray */}
                                                     {formatDateTime(appointment.startTime)}
                                                 </td>
-                                                <td className="py-3 px-4 text-sm text-gray-700 font-medium whitespace-nowrap">
+                                                <td className="py-3 px-4 text-sm text-dark-brown font-medium whitespace-nowrap"> {/* Thay text-gray-700 thành text-dark-brown */}
                                                     {appointment.totalAmount > 0
                                                         ? `${appointment.totalAmount.toLocaleString()} VND`
                                                         : "Chưa xác định"}
@@ -341,8 +326,8 @@ export function BookingHistory() {
                                                         {(appointment.status === "PENDING" ||
                                                             appointment.status === "CONFIRMED") && (
                                                             <button
+                                                                className="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-700 transition min-w-[80px]" /* Giữ màu đỏ cho hủy nhưng đồng bộ hover */
                                                                 onClick={() => handleCancelClick(appointment.appointmentId)}
-                                                                className="bg-red-500 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-600 transition min-w-[80px]"
                                                             >
                                                                 Hủy lịch
                                                             </button>
@@ -350,7 +335,7 @@ export function BookingHistory() {
                                                         {appointment.status === "COMPLETED" && !appointment.hasReviewed && (
                                                             <button
                                                                 onClick={() => handleOpenReviewModal(appointment)}
-                                                                className="bg-blue-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-blue-700 transition min-w-[80px]"
+                                                                className="bg-accent-gold text-light-cream px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-accent-terracotta transition min-w-[80px]" /* Đổi màu nút đánh giá */
                                                             >
                                                                 Đánh giá
                                                             </button>
@@ -358,7 +343,7 @@ export function BookingHistory() {
                                                         {appointment.status === "COMPLETED" && appointment.hasReviewed && (
                                                             <button
                                                                 onClick={() => navigate(routes.store_reviews.replace(':storeId', appointment.storeId.toString()))}
-                                                                className="bg-green-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-green-700 transition min-w-[80px]"
+                                                                className="bg-black-soft text-light-cream px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-dark-brown transition min-w-[80px]" /* Đổi màu nút xem đánh giá */
                                                             >
                                                                 Xem đánh giá
                                                             </button>
@@ -378,7 +363,7 @@ export function BookingHistory() {
                                         <li>
                                             <button
                                                 onClick={() => paginate(currentPage - 1)}
-                                                className={`px-4 py-2 border rounded-lg ${currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-white text-blue-600 hover:bg-blue-100'}`}
+                                                className={`px-4 py-2 border rounded-lg ${currentPage === 1 ? 'bg-soft-gray text-medium-gray cursor-not-allowed' : 'bg-white text-dark-brown hover:bg-soft-gray hover:text-dark-brown'}`} /* Đổi màu nút phân trang */
                                                 disabled={currentPage === 1}
                                             >
                                                 Trước
@@ -388,7 +373,7 @@ export function BookingHistory() {
                                             <li key={number}>
                                                 <button
                                                     onClick={() => paginate(number)}
-                                                    className={`px-4 py-2 border rounded-lg ${currentPage === number ? 'bg-blue-600 text-white' : 'bg-white text-blue-600 hover:bg-blue-100'}`}
+                                                    className={`px-4 py-2 border rounded-lg ${currentPage === number ? 'bg-black-soft text-light-cream' : 'bg-white text-dark-brown hover:bg-soft-gray hover:text-dark-brown'}`} /* Đổi màu nút phân trang */
                                                 >
                                                     {number}
                                                 </button>
@@ -397,7 +382,7 @@ export function BookingHistory() {
                                         <li>
                                             <button
                                                 onClick={() => paginate(currentPage + 1)}
-                                                className={`px-4 py-2 border rounded-lg ${currentPage === totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-white text-blue-600 hover:bg-blue-100'}`}
+                                                className={`px-4 py-2 border rounded-lg ${currentPage === totalPages ? 'bg-soft-gray text-medium-gray cursor-not-allowed' : 'bg-white text-dark-brown hover:bg-soft-gray hover:text-dark-brown'}`} /* Đổi màu nút phân trang */
                                                 disabled={currentPage === totalPages}
                                             >
                                                 Sau
@@ -406,13 +391,13 @@ export function BookingHistory() {
                                     </ul>
                                 </nav>
                             )}
-                            {/* --- Kết thúc Phần phân trang --- */}
+                          
                         </div>
-                    )}
+                    ) }
                 </div>
             </div>
-            {/* Nút CTA cố định */}
-            <motion.div
+           
+             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
@@ -420,7 +405,7 @@ export function BookingHistory() {
             >
                 <Link
                     to={routes.booking}
-                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
+                    className="flex items-center bg-black-soft text-light-cream font-bold py-3 px-7 rounded-full shadow-xl hover:bg-dark-brown transition-all duration-300" /* Đổi màu sắc nút CTA */
                 >
                     <FaPhoneAlt className="mr-2" />
                     Đặt lịch ngay

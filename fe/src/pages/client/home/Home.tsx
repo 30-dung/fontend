@@ -13,8 +13,8 @@ import {
 import { FiArrowRight } from "react-icons/fi";
 import { motion } from "framer-motion";
 import axios from "axios";
-import api from "@/services/api";
 import url from "@/services/url";
+import api from "@/services/api";
 
 import StarRating from "@/components/reviews/StarRating";
 import routes from "@/config/routes";
@@ -54,6 +54,7 @@ export function HomePage() {
     const navigate = useNavigate();
 
     const [currentIndex, setCurrentIndex] = useState<number>(0);
+    // Các ảnh này là URL cố định bên ngoài, không cần url.BASE_IMAGES
     const images: string[] = [
         "https://kings-barber.co.uk/wp-content/uploads/2021/09/IMG_7032.jpg",
         "https://wallpapers.com/images/hd/silver-barber-pole-w7wzw5y557gtnoh8.jpg",
@@ -208,6 +209,7 @@ export function HomePage() {
 
     const galleryRef = useRef<HTMLDivElement>(null);
 
+    // Các ảnh này là URL cố định bên ngoài, không cần url.BASE_IMAGES
     const galleryImages: string[] = [
         "https://www.gento.vn/wp-content/uploads/2023/05/toc-layer-nam-dep-9.jpg",
         "https://cdn.24h.com.vn/upload/1-2021/images/2021-01-14/25-Kieu-toc-nam-Han-Quoc-2021-dep-chuan-soai-ca-phu-hop-voi-moi-guong-mat-toc-nam-han-quoc-6-1610590636-715-width600height601.jpg",
@@ -219,7 +221,6 @@ export function HomePage() {
         "https://th.bing.com/th/id/R.0e539ee45fef995042e8aa5ff5de6d19?rik=GbaHhe4%2fI5nJHw&pid=ImgRaw&r=0",
     ];
 
- 
     useEffect(() => {
         const galleryElement = galleryRef.current;
         if (!galleryElement) return;
@@ -248,26 +249,19 @@ export function HomePage() {
             clearInterval(scrollInterval);
         };
 
-      
         startScrolling();
-
-      
-
+        // Removed the mouse wheel event listeners to simplify and ensure auto-scroll
         return () => {
-            stopScrolling(); 
+            stopScrolling();
         };
-    }, [galleryImages]); 
-
-    
+    }, [galleryImages]);
 
 
     return (
-        <main className="relative bg-gradient-to-b from-blue-{#F3F4F6} to-white min-h-screen">
-
-
+        <main className="relative bg-light-cream font-sans min-h-screen"> {/* Adjusted background and added font-sans */}
             <section>
                 <div className="mt-4 mx-auto max-w-7xl px-2 md:px-8">
-                    {/* Slide Show */}
+                    {/* Slide Show (Giữ nguyên src vì là ảnh cố định bên ngoài) */}
                     <div className="slideshow mb-10">
                         <div className="relative w-full flex items-center justify-center rounded-2xl shadow-lg overflow-hidden">
                             <img
@@ -300,9 +294,9 @@ export function HomePage() {
                         className="flex flex-col md:flex-row gap-6 w-full max-w-5xl mx-auto mb-12"
                     >
                         {/* Box Đặt lịch (Chỉ còn nút) */}
-                        <div className="bg-blue-900 text-white rounded-2xl p-8 flex flex-col justify-between w-full md:w-2/3 shadow-xl">
+                        <div className="bg-black-soft text-light-cream rounded-2xl p-8 flex flex-col justify-between w-full md:w-2/3 shadow-xl"> {/* Changed bg-blue-900 to bg-black-soft, text-white to text-light-cream */}
                             <div>
-                                <h2 className="text-xl font-bold mb-2">
+                                <h2 className="text-xl font-bold mb-2 font-serif"> {/* Added font-serif */}
                                     ĐẶT LỊCH GIỮ CHỖ CHỈ 30 GIÂY
                                 </h2>
                                 <p className="text-base mb-6">
@@ -311,7 +305,7 @@ export function HomePage() {
                             </div>
                             <Link
                                 to={routes.booking}
-                                className="w-full bg-white text-blue-900 font-bold py-3 px-6 rounded-md hover:bg-blue-100 transition text-center text-lg"
+                                className="w-full bg-light-cream text-dark-brown font-bold py-3 px-6 rounded-md hover:bg-soft-gray transition text-center text-lg" // Changed bg-white, text-blue-900, hover:bg-blue-100
                             >
                                 ĐẶT LỊCH NGAY
                             </Link>
@@ -319,10 +313,10 @@ export function HomePage() {
 
                         {/* Box Đánh giá (Giữ nguyên hiển thị, đổi Link) */}
                         <div className="bg-white rounded-2xl p-8 w-full md:w-1/3 shadow-xl flex flex-col justify-between">
-                            <h3 className="text-base font-bold text-blue-900 mb-2">
+                            <h3 className="text-base font-bold text-dark-brown mb-2 font-serif"> {/* Changed text-blue-900 to text-dark-brown, added font-serif */}
                                 MỜI BẠN ĐÁNH GIÁ CHẤT LƯỢNG PHỤC VỤ
                             </h3>
-                            <p className="text-xs text-gray-600 mb-4">
+                            <p className="text-xs text-medium-gray mb-4"> {/* Changed text-gray-600 to text-medium-gray */}
                                 Phản hồi chân thành của bạn sẽ giúp chúng tôi không ngừng cải thiện và mang lại trải nghiệm tốt hơn nữa.
                             </p>
                             <Link to={routes.bookingHistorey} className="block hover:underline">
@@ -334,16 +328,16 @@ export function HomePage() {
                                         />
                                     ))}
                                 </div>
-                                <p className="text-sm text-blue-600 mt-2">Xem thêm đánh giá</p>
+                                <p className="text-sm text-accent-gold mt-2">Xem thêm đánh giá</p> {/* Đổi từ accent-green sang accent-gold để đồng bộ theme */}
                             </Link>
                         </div>
                     </motion.div>
                     {/* END OF REVERTED & MODIFIED SECTION */}
 
-                    {/* Hiển thị loading hoặc dữ liệu Services (từ mockData) */}
+                    {/* Hiển thị loading hoặc dữ liệu Services (từ mockData) (Giữ nguyên src vì là ảnh từ mockData) */}
                     {loading ? (
                         <div className="text-center py-10">
-                            <p className="text-lg text-gray-600 animate-pulse">
+                            <p className="text-lg text-medium-gray animate-pulse"> {/* Changed text-gray-600 to text-medium-gray */}
                                 Đang tải dữ liệu dịch vụ...
                             </p>
                         </div>
@@ -364,7 +358,7 @@ export function HomePage() {
                                     variants={sectionVariants}
                                     className="mx-auto max-w-6xl mt-12"
                                 >
-                                    <h2 className="text-2xl font-bold text-blue-900 mb-6 text-center md:text-left">
+                                    <h2 className="text-2xl font-bold text-dark-brown mb-6 text-center md:text-left font-serif"> {/* Changed text-blue-900 to text-dark-brown, added font-serif */}
                                         {category.name.toUpperCase()}
                                     </h2>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
@@ -387,23 +381,23 @@ export function HomePage() {
                                                         />
                                                     </div>
                                                     <div className="p-5 flex-1 flex flex-col">
-                                                        <h3 className="text-xl font-semibold text-blue-900 mb-2">
+                                                        <h3 className="text-xl font-semibold text-dark-brown mb-2 font-serif"> {/* Changed text-blue-900 to text-dark-brown, added font-serif */}
                                                             {service.name}
                                                         </h3>
-                                                        <p className="text-lg text-gray-700 font-bold mb-1">
+                                                        <p className="text-lg text-dark-brown font-bold mb-1"> {/* Changed text-gray-700 to text-dark-brown */}
                                                             {service.price}
                                                         </p>
-                                                        <p className="text-sm text-gray-500 mb-3 line-clamp-3">
+                                                        <p className="text-sm text-medium-gray mb-3 line-clamp-3"> {/* Changed text-gray-500 to text-medium-gray */}
                                                             {service.description || "Dịch vụ được thực hiện bởi đội ngũ chuyên gia, mang lại vẻ ngoài hoàn hảo và tự tin cho bạn."}
                                                         </p>
                                                         <Link
                                                            to={`${routes.services_combo.replace(":id", service.id.toString())}`}
-                                                            className="flex items-center text-blue-600 hover:text-blue-800 mt-auto group"
+                                                            className="flex items-center text-accent-gold hover:text-accent-terracotta mt-auto group" // Đổi từ text-accent-green sang text-accent-gold
                                                         >
-                                                            <span className="text-sm font-medium text-blue-900 group-hover:underline">
+                                                            <span className="text-sm font-medium text-dark-brown group-hover:underline"> {/* Changed text-blue-900 to text-dark-brown */}
                                                                 Tìm hiểu thêm
                                                             </span>
-                                                            <FiArrowRight className="ml-2 text-blue-900 group-hover:translate-x-1 transition-transform" />
+                                                            <FiArrowRight className="ml-2 text-dark-brown group-hover:translate-x-1 transition-transform" /> {/* Changed text-blue-900 to text-dark-brown */}
                                                         </Link>
                                                     </div>
                                                 </div>
@@ -414,7 +408,7 @@ export function HomePage() {
                         </>
                     )}
 
-                    {/* SECTION: VỀ CHUỖI SALON CỦA CHÚNG TÔI */}
+                    {/* SECTION: VỀ CHUỖI SALON CỦA CHÚNG TÔI (Giữ nguyên src vì là ảnh cố định bên ngoài) */}
                     <motion.div
                         initial="hidden"
                         whileInView="visible"
@@ -433,29 +427,29 @@ export function HomePage() {
                             />
                         </div>
                         <div className="md:w-1/2 text-center md:text-left">
-                            <h2 className="text-3xl font-bold text-blue-900 mb-4 leading-tight">
+                            <h2 className="text-3xl font-bold text-dark-brown mb-4 leading-tight font-serif"> {/* Changed text-blue-900 to text-dark-brown, added font-serif */}
                                 Hệ Thống Salon Tóc Chuyên Nghiệp Hàng Đầu
                             </h2>
-                            <p className="text-base text-gray-700 mb-6 leading-relaxed">
+                            <p className="text-base text-medium-gray mb-6 leading-relaxed"> {/* Changed text-gray-700 to text-medium-gray */}
                                 Với nhiều năm kinh nghiệm và nhiều chi nhánh trên toàn quốc, Four Shine tự hào là điểm đến tin cậy cho hàng triệu khách hàng tìm kiếm sự hoàn hảo trong phong cách tóc. Chúng tôi cam kết mang đến chất lượng dịch vụ đồng bộ, không gian đẳng cấp và trải nghiệm làm đẹp vượt trội tại mọi cửa hàng.
                             </p>
-                            <ul className="text-gray-600 mb-6 space-y-2">
+                            <ul className="text-medium-gray mb-6 space-y-2"> {/* Changed text-gray-600 to text-medium-gray */}
                                 <li className="flex items-center">
-                                    <FaGem className="text-blue-600 mr-2" />
+                                    <FaGem className="text-accent-gold mr-2" /> {/* Đổi từ text-accent-green sang text-accent-gold */}
                                     Chất lượng dịch vụ đồng bộ tại mọi chi nhánh.
                                 </li>
                                 <li className="flex items-center">
-                                    <FaGem className="text-blue-600 mr-2" />
+                                    <FaGem className="text-accent-gold mr-2" /> {/* Đổi từ text-accent-green sang text-accent-gold */}
                                     Đội ngũ stylist được đào tạo chuyên sâu và bài bản.
                                 </li>
                                 <li className="flex items-center">
-                                    <FaGem className="text-blue-600 mr-2" />
+                                    <FaGem className="text-accent-gold mr-2" /> {/* Đổi từ text-accent-green sang text-accent-gold */}
                                     Không gian sang trọng, hiện đại và thân thiện.
                                 </li>
                             </ul>
                             <Link
                                 to={routes.about}
-                                className="inline-flex items-center bg-blue-600 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+                                className="inline-flex items-center bg-black-soft text-light-cream font-bold py-3 px-6 rounded-full shadow-lg hover:bg-dark-brown transition-colors" // Changed bg-blue-600, text-white, hover:bg-blue-700
                             >
                                 Tìm hiểu thêm về hệ thống
                                 <FiArrowRight className="ml-2" />
@@ -463,7 +457,7 @@ export function HomePage() {
                         </div>
                     </motion.div>
 
-                    {/* SECTION: MẠNG LƯỚI CỬA HÀNG (RANDOM BAN ĐẦU & TÌM KIẾM ĐƠN GIẢN) */}
+                    {/* SECTION: MẠNG LƯỚI CỬA HÀNG (Sửa đường dẫn ảnh) */}
                     <motion.div
                         initial="hidden"
                         whileInView="visible"
@@ -471,10 +465,10 @@ export function HomePage() {
                         variants={sectionVariants}
                         className="mx-auto max-w-6xl mt-20 py-12 bg-white rounded-2xl shadow-xl px-6 text-center"
                     >
-                        <h2 className="text-3xl font-bold text-blue-900 mb-4">
+                        <h2 className="text-3xl font-bold text-dark-brown mb-4 font-serif"> {/* Changed text-blue-900 to text-dark-brown, added font-serif */}
                             Mạng Lưới Cửa Hàng Toàn Quốc
                         </h2>
-                        <p className="text-base text-gray-700 mb-8 max-w-3xl mx-auto">
+                        <p className="text-base text-medium-gray mb-8 max-w-3xl mx-auto"> {/* Changed text-gray-700 to text-medium-gray */}
                             Dù bạn ở đâu,Four Shine luôn sẵn sàng phục vụ. Hãy tìm chi nhánh gần nhất để trải nghiệm dịch vụ đẳng cấp!
                         </p>
 
@@ -486,10 +480,10 @@ export function HomePage() {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     placeholder="Tìm kiếm salon theo tên, thành phố, hoặc quận..."
-                                    className="w-full p-3 pl-10 rounded-full border border-blue-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all shadow-sm focus:outline-none"
+                                    className="w-full p-3 pl-10 rounded-full border border-soft-gray focus:ring-2 focus:ring-accent-gold focus:border-transparent transition-all shadow-sm focus:outline-none text-dark-brown" // Đổi focus:ring-accent-green sang accent-gold
                                 />
-                                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                <button type="submit" className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition">
+                                <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-medium-gray" /> {/* Changed text-gray-400 to text-medium-gray */}
+                                <button type="submit" className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black-soft text-light-cream p-2 rounded-full hover:bg-dark-brown transition"> {/* Changed bg-blue-600, text-white, hover:bg-blue-700 */}
                                     <FaLocationArrow />
                                 </button>
                             </div>
@@ -499,8 +493,8 @@ export function HomePage() {
 
                         {/* Store Listings (sẽ hiển thị random 3 hoặc kết quả tìm kiếm) */}
                         {storesLoading ? (
-                            <div className="text-center text-gray-500 py-8">
-                                <p className="text-lg text-gray-600 animate-pulse">Đang tải danh sách salon...</p>
+                            <div className="text-center text-medium-gray py-8"> {/* Changed text-gray-500 to text-medium-gray */}
+                                <p className="text-lg text-medium-gray animate-pulse">Đang tải danh sách salon...</p> {/* Changed text-gray-600 to text-medium-gray */}
                             </div>
                         ) : displayedStores.length > 0 ? (
                             <>
@@ -510,24 +504,22 @@ export function HomePage() {
                                             {/* Only show one store at a time for slideshow */}
                                             <div className="w-full max-w-md">
                                                 {displayedStores[currentStoreSlideIndex] && (
-                                                    <div
-                                                        key={displayedStores[currentStoreSlideIndex].storeId}
-                                                        className="bg-white rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col mx-auto" // Added mx-auto for centering
-                                                    >
+                                                    <div key={displayedStores[currentStoreSlideIndex].storeId} className="bg-white rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col mx-auto">
                                                         <img
-                                                            src={displayedStores[currentStoreSlideIndex].storeImages || "https://via.placeholder.com/150"}
+                                                            // SỬA: Dùng url.BASE_IMAGES
+                                                            src={displayedStores[currentStoreSlideIndex].storeImages ? (displayedStores[currentStoreSlideIndex].storeImages.startsWith('http') ? displayedStores[currentStoreSlideIndex].storeImages : `${url.BASE_IMAGES}${displayedStores[currentStoreSlideIndex].storeImages}`) : "https://via.placeholder.com/150"}
                                                             alt={displayedStores[currentStoreSlideIndex].storeName}
                                                             className="w-full h-48 object-cover"
                                                         />
                                                         <div className="p-5 text-left flex-grow flex flex-col">
-                                                            <h3 className="text-xl font-semibold text-blue-900 mb-2">
+                                                            <h3 className="text-xl font-semibold text-dark-brown mb-2 font-serif"> {/* Changed text-blue-900 to text-dark-brown, added font-serif */}
                                                                 {displayedStores[currentStoreSlideIndex].storeName}
                                                             </h3>
-                                                            <p className="text-sm text-gray-600 mb-2 flex items-center">
-                                                                <FaMapMarkerAlt className="mr-2 text-blue-500" /> {displayedStores[currentStoreSlideIndex].district}, {displayedStores[currentStoreSlideIndex].cityProvince}
+                                                            <p className="text-sm text-medium-gray mb-2 flex items-center"> {/* Changed text-gray-600 to text-medium-gray */}
+                                                                <FaMapMarkerAlt className="mr-2 text-accent-gold" /> {displayedStores[currentStoreSlideIndex].district}, {displayedStores[currentStoreSlideIndex].cityProvince} {/* Đổi từ text-accent-green sang text-accent-gold */}
                                                             </p>
-                                                            <p className="text-sm text-gray-600 mb-3 flex items-center">
-                                                                <FaPhoneAlt className="mr-2 text-blue-500" /> {displayedStores[currentStoreSlideIndex].phoneNumber}
+                                                            <p className="text-sm text-medium-gray mb-3 flex items-center"> {/* Changed text-gray-600 to text-medium-gray */}
+                                                                <FaPhoneAlt className="mr-2 text-accent-gold" /> {displayedStores[currentStoreSlideIndex].phoneNumber} {/* Đổi từ text-accent-green sang text-accent-gold */}
                                                             </p>
                                                             {displayedStores[currentStoreSlideIndex].averageRating !== undefined && (
                                                                 <div className="flex items-center mb-3">
@@ -540,7 +532,7 @@ export function HomePage() {
                                                                         readOnly
                                                                         starSize={18}
                                                                     />
-                                                                    <span className="text-sm text-gray-700 ml-2 font-semibold">
+                                                                    <span className="text-sm text-dark-brown ml-2 font-semibold"> {/* Changed text-gray-700 to text-dark-brown */}
                                                                         ({
                                                                             typeof displayedStores[currentStoreSlideIndex].averageRating === 'string'
                                                                                 ? parseFloat(displayedStores[currentStoreSlideIndex].averageRating).toFixed(1)
@@ -549,19 +541,21 @@ export function HomePage() {
                                                                     </span>
                                                                 </div>
                                                             )}
-                                                            <p className="text-sm text-gray-500 line-clamp-2 mb-4 flex-grow">
+                                                            <p className="text-sm text-medium-gray line-clamp-2 mb-4 flex-grow"> {/* Changed text-gray-500 to text-medium-gray */}
                                                                 {displayedStores[currentStoreSlideIndex].description}
                                                             </p>
-                                                            <div className="mt-auto pt-4 border-t border-gray-100 flex justify-center gap-2">
+                                                            <div className="mt-auto pt-4 border-t border-soft-gray flex justify-center gap-2"> {/* Changed border-gray-100 to border-soft-gray */}
+                                                                {/* Đặt lịch button - màu nền và chữ mặc định */}
                                                                 <button
                                                                     onClick={() => navigate(`/booking?salonId=${displayedStores[currentStoreSlideIndex].storeId}`)}
-                                                                    className="inline-flex justify-center items-center bg-blue-700 text-white font-bold py-2 px-4 rounded-md shadow hover:bg-blue-800 transition-colors text-sm"
+                                                                    className="inline-flex justify-center items-center bg-accent-gold text-text-on-accent font-bold py-2 px-4 rounded-md shadow hover:bg-accent-terracotta transition-colors text-sm" // Đổi màu nền mặc định thành accent-gold, chữ thành text-on-accent
                                                                 >
                                                                     <FaPhoneAlt className="mr-2" /> Đặt lịch
                                                                 </button>
+                                                                {/* Xem ĐG button - màu nền và chữ mặc định */}
                                                                 <button
                                                                     onClick={() => navigate(routes.store_reviews.replace(':storeId', displayedStores[currentStoreSlideIndex].storeId.toString()))}
-                                                                    className="inline-flex justify-center items-center bg-purple-600 text-white font-bold py-2 px-4 rounded-md shadow hover:bg-purple-700 transition-colors text-sm"
+                                                                    className="inline-flex justify-center items-center bg-black-soft text-light-cream font-bold py-2 px-4 rounded-md shadow hover:bg-dark-brown transition-colors text-sm" // Đảm bảo màu nền và chữ mặc định
                                                                 >
                                                                     <FaStar className="mr-2" /> Xem ĐG
                                                                 </button>
@@ -575,14 +569,14 @@ export function HomePage() {
                                         {/* Navigation buttons for store slideshow */}
                                         <button
                                             onClick={prevStoreSlide}
-                                            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none z-10 ml-4"
+                                            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-dark-brown text-light-cream p-2 rounded-full shadow-lg hover:bg-black-soft focus:outline-none z-10 ml-4" // Changed bg-gray-800, text-white, hover:bg-gray-700
                                             aria-label="Previous store"
                                         >
                                             <FaArrowLeft />
                                         </button>
                                         <button
                                             onClick={nextStoreSlide}
-                                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg hover:bg-gray-700 focus:outline-none z-10 mr-4"
+                                            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-dark-brown text-light-cream p-2 rounded-full shadow-lg hover:bg-black-soft focus:outline-none z-10 mr-4" // Changed bg-gray-800, text-white, hover:bg-gray-700
                                             aria-label="Next store"
                                         >
                                             <FaArrowRight />
@@ -596,19 +590,19 @@ export function HomePage() {
                                                 className="bg-white rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col"
                                             >
                                                 <img
-                                                    src={store.storeImages || "https://via.placeholder.com/150"}
+                                                    src={store.storeImages ? (store.storeImages.startsWith('http') ? store.storeImages : `${url.BASE_IMAGES}${store.storeImages}`) : "https://via.placeholder.com/150"}
                                                     alt={store.storeName}
                                                     className="w-full h-48 object-cover"
                                                 />
                                                 <div className="p-5 text-left flex-grow flex flex-col">
-                                                    <h3 className="text-xl font-semibold text-blue-900 mb-2">
+                                                    <h3 className="text-xl font-semibold text-dark-brown mb-2 font-serif"> {/* Changed text-blue-900 to text-dark-brown, added font-serif */}
                                                         {store.storeName}
                                                     </h3>
-                                                    <p className="text-sm text-gray-600 mb-2 flex items-center">
-                                                        <FaMapMarkerAlt className="mr-2 text-blue-500" /> {store.district}, {store.cityProvince}
+                                                    <p className="text-sm text-medium-gray mb-2 flex items-center"> {/* Changed text-gray-600 to text-medium-gray */}
+                                                        <FaMapMarkerAlt className="mr-2 text-accent-gold" /> {store.district}, {store.cityProvince} {/* Đổi từ text-accent-green sang text-accent-gold */}
                                                     </p>
-                                                    <p className="text-sm text-gray-600 mb-3 flex items-center">
-                                                        <FaPhoneAlt className="mr-2 text-blue-500" /> {store.phoneNumber}
+                                                    <p className="text-sm text-medium-gray mb-3 flex items-center"> {/* Changed text-gray-600 to text-medium-gray */}
+                                                        <FaPhoneAlt className="mr-2 text-accent-gold" /> {store.phoneNumber} {/* Đổi từ text-accent-green sang text-accent-gold */}
                                                     </p>
                                                     {store.averageRating !== undefined && (
                                                         <div className="flex items-center mb-3">
@@ -621,7 +615,7 @@ export function HomePage() {
                                                                 readOnly
                                                                 starSize={18}
                                                             />
-                                                            <span className="text-sm text-gray-700 ml-2 font-semibold">
+                                                            <span className="text-sm text-dark-brown ml-2 font-semibold"> {/* Changed text-gray-700 to text-dark-brown */}
                                                                 ({
                                                                     typeof store.averageRating === 'string'
                                                                         ? parseFloat(store.averageRating).toFixed(1)
@@ -630,19 +624,21 @@ export function HomePage() {
                                                             </span>
                                                         </div>
                                                     )}
-                                                    <p className="text-sm text-gray-500 line-clamp-2 mb-4 flex-grow">
+                                                    <p className="text-sm text-medium-gray line-clamp-2 mb-4 flex-grow"> {/* Changed text-gray-500 to text-medium-gray */}
                                                         {store.description}
                                                     </p>
-                                                    <div className="mt-auto pt-4 border-t border-gray-100 flex justify-center gap-2">
+                                                    <div className="mt-auto pt-4 border-t border-soft-gray flex justify-center gap-2"> {/* Changed border-gray-100 to border-soft-gray */}
+                                                        {/* Đặt lịch button - màu nền và chữ mặc định */}
                                                         <button
                                                             onClick={() => navigate(`/booking?salonId=${store.storeId}`)}
-                                                            className="inline-flex justify-center items-center bg-blue-700 text-white font-bold py-2 px-4 rounded-md shadow hover:bg-blue-800 transition-colors text-sm"
+                                                            className="inline-flex justify-center items-center bg-accent-gold text-text-on-accent font-bold py-2 px-4 rounded-md shadow hover:bg-accent-terracotta transition-colors text-sm" // Đổi màu nền mặc định thành accent-gold, chữ thành text-on-accent
                                                         >
                                                             <FaPhoneAlt className="mr-2" /> Đặt lịch
                                                         </button>
+                                                        {/* Xem ĐG button - màu nền và chữ mặc định */}
                                                         <button
                                                             onClick={() => navigate(routes.store_reviews.replace(':storeId', store.storeId.toString()))}
-                                                            className="inline-flex justify-center items-center bg-purple-600 text-white font-bold py-2 px-4 rounded-md shadow hover:bg-purple-700 transition-colors text-sm"
+                                                            className="inline-flex justify-center items-center bg-black-soft text-light-cream font-bold py-2 px-4 rounded-md shadow hover:bg-dark-brown transition-colors text-sm" // Đảm bảo màu nền và chữ mặc định
                                                         >
                                                             <FaStar className="mr-2" /> Xem ĐG
                                                         </button>
@@ -654,7 +650,7 @@ export function HomePage() {
                                 )}
                             </>
                         ) : (
-                            <div className="text-center text-gray-500 py-8">
+                            <div className="text-center text-medium-gray py-8"> {/* Changed text-gray-500 to text-medium-gray */}
                                 Hiện chưa có salon nào trong khu vực này.
                             </div>
                         )}
@@ -670,20 +666,19 @@ export function HomePage() {
                         variants={sectionVariants}
                         className="mx-auto max-w-7xl mt-20 mb-10 py-10 bg-white rounded-2xl shadow-xl overflow-hidden"
                     >
-                        <h2 className="text-3xl font-bold text-blue-900 mb-8 text-center">
+                        <h2 className="text-3xl font-bold text-dark-brown mb-8 text-center font-serif"> {/* Changed text-blue-900 to text-dark-brown, added font-serif */}
                             Thư Viện Ảnh Của Chúng Tôi
                         </h2>
                         {/* Modified gallery container */}
                         <div
                             ref={galleryRef}
-                            // Removed onMouseEnter and onMouseLeave
-                            className="flex overflow-x-hidden space-x-6 pb-4 px-4 scroll-smooth" // Removed custom-scroll-bar and cursor styles
+                            className="flex overflow-x-hidden space-x-6 pb-4 px-4 scroll-smooth"
                         >
                             {/* Duplicate images to create an infinite loop effect */}
                             {[...galleryImages, ...galleryImages].map((imageUrl, index) => (
                                 <div
-                                    key={index} // Use index here as keys for duplicated images, assuming unique enough for carousel purpose
-                                    className="flex-shrink-0 w-80 h-96 bg-gray-200 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
+                                    key={index}
+                                    className="flex-shrink-0 w-80 h-96 bg-soft-gray rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300" // Changed bg-gray-200 to bg-soft-gray
                                 >
                                     <img
                                         src={imageUrl}
@@ -693,15 +688,11 @@ export function HomePage() {
                                 </div>
                             ))}
                         </div>
-                        {/* Removed the mouse wheel instruction text */}
                     </motion.div>
-                    {/* KẾT THÚC PHẦN MỚI */}
-
                 </div>
             </section>
 
-            {/* Nút CTA cố định */}
-            <motion.div
+             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
@@ -709,7 +700,7 @@ export function HomePage() {
             >
                 <Link
                     to={routes.booking}
-                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
+                    className="flex items-center bg-black-soft text-light-cream font-bold py-3 px-7 rounded-full shadow-xl hover:bg-dark-brown transition-all duration-300" /* Đổi màu sắc nút CTA */
                 >
                     <FaPhoneAlt className="mr-2" />
                     Đặt lịch ngay

@@ -1,5 +1,6 @@
 const url = {
     BASE_URL: 'http://localhost:9090/api/',
+    BASE_IMAGES:"http://localhost:9090",
 
     AUTH: {
         REGISTER: 'auth/register',

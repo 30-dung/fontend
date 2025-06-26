@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import api from "@/services/api";
 import url from "@/services/url";
-import { toast } from 'react-toastify'; // Import toast
+import { toast } from 'react-toastify';
 import routes from "@/config/routes";
 
 // Define the shape of formData and formErrors
@@ -83,7 +83,7 @@ export function ResetPasswordPage() {
                     newPassword: formData.password,
                     email: email,
                 });
-                toast.success(response.data, { autoClose: 2000 }); // Success toast
+                toast.success(response.data, { autoClose: 2000 });
                 setTimeout(() => {
                     navigate("/login");
                 }, 2000);
@@ -93,17 +93,17 @@ export function ResetPasswordPage() {
                 if (axios.isAxiosError(error)) {
                     errorMessage = error.response?.data || error.message;
                 }
-                toast.error(errorMessage, { autoClose: 3000 }); // Error toast
+                toast.error(errorMessage, { autoClose: 3000 });
             }
         }
     };
 
     return (
-        <section className="bg-gray-50 dark:bg-gray-900">
+        <section className="bg-light-cream"> {/* Thay bg-gray-50 thành bg-light-cream, bỏ dark mode */}
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
                 
-                <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
-                    <h2 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                <div className="w-full p-6 bg-white rounded-lg shadow border border-soft-gray md:mt-0 sm:max-w-md"> {/* Thay dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8 thành border-soft-gray */}
+                    <h2 className="mb-1 text-xl font-bold leading-tight tracking-tight text-dark-brown md:text-2xl font-serif"> {/* Thay text-gray-900 dark:text-white thành text-dark-brown, thêm font-serif */}
                         Đổi mật khẩu
                     </h2>
                     <form
@@ -113,7 +113,7 @@ export function ResetPasswordPage() {
                         <div>
                             <label
                                 htmlFor="otp"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                className="block mb-2 text-sm font-medium text-dark-brown" 
                             >
                                 Mã OTP
                             </label>
@@ -123,7 +123,7 @@ export function ResetPasswordPage() {
                                 id="otp"
                                 value={formData.otp}
                                 onChange={handleChange}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                className="bg-soft-gray border border-soft-gray text-dark-brown text-sm rounded-lg focus:ring-accent-gold focus:border-accent-gold block w-full p-2.5" 
                                 placeholder="Enter 6-digit OTP"
                                 required
                             />
@@ -136,7 +136,7 @@ export function ResetPasswordPage() {
                         <div>
                             <label
                                 htmlFor="password"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                className="block mb-2 text-sm font-medium text-dark-brown" 
                             >
                                 Mật khẩu mới
                             </label>
@@ -146,7 +146,7 @@ export function ResetPasswordPage() {
                                 id="password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                className="bg-soft-gray border border-soft-gray text-dark-brown text-sm rounded-lg focus:ring-accent-gold focus:border-accent-gold block w-full p-2.5" 
                                 placeholder="••••••••"
                                 required
                             />
@@ -159,7 +159,7 @@ export function ResetPasswordPage() {
                         <div>
                             <label
                                 htmlFor="confirm-password"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                className="block mb-2 text-sm font-medium text-dark-brown" 
                             >
                                 Xác nhận mật khẩu
                             </label>
@@ -169,7 +169,7 @@ export function ResetPasswordPage() {
                                 id="confirm-password"
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                className="bg-soft-gray border border-soft-gray text-dark-brown text-sm rounded-lg focus:ring-accent-gold focus:border-accent-gold block w-full p-2.5" 
                                 placeholder="••••••••"
                                 required
                             />
@@ -185,18 +185,18 @@ export function ResetPasswordPage() {
                                     id="newsletter"
                                     aria-describedby="newsletter"
                                     type="checkbox"
-                                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                                    className="w-4 h-4 border border-medium-gray rounded bg-soft-gray focus:ring-3 focus:ring-accent-gold" 
                                     required
                                 />
                             </div>
                             <div className="ml-3 text-sm">
                                 <label
                                     htmlFor="newsletter"
-                                    className="font-light text-gray-500 dark:text-gray-300"
+                                    className="font-light text-medium-gray" 
                                 >
                                     Tôi chấp nhận{" "}
                                     <a
-                                        className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                        className="font-medium text-accent-gold hover:underline" 
                                         href="#"
                                     >
                                         Điều khoản và điều kiện
@@ -206,15 +206,15 @@ export function ResetPasswordPage() {
                         </div>
                         <button
                             type="submit"
-                            className="w-full text-white bg-blue-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-900 dark:hover:bg-blue-800 dark:focus:ring-blue-800 disabled:opacity-50"
+                            className="w-full text-light-cream bg-black-soft hover:bg-dark-brown focus:ring-4 focus:outline-none focus:ring-accent-gold font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50" /* Thay đổi màu nền, hover, focus ring */
                         >
                             Đặt lại mật khẩu
                         </button>
-                        <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                        <p className="text-sm font-light text-medium-gray text-center"> 
                             Quay lại{" "}
                             <Link
                                 to={routes.login}
-                                className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+                                className="font-medium text-accent-gold hover:underline" 
                             >
                                 Đăng nhập
                             </Link>

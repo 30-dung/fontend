@@ -6,7 +6,6 @@ import api from "@/services/api";
 import url from "@/services/url";
 import routes from "@/config/routes";
 import StarRating from "@/components/reviews/StarRating";
-// Import thư viện react-select
 import Select from 'react-select';
 import { motion } from "framer-motion";
 import { FaPhoneAlt } from "react-icons/fa";
@@ -30,7 +29,6 @@ interface CityWithCount {
     storeCount: number;
 }
 
-// Định nghĩa kiểu dữ liệu cho option của react-select
 interface SelectOption {
     value: string;
     label: string;
@@ -45,7 +43,6 @@ export const LocationPage = () => {
     const [districts, setDistricts] = useState<CityWithCount[]>([]);
     const navigate = useNavigate();
 
-    // State để lưu trữ option được chọn của react-select (cho hiển thị)
     const [selectedCityOption, setSelectedCityOption] = useState<SelectOption | null>(null);
     const [selectedDistrictOption, setSelectedDistrictOption] = useState<SelectOption | null>(null);
 
@@ -88,8 +85,8 @@ export const LocationPage = () => {
                         console.warn("No valid districts data:", response.data);
                         setDistricts([]);
                     }
-                    setDistrict(""); // Reset district when city changes
-                    setSelectedDistrictOption(null); // Reset selected district option
+                    setDistrict("");
+                    setSelectedDistrictOption(null);
                 } catch (err) {
                     console.error("Error fetching districts:", err);
                     setError(
@@ -102,7 +99,7 @@ export const LocationPage = () => {
         } else {
             setDistricts([]);
             setDistrict("");
-            setSelectedDistrictOption(null); // Clear selected district if no city
+            setSelectedDistrictOption(null);
         }
     }, [city]);
 
@@ -134,42 +131,39 @@ export const LocationPage = () => {
         fetchStores();
     }, [city, district]);
 
-    // Chuyển đổi dữ liệu cities sang format của react-select
     const cityOptions: SelectOption[] = cities.map(c => ({
         value: c.cityProvince,
         label: `${c.cityProvince} (${c.storeCount})`
     }));
 
-    // Chuyển đổi dữ liệu districts sang format của react-select
     const districtOptions: SelectOption[] = districts.map(d => ({
         value: d.cityProvince,
         label: `${d.cityProvince} (${d.storeCount})`
     }));
 
-    // Calculate max-height for scrolling based on store count
     const maxItemsBeforeScroll = 5;
-    const estimatedItemHeight = 200; // px
+    const estimatedItemHeight = 200;
     const dynamicMaxHeight = stores.length > maxItemsBeforeScroll
         ? `${maxItemsBeforeScroll * estimatedItemHeight}px`
         : 'none';
 
-    // Styles tùy chỉnh cho react-select
+    // Styles tùy chỉnh cho react-select - Đã chỉnh sửa để đồng bộ với theme
     const customSelectStyles = {
         control: (provided: any, state: any) => ({
             ...provided,
-            padding: '8px 16px', // p-4 ~ 16px
-            paddingLeft: '20px', // pl-5 ~ 20px
-            paddingRight: '30px', // Đã giảm từ 48px xuống 30px
-            border: state.isFocused ? '2px solid #2563EB' : '1px solid #D1D5DB', // border-blue-500 khi focus
-            borderRadius: '0.5rem', // rounded-lg
-            boxShadow: state.isFocused ? '0 0 0 4px rgba(96, 165, 250, 0.3)' : '0 1px 2px 0 rgba(0, 0, 0, 0.05)', // focus:ring-2 focus:ring-blue-300, shadow-sm
+            padding: '8px 16px',
+            paddingLeft: '20px',
+            paddingRight: '30px',
+            border: state.isFocused ? '2px solid var(--accent-gold)' : '1px solid var(--soft-gray)', // Đổi màu border focus và mặc định
+            borderRadius: '0.5rem',
+            boxShadow: state.isFocused ? '0 0 0 4px rgba(var(--accent-gold-rgb), 0.3)' : '0 1px 2px 0 rgba(0, 0, 0, 0.05)', // Đổi màu shadow focus
             '&:hover': {
-                borderColor: '#60A5FA', // hover:border-blue-400
-                boxShadow: '0 0 0 4px rgba(147, 197, 253, 0.2)' // hover:ring-blue-100
+                borderColor: 'var(--accent-gold)', // Đổi màu border hover
+                boxShadow: '0 0 0 4px rgba(var(--accent-gold-rgb), 0.2)' // Đổi màu shadow hover
             },
             backgroundColor: 'white',
-            fontWeight: '600', // font-semibold
-            fontSize: '1.125rem', // text-lg
+            fontWeight: '600',
+            fontSize: '1.125rem',
             cursor: 'pointer',
         }),
         valueContainer: (provided: any) => ({
@@ -178,78 +172,78 @@ export const LocationPage = () => {
         }),
         singleValue: (provided: any) => ({
             ...provided,
-            color: '#1F2937', // text-gray-800
+            color: 'var(--dark-brown)', // Đổi màu chữ
         }),
-        indicatorSeparator: () => ({ display: 'none' }), // Ẩn đường phân cách giữa mũi tên và text
+        indicatorSeparator: () => ({ display: 'none' }),
         dropdownIndicator: (provided: any) => ({
             ...provided,
-            padding: '0 8px', // Giảm padding mặc định của indicator để nó sát hơn vào text
-            color: '#6B7280', // text-gray-500
-            transform: provided.transform, // Giữ chuyển động quay của mũi tên mặc định
+            padding: '0 8px',
+            color: 'var(--medium-gray)', // Đổi màu indicator
+            transform: provided.transform,
             '&:hover': {
-                color: '#6B7280', // Giữ nguyên màu khi hover
+                color: 'var(--dark-brown)', // Đổi màu hover indicator
             },
         }),
         menu: (provided: any) => ({
             ...provided,
             backgroundColor: 'white',
-            borderRadius: '0.5rem', // rounded-lg
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)', // Thêm shadow cho menu
-            marginTop: '0.5rem', // Khoảng cách giữa select box và menu xổ xuống
-            overflow: 'hidden', // Quan trọng để bo góc và ẩn nội dung tràn
+            borderRadius: '0.5rem',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            marginTop: '0.5rem',
+            overflow: 'hidden',
         }),
         menuList: (provided: any) => ({
             ...provided,
-            padding: 0, // Bỏ padding mặc định của menuList
-            maxHeight: `${5 * 50}px`, // Giới hạn 5 items, mỗi item ước tính 50px chiều cao (có thể điều chỉnh)
-            overflowY: 'auto', // Bật cuộn cho danh sách options
-            '&::-webkit-scrollbar': { // Tùy chỉnh thanh cuộn cho WebKit
+            padding: 0,
+            maxHeight: `${5 * 50}px`,
+            overflowY: 'auto',
+            '&::-webkit-scrollbar': {
                 width: '8px',
             },
             '&::-webkit-scrollbar-track': {
-                background: '#f1f1f1',
+                background: 'var(--soft-gray)', // Đổi màu scrollbar track
                 borderRadius: '10px',
             },
             '&::-webkit-scrollbar-thumb': {
-                background: '#bbb',
+                background: 'var(--medium-gray)', // Đổi màu scrollbar thumb
                 borderRadius: '10px',
             },
             '&::-webkit-scrollbar-thumb:hover': {
-                background: '#999',
+                background: 'var(--dark-brown)', // Đổi màu scrollbar thumb hover
             },
         }),
         option: (provided: any, state: any) => ({
             ...provided,
-            padding: '12px 20px', // py-3 px-4 ~ 12px 16px, tăng thêm px
+            padding: '12px 20px',
             backgroundColor: state.isSelected
-                ? '#DBEAFE' // Màu xanh nhạt khi được chọn (blue-100)
+                ? 'var(--soft-gray)' // Màu khi được chọn
                 : state.isFocused
-                    ? '#EFF6FF' // Màu xanh rất nhạt khi hover (blue-50)
+                    ? 'var(--light-cream)' // Màu khi hover
                     : 'white',
-            color: '#1F2937', // text-gray-800
+            color: 'var(--dark-brown)', // Đổi màu chữ option
             cursor: 'pointer',
-            fontSize: '1rem', // text-base
-            fontWeight: state.isSelected ? '600' : 'normal', // In đậm khi được chọn
+            fontSize: '1rem',
+            fontWeight: state.isSelected ? '600' : 'normal',
             '&:active': {
-                backgroundColor: '#BFDBFE', // Màu xanh nhạt hơn một chút khi click (blue-200)
+                backgroundColor: 'var(--soft-gray)', // Màu khi click
             },
         }),
         placeholder: (provided: any) => ({
             ...provided,
-            color: '#6B7280', // text-gray-500
+            color: 'var(--medium-gray)', // Đổi màu placeholder
         }),
     };
 
 
     return (
-        <div>
+        <div className="bg-light-cream font-sans"> {/* Thay bg-gray-100 thành bg-light-cream */}
             {/* Full-width Image Banner */}
             <div
-                className="relative bg-cover bg-center from-blue-{#F3F4F6} h-80 flex items-center justify-center overflow-hidden w-full"
+                className="relative bg-cover bg-center h-80 flex items-center justify-center overflow-hidden w-full"
                 style={{ backgroundImage: `url('https://static.booksy.com/static/live/covers/barbers.jpg')` }}
             >
                 <div className="absolute inset-0 bg-black opacity-40 backdrop-filter backdrop-blur-sm"></div>
-                <h1 className="relative text-white text-4xl md:text-5xl font-bold z-10 text-center px-4">
+                <h1 className="relative text-white text-4xl md:text-5xl font-bold z-10 text-center px-4 font-serif"> {/* Thêm font-serif */}
                     Tìm salon phù hợp với bạn
                 </h1>
             </div>
@@ -260,7 +254,7 @@ export const LocationPage = () => {
 
                     {/* Search Section */}
                     <div className="mb-8">
-                        <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6 text-center">
+                        <h2 className="text-2xl md:text-3xl font-bold text-dark-brown mb-6 text-center font-serif"> {/* Thay text-blue-900 thành text-dark-brown, thêm font-serif */}
                             Tìm kiếm salon gần bạn
                         </h2>
                         <div className="flex flex-col md:flex-row gap-4">
@@ -273,8 +267,8 @@ export const LocationPage = () => {
                                     }}
                                     options={cityOptions}
                                     placeholder="Tỉnh/Thành phố"
-                                    isClearable={false} // Không cho phép xóa lựa chọn
-                                    isSearchable={true} // Cho phép tìm kiếm
+                                    isClearable={false}
+                                    isSearchable={true}
                                     styles={customSelectStyles}
                                 />
                             </div>
@@ -290,7 +284,7 @@ export const LocationPage = () => {
                                     isClearable={false}
                                     isSearchable={true}
                                     styles={customSelectStyles}
-                                    isDisabled={!city} // Vô hiệu hóa nếu chưa chọn thành phố
+                                    isDisabled={!city}
                                 />
                             </div>
                         </div>
@@ -298,9 +292,9 @@ export const LocationPage = () => {
                     </div>
 
                     {/* Store Listings with conditional scrolling */}
-                    <div className="pt-6 border-t border-gray-100 mt-6">
+                    <div className="pt-6 border-t border-soft-gray mt-6"> {/* Thay border-gray-100 thành border-soft-gray */}
                         {stores.length === 0 && city && !error ? (
-                            <div className="text-center text-gray-500 py-8">
+                            <div className="text-center text-medium-gray py-8"> {/* Thay text-gray-500 thành text-medium-gray */}
                                 Không tìm thấy salon phù hợp.
                             </div>
                         ) : (
@@ -311,11 +305,11 @@ export const LocationPage = () => {
                                 {stores.map((store) => (
                                     <div
                                         key={store.storeId}
-                                        className="flex flex-col md:flex-row items-start gap-6 p-4 border-b border-gray-100 last:border-b-0"
+                                        className="flex flex-col md:flex-row items-start gap-6 p-4 border-b border-soft-gray last:border-b-0" /* Thay border-gray-100 thành border-soft-gray */
                                     >
                                         <img
                                             src={
-                                                store.storeImages ||
+                                                `${url.BASE_IMAGES}${store.storeImages}` ||
                                                 "https://via.placeholder.com/150"
                                             }
                                             alt={store.storeName}
@@ -323,27 +317,27 @@ export const LocationPage = () => {
                                         />
                                         <div className="flex-1 w-full">
                                             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2">
-                                                <p className="text-xl font-bold text-blue-900 leading-tight">
+                                                <p className="text-xl font-bold text-dark-brown leading-tight font-serif"> {/* Thay text-blue-900 thành text-dark-brown, thêm font-serif */}
                                                     {store.storeName}
                                                 </p>
                                                 {store.averageRating !== undefined && (
                                                     <div className="flex items-center flex-shrink-0 mt-1 md:mt-0">
                                                         <StarRating initialRating={Math.round(store.averageRating)} readOnly starSize={20} />
-                                                        <span className="text-yellow-500 font-semibold ml-1 text-base">
+                                                        <span className="text-accent-gold font-semibold ml-1 text-base"> {/* Thay text-yellow-500 thành text-accent-gold */}
                                                             ({store.averageRating.toFixed(1)})
                                                         </span>
                                                     </div>
                                                 )}
                                             </div>
-                                            <p className="text-gray-700 text-lg mt-1">
+                                            <p className="text-medium-gray text-lg mt-1"> {/* Thay text-gray-700 thành text-medium-gray */}
                                                 {store.district}, {store.cityProvince}
                                             </p>
-                                            <p className="text-gray-600 text-base mt-1 line-clamp-3">
+                                            <p className="text-medium-gray text-base mt-1 line-clamp-3"> {/* Thay text-gray-600 thành text-medium-gray */}
                                                 {store.description}
                                             </p>
                                             <div className="flex flex-wrap gap-3 mt-4">
                                                 <button
-                                                    className="flex items-center gap-2 px-4 py-2 border border-blue-200 rounded-lg text-blue-700 font-semibold hover:bg-blue-50 transition text-base"
+                                                    className="flex items-center gap-2 px-4 py-2 border border-accent-gold rounded-lg text-accent-gold font-semibold hover:bg-accent-gold hover:text-light-cream transition text-base" /* Đổi màu nút HOTLINE */
                                                     onClick={() =>
                                                         window.open(
                                                             `tel:${store.phoneNumber}`,
@@ -363,8 +357,7 @@ export const LocationPage = () => {
                                                     HOTLINE
                                                 </button>
                                                 <button
-                                                    // Đã thay đổi màu sắc nút "ĐẶT LỊCH CẮT"
-                                                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition text-base"
+                                                    className="flex items-center gap-2 px-4 py-2 bg-black-soft text-light-cream rounded-lg font-semibold hover:bg-dark-brown transition text-base" /* Đổi màu nút "ĐẶT LỊCH CẮT" */
                                                     onClick={() =>
                                                         navigate(
                                                             `${routes.booking}?salonId=${store.storeId}`
@@ -383,14 +376,13 @@ export const LocationPage = () => {
                                                     ĐẶT LỊCH CẮT
                                                 </button>
                                                 <button
-                                                    // Đã thay đổi màu sắc nút "Xem đánh giá"
-                                                    className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition text-base"
+                                                    className="flex items-center gap-2 px-4 py-2 bg-dark-brown text-light-cream rounded-lg font-semibold hover:bg-black-soft transition text-base" /* Đổi màu nút "Xem đánh giá" */
                                                     onClick={() => navigate(routes.store_reviews.replace(':storeId', store.storeId.toString()))}
                                                 >
                                                     Xem đánh giá
                                                 </button>
                                             </div>
-                                            <p className="text-gray-500 text-sm mt-2">
+                                            <p className="text-medium-gray text-sm mt-2"> {/* Thay text-gray-500 thành text-medium-gray */}
                                                 Giờ mở cửa: {store.openingTime || "N/A"} -{" "}
                                                 {store.closingTime || "N/A"}
                                             </p>
@@ -402,8 +394,7 @@ export const LocationPage = () => {
                     </div>
                 </div>
             </div>
-            {/* Nút CTA cố định */}
-            <motion.div
+             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
@@ -411,7 +402,7 @@ export const LocationPage = () => {
             >
                 <Link
                     to={routes.booking}
-                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
+                    className="flex items-center bg-black-soft text-light-cream font-bold py-3 px-7 rounded-full shadow-xl hover:bg-dark-brown transition-all duration-300" /* Đổi màu sắc nút CTA */
                 >
                     <FaPhoneAlt className="mr-2" />
                     Đặt lịch ngay

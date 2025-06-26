@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "@/services/api";
 import url from "@/services/url";
-import { toast } from 'react-toastify'; // Import toast
+import { toast } from 'react-toastify';
 import routes from "@/config/routes";
 
 interface FormData {
@@ -149,33 +149,33 @@ export function RegisterPage() {
 
             if (response.status === 201 && response.data.token) {
                 localStorage.setItem("token", response.data.token);
-                toast.success("Đăng ký thành công! Đang chuyển đến trang đăng nhập...", { autoClose: 2000 }); // Success toast
+                toast.success("Đăng ký thành công! Đang chuyển đến trang đăng nhập...", { autoClose: 2000 });
                 setTimeout(() => {
                     navigate("/login");
                 }, 1000);
             } else {
-                toast.error("Đăng ký không thành công. Phản hồi không mong đợi.", { autoClose: 3000 }); // Error toast
+                toast.error("Đăng ký không thành công. Phản hồi không mong đợi.", { autoClose: 3000 });
             }
         } catch (err: any) {
             console.error("API error:", err);
             const errorMessage = err.response?.data?.role || "Đăng ký không thành công. Vui lòng kiểm tra mạng hoặc cài đặt CORS.";
-            toast.error(errorMessage, { autoClose: 3000 }); // Error toast
+            toast.error(errorMessage, { autoClose: 3000 });
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <section className="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
+        <section className="bg-light-cream min-h-screen flex items-center justify-center font-sans"> {/* Thay bg-gray-50 dark:bg-gray-900 thành bg-light-cream, thêm font-sans */}
             <div className="w-full max-w-2xl px-6 py-8 mx-auto">
                 
-                <div className="w-full bg-white rounded-lg shadow dark:border sm:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div className="w-full bg-white rounded-lg shadow border border-soft-gray sm:max-w-2xl xl:p-0"> {/* Thay dark:border sm:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700 thành border-soft-gray */}
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center">
+                        <h1 className="text-xl font-bold leading-tight tracking-tight text-dark-brown md:text-2xl text-center font-serif"> {/* Thay text-gray-900 dark:text-white thành text-dark-brown, thêm font-serif */}
                             Tạo tài khoản
                         </h1>
                         {loading && (
-                            <p className="text-sm text-gray-600 text-center">
+                            <p className="text-sm text-medium-gray text-center"> {/* Thay text-gray-600 thành text-medium-gray */}
                                 Đang tải...
                             </p>
                         )}
@@ -187,7 +187,7 @@ export function RegisterPage() {
                                 <div>
                                     <label
                                         htmlFor="fullName"
-                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                        className="block mb-2 text-sm font-medium text-dark-brown" 
                                     >
                                         Họ và tên
                                     </label>
@@ -195,7 +195,7 @@ export function RegisterPage() {
                                         type="text"
                                         name="fullName"
                                         id="fullName"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        className="bg-soft-gray border border-soft-gray text-dark-brown text-sm rounded-lg focus:ring-accent-gold focus:border-accent-gold block w-full p-2.5" 
                                         placeholder="John Doe"
                                         value={formData.fullName}
                                         onChange={handleChange}
@@ -209,7 +209,7 @@ export function RegisterPage() {
                                 <div>
                                     <label
                                         htmlFor="email"
-                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                        className="block mb-2 text-sm font-medium text-dark-brown" 
                                     >
                                         Email của bạn
                                     </label>
@@ -217,7 +217,7 @@ export function RegisterPage() {
                                         type="email"
                                         name="email"
                                         id="email"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        className="bg-soft-gray border border-soft-gray text-dark-brown text-sm rounded-lg focus:ring-accent-gold focus:border-accent-gold block w-full p-2.5" 
                                         placeholder="name@company.com"
                                         value={formData.email}
                                         onChange={handleChange}
@@ -231,7 +231,7 @@ export function RegisterPage() {
                                 <div>
                                     <label
                                         htmlFor="password"
-                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                        className="block mb-2 text-sm font-medium text-dark-brown" 
                                     >
                                         Mật khẩu
                                     </label>
@@ -242,7 +242,7 @@ export function RegisterPage() {
                                         name="password"
                                         id="password"
                                         placeholder="••••••••"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        className="bg-soft-gray border border-soft-gray text-dark-brown text-sm rounded-lg focus:ring-accent-gold focus:border-accent-gold block w-full p-2.5" 
                                         value={formData.password}
                                         onChange={handleChange}
                                     />
@@ -255,7 +255,7 @@ export function RegisterPage() {
                                 <div>
                                     <label
                                         htmlFor="confirmPassword"
-                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                        className="block mb-2 text-sm font-medium text-dark-brown" 
                                     >
                                         Xác nhận mật khẩu
                                     </label>
@@ -266,7 +266,7 @@ export function RegisterPage() {
                                         name="confirmPassword"
                                         id="confirmPassword"
                                         placeholder="••••••••"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        className="bg-soft-gray border border-soft-gray text-dark-brown text-sm rounded-lg focus:ring-accent-gold focus:border-accent-gold block w-full p-2.5" 
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
                                     />
@@ -279,7 +279,7 @@ export function RegisterPage() {
                                 <div>
                                     <label
                                         htmlFor="phoneNumber"
-                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                        className="block mb-2 text-sm font-medium text-dark-brown" 
                                     >
                                         Số điện thoại
                                     </label>
@@ -287,7 +287,7 @@ export function RegisterPage() {
                                         type="text"
                                         name="phoneNumber"
                                         id="phoneNumber"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        className="bg-soft-gray border border-soft-gray text-dark-brown text-sm rounded-lg focus:ring-accent-gold focus:border-accent-gold block w-full p-2.5" 
                                         placeholder="1234567890"
                                         value={formData.phoneNumber}
                                         onChange={handleChange}
@@ -298,6 +298,10 @@ export function RegisterPage() {
                                         </p>
                                     )}
                                 </div>
+                                {/* Thêm phần lựa chọn membershipType */}
+                                <div>
+                                    
+                                </div>
                             </div>
                             <div className="flex items-center">
                                 <input
@@ -305,11 +309,11 @@ export function RegisterPage() {
                                     id="showPassword"
                                     checked={showPassword}
                                     onChange={handleTogglePassword}
-                                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                                    className="w-4 h-4 border border-medium-gray rounded bg-soft-gray focus:ring-3 focus:ring-accent-gold" 
                                 />
                                 <label
                                     htmlFor="showPassword"
-                                    className="ml-2 text-sm font-medium text-gray-900 dark:text-white"
+                                    className="ml-2 text-sm font-medium text-dark-brown" 
                                 >
                                     Hiện mật khẩu
                                 </label>
@@ -320,18 +324,18 @@ export function RegisterPage() {
                                         id="terms"
                                         aria-describedby="terms"
                                         type="checkbox"
-                                        className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                                        className="w-4 h-4 border border-medium-gray rounded bg-soft-gray focus:ring-3 focus:ring-accent-gold"
                                         required
                                     />
                                 </div>
                                 <div className="ml-3 text-sm">
                                     <label
                                         htmlFor="terms"
-                                        className="font-light text-gray-500 dark:text-gray-300"
+                                        className="font-light text-medium-gray" 
                                     >
                                         Tôi chấp nhận{" "}
                                         <a
-                                            className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                            className="font-medium text-accent-gold hover:underline" 
                                             href="#"
                                         >
                                             Điều khoản và điều kiện
@@ -342,15 +346,15 @@ export function RegisterPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:bg-gray-400"
+                                className="w-full text-light-cream bg-black-soft hover:bg-dark-brown focus:ring-4 focus:outline-none focus:ring-accent-gold font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50" /* Thay đổi màu nền, hover, focus ring, disabled */
                             >
                                 Tạo tài khoản
                             </button>
-                            <p className="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
+                            <p className="text-sm font-light text-medium-gray text-center"> 
                                 Bạn đã có tài khoản?{" "}
                                 <Link
                                     to={routes.login}
-                                    className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+                                    className="font-medium text-accent-gold hover:underline" 
                                 >
                                     Đăng nhập tại đây
                                 </Link>

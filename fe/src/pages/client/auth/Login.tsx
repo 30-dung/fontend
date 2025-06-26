@@ -4,7 +4,7 @@ import axios from "axios";
 import api from "@/services/api";
 import url from "@/services/url";
 import routes from "@/config/routes";
-import { toast } from 'react-toastify'; // Import toast
+import { toast } from 'react-toastify';
 
 interface FormData {
     email: string;
@@ -112,7 +112,7 @@ export function LoginPage() {
                     console.warn("Login API did not return userId or fullName.");
                 }
 
-                toast.success("Đăng nhập thành công!", { autoClose: 2000 }); // Success toast
+                toast.success("Đăng nhập thành công!", { autoClose: 2000 });
                 setTimeout(() => {
                     if (response.data.role.includes("ROLE_CUSTOMER")) {
                         navigate(returnTo);
@@ -126,7 +126,7 @@ export function LoginPage() {
                     errorMessage =
                         error.response?.data?.message || error.message;
                 }
-                toast.error(errorMessage, { autoClose: 3000 }); // Error toast
+                toast.error(errorMessage, { autoClose: 3000 });
             } finally {
                 setLoading(false);
             }
@@ -134,12 +134,12 @@ export function LoginPage() {
     };
 
     return (
-        <section className="bg-gray-50 dark:bg-gray-900">
+        <section className="bg-light-cream"> {/* Thay bg-gray-50 thành bg-light-cream, bỏ dark mode */}
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
                
-                <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div className="w-full bg-white rounded-lg shadow border border-soft-gray md:mt-0 sm:max-w-md xl:p-0"> {/* Thay dark-bg-gray-800 dark-border-gray-700 thành border-soft-gray */}
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        <h1 className="text-xl font-bold leading-tight tracking-tight text-dark-brown md:text-2xl font-serif"> {/* Thay text-gray-900 dark:text-white thành text-dark-brown, thêm font-serif */}
                             Đăng nhập vào tài khoản của bạn
                         </h1>
                         <form
@@ -149,7 +149,7 @@ export function LoginPage() {
                             <div>
                                 <label
                                     htmlFor="email"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                    className="block mb-2 text-sm font-medium text-dark-brown" 
                                 >
                                     Email
                                 </label>
@@ -159,7 +159,7 @@ export function LoginPage() {
                                     id="email"
                                     value={formData.email}
                                     onChange={handleChange}
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    className="bg-soft-gray border border-soft-gray text-dark-brown rounded-lg focus:ring-accent-gold focus:border-accent-gold block w-full p-2.5" 
                                     placeholder="name@company.com"
                                 />
                                 {formErrors.email && (
@@ -171,7 +171,7 @@ export function LoginPage() {
                             <div>
                                 <label
                                     htmlFor="password"
-                                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                    className="block mb-2 text-sm font-medium text-dark-brown" 
                                 >
                                     Mật khẩu
                                 </label>
@@ -182,7 +182,7 @@ export function LoginPage() {
                                     value={formData.password}
                                     onChange={handleChange}
                                     placeholder="••••••••"
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    className="bg-soft-gray border border-soft-gray text-dark-brown rounded-lg focus:ring-accent-gold focus:border-accent-gold block w-full p-2.5" 
                                 />
                                 {formErrors.password && (
                                     <p className="text-sm text-red-500">
@@ -196,11 +196,11 @@ export function LoginPage() {
                                     id="showPassword"
                                     checked={showPassword}
                                     onChange={handleTogglePassword}
-                                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                                    className="w-4 h-4 border border-medium-gray rounded bg-soft-gray focus:ring-3 focus:ring-accent-gold" 
                                 />
                                 <label
                                     htmlFor="showPassword"
-                                    className="ml-2 text-sm font-medium text-gray-900 dark:text-white"
+                                    className="ml-2 text-sm font-medium text-dark-brown" 
                                 >
                                     Hiển thị mật khẩu
                                 </label>
@@ -212,13 +212,13 @@ export function LoginPage() {
                                             id="remember"
                                             aria-describedby="remember"
                                             type="checkbox"
-                                            className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                                            className="w-4 h-4 border border-medium-gray rounded bg-soft-gray focus:ring-3 focus:ring-accent-gold" 
                                         />
                                     </div>
                                     <div className="ml-3 text-sm">
                                         <label
                                             htmlFor="remember"
-                                            className="text-gray-500 dark:text-gray-300"
+                                            className="text-medium-gray" 
                                         >
                                             Ghi nhớ tôi
                                         </label>
@@ -226,7 +226,7 @@ export function LoginPage() {
                                 </div>
                                 <Link
                                     to={routes.forgot}
-                                    className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                    className="text-accent-gold hover:underline" 
                                 >
                                     Quên mật khẩu?
                                 </Link>
@@ -234,24 +234,23 @@ export function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full text-white bg-shine-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:opacity-50"
+                                className="w-full text-light-cream bg-black-soft hover:bg-dark-brown focus:ring-4 focus:outline-none focus:ring-accent-gold font-medium rounded-lg text-sm px-5 py-2.5 text-center disabled:opacity-50" /* Thay đổi màu nền, hover, focus ring */
                             >
                                 {loading ? "Đang tải..." : "Đăng nhập"}
                             </button>
-                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                            <p className="text-sm font-light text-medium-gray text-center"> 
                                 Bạn chưa có tài khoản?{" "}
                                 <Link
                                     to={routes.register}
-                                    className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                    className="font-medium text-accent-gold hover:underline" 
                                 >
                                     Đăng ký
                                 </Link>
                             </p>
-                            <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                               
+                            <p className="text-sm font-light text-medium-gray text-center"> 
                                 <Link
                                     to={routes.home}
-                                    className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                                    className="font-medium text-accent-gold hover:underline" 
                                 >
                                    Về trang chủ
                                 </Link>

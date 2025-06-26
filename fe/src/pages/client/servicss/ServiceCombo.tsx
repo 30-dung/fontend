@@ -25,27 +25,24 @@ interface Combo {
 }
 
 // API base URL
-const API_BASE_URL = "/mockData.json"; // File mockData.json trong thư mục public
+const API_BASE_URL = "/mockData.json";
 
 export function ServiceComBo() {
   const { id } = useParams<{ id: string }>();
   const [services, setServices] = useState<Service | null>(null);
-  const [combos, setCombos] = useState<Combo[]>([]); // State riêng cho productAll
+  const [combos, setCombos] = useState<Combo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
-  // Gọi API bằng Axios
   useEffect(() => {
     const fetchService = async () => {
       try {
         setLoading(true);
         setError("");
 
-        // Gọi API để lấy dữ liệu từ mockData.json
         const response = await axios.get(API_BASE_URL);
         const { services, combos } = response.data;
 
-        // Tìm sản phẩm theo id
         const foundService = services.find((s: Service) => s.id === parseInt(id || "0"));
         if (!foundService) {
           setServices(null);
@@ -54,11 +51,10 @@ export function ServiceComBo() {
           return;
         }
 
-        // Lọc các gói chi tiết liên quan từ combos
         const relatedCombo = combos.filter((cb: Combo) => cb.serviceId === foundService.id);
 
         setServices(foundService);
-        setCombos(relatedCombo); // Cập nhật state cho combos
+        setCombos(relatedCombo);
       } catch (err) {
         console.error("Lỗi khi lấy dữ liệu:", err);
         setError("Không thể tải dữ liệu dịch vụ. Vui lòng thử lại sau.");
@@ -70,35 +66,29 @@ export function ServiceComBo() {
     fetchService();
   }, [id]);
 
-  // Animation variants cho hiệu ứng fade-in
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
   };
 
-  // Hiển thị khi đang tải
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-lg text-shine-primary">Đang tải...</p>
+      <div className="flex justify-center items-center h-screen bg-light-cream"> {/* Thêm bg-light-cream */}
+        <p className="text-lg text-dark-brown">Đang tải...</p> {/* Thay text-shine-primary thành text-dark-brown */}
       </div>
     );
   }
 
-  // Hiển thị khi có lỗi hoặc không tìm thấy sản phẩm
   if (error || !services) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-light-cream"> {/* Thêm bg-light-cream */}
         <p className="text-lg text-red-600">{error || "Không tìm thấy dịch vụ!"}</p>
       </div>
     );
   }
 
   return (
-
-
-
-    <main className="relative from-blue-{#F3F4F6}">
+    <main className="relative bg-light-cream font-sans"> {/* Thay from-blue-{#F3F4F6} thành bg-light-cream, thêm font-sans */}
       <section>
         <div className="mx-4 md:mx-24 mb-6 md:mb-12">
 
@@ -111,8 +101,8 @@ export function ServiceComBo() {
             variants={sectionVariants}
             className="mx-4 md:mx-24 mt-6"
           >
-            <h1 className="text-2xl font-bold text-shine-primary mb-2">{services.name}</h1>
-            <p className="text-sm text-gray-600 mb-6">{services.description || "Không có mô tả"}</p>
+            <h1 className="text-2xl font-bold text-dark-brown mb-2 font-serif">{services.name}</h1> {/* Thay text-shine-primary thành text-dark-brown, thêm font-serif */}
+            <p className="text-sm text-medium-gray mb-6">{services.description || "Không có mô tả"}</p> {/* Thay text-gray-600 thành text-medium-gray */}
           </motion.div>
 
           {/* Các gói dịch vụ */}
@@ -128,7 +118,7 @@ export function ServiceComBo() {
                 {combos.map((cbs) => (
                   <div
                     key={cbs.id}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden"
+                    className="bg-white rounded-xl shadow-lg overflow-hidden border border-soft-gray" 
                   >
                     <div className="relative overflow-hidden">
                       <img
@@ -139,15 +129,15 @@ export function ServiceComBo() {
                     </div>
 
                     <div className="p-4">
-                      <h3 className="text-lg font-bold text-gray-800 mb-1">{cbs.name}</h3>
-                      <p className="text-sm text-gray-600 whitespace-pre-line mb-4">{cbs.description}</p>
+                      <h3 className="text-lg font-bold text-dark-brown mb-1 font-serif">{cbs.name}</h3> {/* Thay text-gray-800 thành text-dark-brown, thêm font-serif */}
+                      <p className="text-sm text-medium-gray whitespace-pre-line mb-4">{cbs.description}</p> {/* Thay text-gray-600 thành text-medium-gray */}
                       <div className="flex justify-between items-center">
-                        <span className="bg-shine-primary text-white text-xs font-medium px-3 py-1 rounded-full">
+                        <span className="bg-dark-brown text-light-cream text-xs font-medium px-3 py-1 rounded-full"> {/* Thay bg-shine-primary text-white thành bg-dark-brown text-light-cream */}
                           {cbs.duration}
                         </span>
                         <Link
                           to={`${routes.combo_detail.replace(':id', cbs.id.toString())}`}
-                          className="flex items-center text-shine-primary hover:text-shine-primary/80"
+                          className="flex items-center text-accent-gold hover:text-dark-brown" 
                         >
                           <span className="text-sm font-medium">Tìm hiểu thêm</span>
                           <FaArrowRight className="ml-2" />
@@ -162,7 +152,7 @@ export function ServiceComBo() {
               <div className="flex justify-center mt-8">
                 <Link
                   to="/booking"
-                  className="bg-shine-primary text-white font-bold py-3 px-6 rounded-full hover:bg-shine-primary/90 transition"
+                  className="bg-black-soft text-light-cream font-bold py-3 px-6 rounded-full hover:bg-dark-brown transition" 
                 >
                   ĐẶT LỊCH NGAY
                 </Link>
@@ -170,21 +160,20 @@ export function ServiceComBo() {
             </motion.div>
           )}
 
-          {/* Nút CTA cố định */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-            className="fixed bottom-6 right-6"
-          >
-            <Link
-              to="/booking"
-              className="flex items-center bg-shine-primary text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-shine-primary/90 transition animate-bounce"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="fixed bottom-6 right-6 z-50"
             >
-              <FaPhoneAlt className="mr-2" />
-              Đặt lịch ngay
-            </Link>
-          </motion.div>
+                <Link
+                    to={routes.booking}
+                    className="flex items-center bg-black-soft text-light-cream font-bold py-3 px-7 rounded-full shadow-xl hover:bg-dark-brown transition-all duration-300"
+                >
+                    <FaPhoneAlt className="mr-2" />
+                    Đặt lịch ngay
+                </Link>
+            </motion.div>
         </div>
       </section>
     </main>

@@ -72,6 +72,7 @@ export interface ServiceRatingSummary {
     averageRating: number; // Thêm trường này
     totalReviews: number; // Thêm trường này
     serviceImg?: string;
+    description:string;
 }
 
 export interface OverallRating {

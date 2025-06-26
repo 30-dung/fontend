@@ -35,13 +35,11 @@ export function SelectService({
 }: SelectServiceProps) {
     const [searchParams, setSearchParams] = useSearchParams();
     const storeId = localStorage.getItem("storeId") || salonId;
-    // Khi chỉ cho phép chọn 1 dịch vụ, chúng ta sẽ lưu ID của dịch vụ đó, hoặc null nếu không có.
     const selectedServiceIdFromLS = JSON.parse(
         localStorage.getItem("selectedServiceId") || "null"
     );
 
     const [services, setServices] = useState<StoreService[]>([]);
-    // selectedServicesState giờ chỉ giữ 1 hoặc 0 dịch vụ
     const [selectedServicesState, setSelectedServicesState] = useState<
         StoreService[]
     >([]);
@@ -57,7 +55,7 @@ export function SelectService({
             }
             setLoading(true);
             try {
-                const response = await api.get(
+                const response = await api.get<StoreService[]>(
                     `${url.STORE_SERVICE.GET_BY_STORE}/${storeId}`
                 );
                 const mappedServices: StoreService[] = response.data.map((s: any) => ({
@@ -68,7 +66,6 @@ export function SelectService({
                 setServices(mappedServices);
                 setError(null);
 
-                // Khôi phục dịch vụ đã chọn từ localStorage
                 if (selectedServiceIdFromLS !== null) {
                     const savedService = mappedServices.find(
                         (s: StoreService) => s.storeServiceId === selectedServiceIdFromLS
@@ -87,7 +84,6 @@ export function SelectService({
                         ]);
                     }
                 } else {
-                    // Đảm bảo state được reset nếu không có dịch vụ nào trong localStorage
                     setSelectedServicesState([]);
                     setSelectedServices([]);
                 }
@@ -102,29 +98,25 @@ export function SelectService({
             }
         };
         fetchServices();
-    }, [storeId, setSelectedServices, selectedServiceIdFromLS]); // Thêm selectedServiceIdFromLS vào dependency array
+    }, [storeId, setSelectedServices, selectedServiceIdFromLS]);
 
     const handleSelectService = (service: StoreService) => {
-        // Kiểm tra xem dịch vụ hiện tại đã được chọn chưa
         const isAlreadySelected = selectedServicesState.some(
             (s) => s.storeServiceId === service.storeServiceId
         );
 
         if (isAlreadySelected) {
-            // Nếu dịch vụ này đã được chọn, bỏ chọn nó
-            setSelectedServicesState([]); // Bỏ chọn tất cả (chỉ có 1 mà thôi)
+            setSelectedServicesState([]);
         } else {
-            // Nếu dịch vụ này chưa được chọn, chọn nó và bỏ chọn bất kỳ dịch vụ nào khác
             setSelectedServicesState([service]);
         }
     };
 
     const handleConfirm = () => {
         if (selectedServicesState.length === 0) {
-            setError("Vui lòng chọn một dịch vụ"); // Đổi thông báo lỗi
+            setError("Vui lòng chọn một dịch vụ");
             return;
         }
-        // Lưu ID của dịch vụ duy nhất đã chọn vào localStorage
         localStorage.setItem(
             "selectedServiceId",
             JSON.stringify(selectedServicesState[0].storeServiceId)
@@ -154,49 +146,50 @@ export function SelectService({
     );
 
     return (
-        <div className="w-full min-h-screen from-blue-{#F3F4F6} font-sans flex flex-col items-center">
+        <div className="w-full min-h-screen bg-light-cream font-sans flex flex-col items-center">
             {/* Banner ảnh lớn */}
             <div
                 className="relative bg-cover bg-center w-full flex items-center justify-center overflow-hidden object-cover "
                style={{ backgroundImage: `url('https://t3.ftcdn.net/jpg/06/70/53/74/360_F_670537427_n4UsFhTyJyRLAuuukM1Z9LTEbtZp0KWi.jpg')`, height: '350px' }}
             >
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center"></div>
-                <h1 className="relative text-white text-4xl md:text-5xl font-bold z-10 text-center px-4">
+                <div className="absolute inset-0 bg-black opacity-40 flex items-center justify-center"></div>
+                <h1 className="relative text-white text-4xl md:text-5xl font-bold z-10 text-center px-4 font-serif">
                     Chọn Dịch Vụ
                 </h1>
             </div>
 
-            {/* Khung trắng lớn chứa toàn bộ nội dung chính (bao gồm cả phần tổng thanh toán) */}
-            <div className="container mx-auto max-w-5xl -mt-16 md:-mt-20 relative z-20 px-4 mb-8">
-                <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+            {/* Khung trắng lớn chứa toàn bộ nội dung chính */}
+            <div className="container mx-auto max-w-5xl -mt-16 md:-mt-20 relative z-20 px-4 mb-8 flex flex-col lg:flex-row gap-6">
+                {/* Cột chính: Danh sách dịch vụ */}
+                <div className="lg:w-2/3 bg-white rounded-2xl shadow-xl p-6 md:p-8 flex-grow">
 
                     {/* Header với nút quay lại và tiêu đề "Chọn dịch vụ" */}
                     <div className="flex items-center justify-between mb-6">
                         <button
                             onClick={() => setStep(0)}
-                            className="text-[#15397F] hover:text-[#1e4bb8] transition duration-200 p-2 rounded-full hover:bg-gray-200"
+                            className="text-dark-brown hover:text-accent-gold transition duration-200 p-2 rounded-full hover:bg-soft-gray"
                         >
                             <FaArrowLeft className="w-5 h-5" />
                         </button>
-                        <h2 className="text-2xl md:text-3xl font-bold text-center text-[#15397F] flex-grow">
+                        <h2 className="text-2xl md:text-3xl font-bold text-center text-dark-brown flex-grow font-serif">
                             Dịch vụ có sẵn
                         </h2>
                         <div className="w-7 h-7"></div>
                     </div>
 
                     {/* Thanh tìm kiếm */}
-                    <div className="relative mb-6 flex items-center bg-gray-50 rounded-lg shadow-sm border border-gray-200 focus-within:ring-2 focus-within:ring-[#15397F] focus-within:border-transparent transition duration-200">
-                        <FaSearch className="text-gray-400 ml-3 text-lg" />
+                    <div className="relative mb-6 flex items-center bg-soft-gray rounded-lg shadow-sm border border-soft-gray focus-within:ring-2 focus-within:ring-accent-gold focus-within:border-transparent transition duration-200">
+                        <FaSearch className="text-medium-gray ml-3 text-lg" />
                         <input
                             type="text"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder="Tìm kiếm dịch vụ..."
-                            className="bg-transparent border-none focus:outline-none py-3 px-4 w-full text-gray-700 placeholder-gray-500 text-base"
+                            className="bg-transparent border-none focus:outline-none py-3 px-4 w-full text-dark-brown placeholder-medium-gray text-base"
                         />
                         {searchTerm && (
                             <button
-                                className="mr-3 text-gray-500 hover:text-gray-700 text-xl font-bold transition"
+                                className="mr-3 text-medium-gray hover:text-dark-brown transition"
                                 onClick={() => setSearchTerm("")}
                                 aria-label="Clear search"
                             >
@@ -206,7 +199,7 @@ export function SelectService({
                     </div>
 
                     {loading && (
-                        <div className="text-center text-gray-500 py-6 text-lg">
+                        <div className="text-center text-medium-gray py-6 text-lg">
                             Đang tải danh sách dịch vụ...
                         </div>
                     )}
@@ -217,69 +210,71 @@ export function SelectService({
                     )}
 
                     {!loading && !error && (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6"> {/* Đã chỉnh: lg:grid-cols-2 và xl:grid-cols-2 */}
                             {filteredServices.length > 0 ? (
                                 filteredServices.map((service) => (
                                     <div
                                         key={service.storeServiceId}
                                         className={`bg-white rounded-lg shadow-md overflow-hidden flex flex-col cursor-pointer
-                                            ${selectedServicesState.some(s => s.storeServiceId === service.storeServiceId) ? 'border-2 border-[#15397F]' : 'border border-gray-200'}
+                                            ${selectedServicesState.some(s => s.storeServiceId === service.storeServiceId) ? 'border-2 border-dark-brown' : 'border border-soft-gray'}
                                             hover:shadow-lg transition transform hover:scale-105 duration-300`}
                                         onClick={() => handleSelectService(service)}
                                     >
                                         <img
                                             className="w-full h-36 object-cover rounded-t-lg"
                                             src={
-                                                service.service.serviceImg ||
-                                                "https://via.placeholder.com/300x150?text=Service+Image"
+                                                service.service.serviceImg
+                                                    ? (service.service.serviceImg.startsWith('http')
+                                                        ? service.service.serviceImg
+                                                        : `${url.BASE_IMAGES}${service.service.serviceImg}`)
+                                                    : "https://via.placeholder.com/300x150?text=Service+Image"
                                             }
                                             alt={service.service.serviceName}
                                         />
                                         <div className="p-3 flex flex-col flex-1">
                                             <div className="flex justify-between items-start mb-1">
-                                                <p className="text-base font-semibold text-gray-800 flex-1 pr-1 leading-tight">
+                                                <p className="text-base font-semibold text-dark-brown flex-1 pr-1 leading-tight font-serif">
                                                     {service.service.serviceName}
                                                 </p>
-                                                <div className="flex items-center text-xs text-gray-600 pl-1">
-                                                    <FaClock className="h-3 w-3 mr-1 text-gray-500" />
+                                                <div className="flex items-center text-xs text-medium-gray pl-1">
+                                                    <FaClock className="h-3 w-3 mr-1 text-medium-gray" />
                                                     {service.service.durationMinutes}p
                                                 </div>
                                             </div>
 
                                             {service.service.description && (
-                                                <p className="text-xs text-gray-600 mb-2 line-clamp-2 leading-snug">
+                                                <p className="text-xs text-medium-gray mb-2 line-clamp-2 leading-snug">
                                                     {service.service.description}
                                                 </p>
                                             )}
 
-                                            {/* Hiển thị Rating của dịch vụ */}
                                             <div className="flex items-center text-sm mb-2">
                                                 {service.totalReviews > 0 ? (
                                                     <>
                                                         <StarRating initialRating={service.averageRating} readOnly starSize={14} />
-                                                        <span className="ml-1 text-gray-600">({service.totalReviews})</span>
+                                                        <span className="ml-1 text-medium-gray">({service.totalReviews})</span>
                                                     </>
                                                 ) : (
-                                                    <span className="text-xs text-gray-400">Chưa có đánh giá</span>
+                                                    <span className="text-xs text-medium-gray">Chưa có đánh giá</span>
                                                 )}
                                             </div>
 
-                                            <div className="mt-auto pt-2 border-t border-gray-100">
-                                                <span className="text-sm font-bold text-gray-900 block mb-1">
+                                            <div className="mt-auto pt-2 border-t border-soft-gray">
+                                                <span className="text-sm font-bold text-dark-brown block mb-1">
                                                     Giá tiêu chuẩn
                                                 </span>
-                                                <span className="text-lg font-bold text-[#15397F] block mb-3">
+                                                <span className="text-lg font-bold text-accent-gold block mb-3">
                                                     {service.price.toLocaleString("vi-VN")} VND
                                                 </span>
                                                 <button
-                                                    className={`w-full text-white font-semibold text-sm px-3 py-1.5 rounded-lg transition duration-200 ease-in-out ${
+                                                    className={`w-full text-light-cream font-semibold text-sm px-3 py-1.5 rounded-lg transition duration-200 ease-in-out ${
                                                         selectedServicesState.some(
                                                             (s) =>
                                                                 s.storeServiceId ===
                                                                 service.storeServiceId
                                                         )
-                                                            ? "bg-blue-800 hover:bg-blue-900"
-                                                            : "bg-[#15397F] hover:bg-[#1e4bb8]"
+                                                            ? "bg-dark-brown hover:bg-black-soft"
+                                                            : "bg-black-soft hover:bg-dark-brown"
                                                     }`}
                                                     onClick={(e) => {
                                                         e.stopPropagation();
@@ -292,41 +287,58 @@ export function SelectService({
                                                             service.storeServiceId
                                                     )
                                                         ? "Đã chọn"
-                                                        : "Chọn dịch vụ"} {/* Đổi text button */}
+                                                        : "Chọn dịch vụ"}
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
                                 ))
                             ) : (
-                                <div className="col-span-full text-center text-gray-500 py-8 text-base">
+                                <div className="col-span-full text-center text-medium-gray py-8 text-base">
                                     Không tìm thấy dịch vụ nào.
                                 </div>
                             )}
                         </div>
                     )}
+                </div>
 
-                    {/* Phần Tổng thanh toán và Tiếp tục - sử dụng sticky position */}
-                    <div className="sticky bottom-0 z-40 mt-8 p-6 bg-white border border-gray-200 rounded-xl shadow">
-                        <p className="text-base text-gray-700 font-semibold mb-2">
-                            Đã chọn {selectedServicesState.length} dịch vụ
-                        </p>
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xl font-bold text-[#15397F]">
-                                Tổng thanh toán
-                            </span>
-                            <span className="text-xl font-bold text-green-700">
+                {/* Sidebar Tóm tắt đơn hàng và nút Tiếp tục */}
+                <div className="lg:w-1/3 bg-white px-6 py-8 rounded-xl shadow-xl h-fit sticky top-20">
+                    <h3 className="text-xl font-bold text-dark-brown mb-5 font-serif">Tóm tắt dịch vụ</h3>
+                    <div className="space-y-4">
+                        {selectedServicesState.length > 0 ? (
+                            <div className="text-sm text-medium-gray">
+                                <p className="font-semibold mb-1">Dịch vụ đã chọn:</p>
+                                <ul className="list-none list-inside ml-2 space-y-0.5">
+                                    {selectedServicesState.map(service => (
+                                        <li key={service.storeServiceId}>
+                                            {service.service.serviceName} ({service.service.durationMinutes} phút) - {service.price.toLocaleString()} VND
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ) : (
+                            <p className="text-medium-gray text-sm">Chưa có dịch vụ nào được chọn.</p>
+                        )}
+                        
+                        <div className="text-lg font-bold text-dark-brown flex justify-between pt-4 border-t border-soft-gray">
+                            <span>Tổng thanh toán:</span>
+                            <span className="text-xl font-bold text-accent-gold">
                                 {selectedServicesState.length > 0
                                     ? selectedServicesState[0].price.toLocaleString("vi-VN")
-                                    : "0"}{" "} {/* Chỉ hiển thị giá của dịch vụ đã chọn */}
+                                    : "0"}{" "}
                                 VND
                             </span>
                         </div>
+                    </div>
+
+                    {/* Nút Tiếp tục */}
+                    <div className="mt-8">
                         <button
-                            className={`w-full mt-2 text-white font-semibold text-base px-4 py-3 rounded-lg transition duration-200 ease-in-out ${
+                            className={`w-full py-3 rounded-lg text-light-cream font-semibold text-base uppercase tracking-wide transition duration-200 shadow-md ${
                                 selectedServicesState.length === 0
-                                    ? "bg-gray-400 cursor-not-allowed"
-                                    : "bg-[#15397F] hover:bg-[#1e4bb8]"
+                                    ? "bg-soft-gray cursor-not-allowed text-medium-gray"
+                                    : "bg-black-soft hover:bg-dark-brown"
                             }`}
                             onClick={handleConfirm}
                             disabled={selectedServicesState.length === 0}
@@ -334,7 +346,7 @@ export function SelectService({
                             Tiếp tục
                         </button>
                     </div>
-                </div> {/* Kết thúc khung trắng lớn */}
+                </div>
             </div>
         </div>
     );

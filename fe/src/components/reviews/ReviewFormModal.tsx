@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import routes from '@/config/routes';
 import { FaStore, FaUser, FaCut, FaRegCommentDots } from 'react-icons/fa';
 
-import { toast } from 'react-toastify'; // Import toast function
+import { toast } from 'react-toastify';
 
 interface ReviewFormModalProps {
     isOpen: boolean;
@@ -36,7 +36,7 @@ const ReviewFormModal: React.FC<ReviewFormModalProps> = ({
     const [serviceRating, setServiceRating] = useState(0);
     const [comment, setComment] = useState('');
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null); // Giữ lại error state để hiển thị lỗi validation form
+    const [error, setError] = useState<string | null>(null);
     const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
     const navigate = useNavigate();
 
@@ -54,31 +54,27 @@ const ReviewFormModal: React.FC<ReviewFormModalProps> = ({
                     setUserInfo(response.data);
                 } catch (err) {
                     console.error('Failed to fetch user info', err);
-                    // Dùng toast cho lỗi fetch user info nếu cần, hoặc giữ nguyên setError
                     toast.error("Không thể tải thông tin người dùng. Vui lòng thử lại.");
-                    onClose(); // Đóng modal nếu không tải được user info
+                    onClose();
                 }
             };
             fetchUserInfo();
         }
     }, [isOpen]);
 
-    // Hiển thị loading hoặc null nếu user info chưa sẵn sàng và modal đang mở
     if (isOpen && !userInfo) {
         return (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 font-sans"> {/* Thêm font-sans */}
                 <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md text-center">
-                    <p className="text-gray-700">Đang tải thông tin người dùng...</p>
+                    <p className="text-medium-gray">Đang tải thông tin người dùng...</p> {/* Thay text-gray-700 thành text-medium-gray */}
                 </div>
             </div>
         );
     }
     
-    // Nếu modal không mở hoặc user ID không hợp lệ, không render gì cả
     if (!isOpen || typeof userInfo?.userId !== 'number') {
         if (isOpen && userInfo && typeof userInfo.userId !== 'number') {
             console.error("ReviewFormModal: User ID is invalid or missing from profile API. Cannot submit review.");
-            // Dùng toast cho lỗi user ID không hợp lệ
             toast.error("Lỗi: Không tìm thấy ID người dùng hợp lệ. Vui lòng thử lại hoặc đăng nhập lại.");
         }
         return null;
@@ -93,7 +89,7 @@ const ReviewFormModal: React.FC<ReviewFormModalProps> = ({
         }
 
         setLoading(true);
-        setError(null); // Clear previous error
+        setError(null);
 
         try {
             const reviewsToSend: ReviewRequest[] = [];
@@ -135,16 +131,14 @@ const ReviewFormModal: React.FC<ReviewFormModalProps> = ({
                 await api.post(url.REVIEW.CREATE, reviewReq);
             }
 
-            // Hiển thị thông báo thành công bằng react-toastify
-            toast.success("Gửi đánh giá thành công!"); 
-            onReviewSubmitted(true); // Vẫn gọi prop để cha component có thể cập nhật UI
-            onClose(); // Đóng modal
+            toast.success("Gửi đánh giá thành công!");
+            onReviewSubmitted(true);
+            onClose();
 
         } catch (err: any) {
             console.error('Error submitting review:', err.response?.data || err.message);
             const errorMessage = err.response?.data?.message || 'Đã xảy ra lỗi khi gửi đánh giá. Vui lòng thử lại.';
-            setError(errorMessage); // Vẫn set error nội bộ cho form validation
-            // Hiển thị thông báo lỗi bằng react-toastify
+            setError(errorMessage);
             toast.error(errorMessage);
             onReviewSubmitted(false);
         } finally {
@@ -153,43 +147,42 @@ const ReviewFormModal: React.FC<ReviewFormModalProps> = ({
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-lg animate-fade-in-up relative border border-gray-100">
-                <h2 className="text-3xl font-bold text-[#15397F] mb-6 text-center">Đánh giá chất lượng</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 font-sans"> {/* Thêm font-sans */}
+            <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-lg animate-fade-in-up relative border border-soft-gray"> {/* Thay border-gray-100 thành border-soft-gray */}
+                <h2 className="text-3xl font-bold text-dark-brown mb-6 text-center font-serif">Đánh giá chất lượng</h2> {/* Thay text-[#15397F] thành text-dark-brown, thêm font-serif */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-[#15397F] transition-colors text-3xl font-light"
+                    className="absolute top-4 right-4 text-medium-gray hover:text-dark-brown transition-colors text-3xl font-light" /* Thay text-gray-500 hover:text-[#15397F] thành màu theme */
                 >
                     &times;
                 </button>
-                {/* Chỉ hiển thị error nếu nó đến từ validation form, không phải từ API toast */}
                 {error && <p className="text-red-600 text-sm mb-4 text-center">{error}</p>}
 
                 <form onSubmit={handleSubmit}>
                     {/* Cửa hàng */}
-                    <div className="mb-5 py-2 border-b border-gray-200 flex items-center justify-between">
-                        <div className="flex items-center text-gray-700 text-base font-semibold">
-                            <FaStore className="mr-2 text-[#15397F]" />
-                            Cửa hàng:<span className="ml-1 text-gray-900 font-medium">{storeName}</span>
+                    <div className="mb-5 py-2 border-b border-soft-gray flex items-center justify-between"> {/* Thay border-gray-200 thành border-soft-gray */}
+                        <div className="flex items-center text-dark-brown text-base font-semibold"> {/* Thay text-gray-700 thành text-dark-brown */}
+                            <FaStore className="mr-2 text-dark-brown" /> {/* Thay text-[#15397F] thành text-dark-brown */}
+                            Cửa hàng:<span className="ml-1 text-dark-brown font-medium">{storeName}</span> {/* Thay text-gray-900 thành text-dark-brown */}
                         </div>
                         <StarRating initialRating={storeRating} onChange={setStoreRating} starSize={26} />
                     </div>
 
                     {/* Stylist */}
-                    <div className="mb-5 py-2 border-b border-gray-200 flex items-center justify-between">
-                        <div className="flex items-center text-gray-700 text-base font-semibold">
-                            <FaUser className="mr-2 text-[#15397F]" />
-                            Stylist:<span className="ml-1 text-gray-900 font-medium">{employeeName}</span>
+                    <div className="mb-5 py-2 border-b border-soft-gray flex items-center justify-between"> {/* Thay border-gray-200 thành border-soft-gray */}
+                        <div className="flex items-center text-dark-brown text-base font-semibold"> {/* Thay text-gray-700 thành text-dark-brown */}
+                            <FaUser className="mr-2 text-dark-brown" /> {/* Thay text-[#15397F] thành text-dark-brown */}
+                            Stylist:<span className="ml-1 text-dark-brown font-medium">{employeeName}</span> {/* Thay text-gray-900 thành text-dark-brown */}
                         </div>
                         <StarRating initialRating={stylistRating} onChange={setStylistRating} starSize={26} />
                     </div>
 
                     {/* Dịch vụ */}
-                    <div className="mb-5 py-2 border-b border-gray-200 flex items-center justify-between">
-                        <div className="flex items-center text-gray-700 text-base font-semibold">
-                            <FaCut className="mr-2 text-[#15397F]" />
+                    <div className="mb-5 py-2 border-b border-soft-gray flex items-center justify-between"> {/* Thay border-gray-200 thành border-soft-gray */}
+                        <div className="flex items-center text-dark-brown text-base font-semibold"> {/* Thay text-gray-700 thành text-dark-brown */}
+                            <FaCut className="mr-2 text-dark-brown" /> {/* Thay text-[#15397F] thành text-dark-brown */}
                             Dịch vụ:{' '}
-                            <div className="text-gray-900 font-medium text-base inline">
+                            <div className="text-dark-brown font-medium text-base inline"> {/* Thay text-gray-900 thành text-dark-brown */}
                                 {serviceName.map((name, idx) => (
                                     <span key={idx}>
                                         {name}{idx < serviceName.length - 1 ? ', ' : ''}
@@ -203,8 +196,8 @@ const ReviewFormModal: React.FC<ReviewFormModalProps> = ({
 
                     {/* Bình luận */}
                     <div className="mb-6 py-2">
-                        <label htmlFor="comment" className="flex items-center text-gray-700 text-base font-semibold mb-3">
-                            <FaRegCommentDots className="mr-2 text-[#15397F]" />
+                        <label htmlFor="comment" className="flex items-center text-dark-brown text-base font-semibold mb-3"> {/* Thay text-gray-700 thành text-dark-brown */}
+                            <FaRegCommentDots className="mr-2 text-dark-brown" /> {/* Thay text-[#15397F] thành text-dark-brown */}
                             Bình luận (tùy chọn):
                         </label>
                         <textarea
@@ -212,7 +205,7 @@ const ReviewFormModal: React.FC<ReviewFormModalProps> = ({
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             rows={4}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#15397F] resize-none text-gray-800 placeholder-gray-500 transition-colors duration-200"
+                            className="w-full px-4 py-3 border border-soft-gray rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-gold resize-none text-dark-brown placeholder-medium-gray transition-colors duration-200" /* Thay đổi màu border, focus ring/border, text, placeholder */
                             placeholder="Chia sẻ trải nghiệm của bạn..."
                         ></textarea>
                     </div>
@@ -220,7 +213,7 @@ const ReviewFormModal: React.FC<ReviewFormModalProps> = ({
                     {/* Nút gửi đánh giá */}
                     <button
                         type="submit"
-                        className="w-full bg-[#15397F] text-white py-3 rounded-lg font-semibold text-lg hover:bg-[#1e4bb8] transition-colors duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-md"
+                        className="w-full bg-black-soft text-light-cream py-3 rounded-lg font-semibold text-lg hover:bg-dark-brown transition-colors duration-300 disabled:bg-soft-gray disabled:cursor-not-allowed shadow-md" /* Thay bg-[#15397F] hover:bg-[#1e4bb8] text-white thành màu theme */
                         disabled={loading}
                     >
                         {loading ? 'Đang gửi...' : 'Gửi đánh giá'}

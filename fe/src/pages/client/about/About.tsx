@@ -328,7 +328,7 @@ export function AboutPage() {
             </div>
 
             {/* Nút CTA cố định */}
-            <motion.div
+             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1 }}
@@ -336,7 +336,7 @@ export function AboutPage() {
             >
                 <Link
                     to={routes.booking}
-                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
+                    className="flex items-center bg-black-soft text-light-cream font-bold py-3 px-7 rounded-full shadow-xl hover:bg-dark-brown transition-all duration-300" /* Đổi màu sắc nút CTA */
                 >
                     <FaPhoneAlt className="mr-2" />
                     Đặt lịch ngay

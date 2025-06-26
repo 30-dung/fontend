@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"; // Import useRef
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {
     FaStore,
@@ -10,7 +10,7 @@ import {
     FaChevronUp,
     FaArrowLeft,
     FaPhoneAlt,
-    FaStar, // Cần import FaStar để hiển thị sao
+    FaStar,
 } from "react-icons/fa";
 import { SelectStore } from "@/components/booking/SelectStore";
 import { SelectService } from "@/components/booking/SelectService";
@@ -18,7 +18,7 @@ import url from "@/services/url";
 import api from "@/services/api";
 import routes from "@/config/routes";
 import { motion } from "framer-motion";
-import StarRating from "@/components/reviews/StarRating"; // Import StarRating component
+import StarRating from "@/components/reviews/StarRating";
 
 interface Store {
     storeId: number;
@@ -40,8 +40,8 @@ interface Employee {
     email: string;
     phoneNumber: string;
     avatarUrl?: string;
-    averageRating: number; // Thêm trường đánh giá trung bình
-    totalReviews: number;  // Thêm trường tổng số đánh giá
+    averageRating: number;
+    totalReviews: number;
 }
 
 interface WorkingTimeSlot {
@@ -61,8 +61,8 @@ interface StoreService {
         serviceImg: string;
     };
     price: number;
-    averageRating: number; // Thêm trường đánh giá trung bình cho StoreService
-    totalReviews: number;  // Thêm trường tổng số đánh giá cho StoreService
+    averageRating: number;
+    totalReviews: number;
 }
 
 export default function BookingForm() {
@@ -90,13 +90,10 @@ export default function BookingForm() {
     const [servicesDetails, setServicesDetails] = useState<StoreService[]>([]);
     const [loading, setLoading] = useState(false);
 
-    // --- Các state mới cho slideshow stylist ---
     const [currentStylistPage, setCurrentStylistPage] = useState(0);
-    const stylistsPerPage = 3; // 3 item trên một hàng
-    const carouselRef = useRef<HTMLDivElement>(null); // Ref cho container của các stylist
-    // --- Hết state mới ---
+    const stylistsPerPage = 3;
+    const carouselRef = useRef<HTMLDivElement>(null);
 
-    // Reset storeId and load store when entering the page
     useEffect(() => {
         const salonId = searchParams.get("salonId");
         if (!salonId) {
@@ -141,7 +138,6 @@ export default function BookingForm() {
         }
     }, [searchParams]);
 
-    // Clear localStorage when leaving the page
     useEffect(() => {
         return () => {
             const navigationEntries = window.performance.getEntriesByType(
@@ -158,7 +154,6 @@ export default function BookingForm() {
         };
     }, []);
 
-    // Check login and fetch user profile
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -193,7 +188,6 @@ export default function BookingForm() {
         fetchUserProfile();
     }, [navigate, setSearchParams, step]);
 
-    // Load stylists
     useEffect(() => {
         const fetchStylists = async () => {
             const storeId = localStorage.getItem("storeId") || "0";
@@ -211,7 +205,6 @@ export default function BookingForm() {
                 const response = await api.get(
                     `${url.EMPLOYEE.BY_STORE}/${storeId}`
                 );
-                // Hàm xáo trộn mảng (Fisher-Yates shuffle)
                 const shuffleArray = (array: any[]) => {
                     let currentIndex = array.length, randomIndex;
                     while (currentIndex !== 0) {
@@ -223,17 +216,16 @@ export default function BookingForm() {
                     return array;
                 };
 
-                // Ánh xạ dữ liệu stylist và xáo trộn
                 let mappedStylists = response.data.map((stylist: any) => ({
                     employeeId: stylist.employeeId,
                     fullName: stylist.fullName,
                     email: stylist.email,
                     phoneNumber: stylist.phoneNumber,
                     avatarUrl: stylist.avatarUrl,
-                    averageRating: stylist.averageRating || 0, // Lấy averageRating
-                    totalReviews: stylist.totalReviews || 0, // Lấy totalReviews
+                    averageRating: stylist.averageRating || 0,
+                    totalReviews: stylist.totalReviews || 0,
                 }));
-                setStylists(shuffleArray(mappedStylists)); // Sắp xếp ngẫu nhiên ngay khi fetch
+                setStylists(shuffleArray(mappedStylists));
             } catch (err: any) {
                 console.error("Không thể tải danh sách stylist:", err);
             } finally {
@@ -243,7 +235,6 @@ export default function BookingForm() {
         fetchStylists();
     }, [selectedStore, selectedServices]);
 
-    // Load time slots
     useEffect(() => {
         const fetchAvailableSlots = async () => {
             if (
@@ -283,7 +274,6 @@ export default function BookingForm() {
         fetchAvailableSlots();
     }, [selectedStore, selectedServices, selectedStylist, selectedDate]);
 
-    // Load service details
     useEffect(() => {
         const fetchServicesDetails = async () => {
             const storeId = localStorage.getItem("storeId") || "0";
@@ -417,11 +407,9 @@ export default function BookingForm() {
         setErrorStore(null);
         setErrorService(null);
         setStylistOpen(!stylistOpen);
-        // Reset về trang đầu tiên khi mở lại danh sách stylist
-        setCurrentStylistPage(0); // Reset page to 0 on open
+        setCurrentStylistPage(0);
     };
 
-    // Hàm để xử lý chuyển trang stylist
     const handleNextStylistPage = () => {
         setCurrentStylistPage((prevPage) =>
             Math.min(prevPage + 1, Math.ceil(stylists.length / stylistsPerPage) - 1)
@@ -432,14 +420,10 @@ export default function BookingForm() {
         setCurrentStylistPage((prevPage) => Math.max(prevPage - 1, 0));
     };
 
-    // Tính toán các stylist để hiển thị trên trang hiện tại
-    // Không cần slice ở đây vì chúng ta sẽ dịch chuyển toàn bộ container
-    // const visibleStylists = stylists.slice(startIndex, startIndex + stylistsPerPage);
-
-    const showNavigationButtons = stylists.length > stylistsPerPage; // Chỉ hiển thị nút khi stylist nhiều hơn số item trên 1 trang
+    const showNavigationButtons = stylists.length > stylistsPerPage;
 
     return (
-        <div className="w-full max-w-full mx-auto from-blue-{#F3F4F6} min-h-screen flex flex-col font-sans">
+        <div className="w-full max-w-full mx-auto bg-light-cream min-h-screen flex flex-col font-sans"> {/* Thay from-blue-{#F3F4F6} thành bg-light-cream */}
             {step === 0 && (
                 <>
                     {/* Banner ảnh lớn và tiêu đề */}
@@ -453,7 +437,7 @@ export default function BookingForm() {
                             className="absolute inset-0 w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                            <span className="text-white text-4xl md:text-5xl font-bold tracking-tight text-shadow-lg">
+                            <span className="text-white text-4xl md:text-5xl font-bold tracking-tight text-shadow-lg font-serif"> {/* Thêm font-serif */}
                                 Đặt lịch giữ chỗ
                             </span>
                         </div>
@@ -462,33 +446,33 @@ export default function BookingForm() {
                     {/* Container chính cho form và sidebar */}
                     <div className="relative z-10 -mt-16 md:-mt-20 max-w-5xl mx-auto w-[calc(100%-2rem)] flex flex-col lg:flex-row gap-6">
                         {/* Phần form chính (cột trái) */}
-                        <div className="lg:w-2/3 bg-white px-6 py-8 rounded-xl shadow-xl flex-grow">
+                        <div className="lg:w-2/3 bg-white px-6 py-8 rounded-xl shadow-xl flex-grow mb-24">
                             <div className="space-y-4">
                                 {/* Chọn Salon */}
                                 <div className="bg-white rounded-lg p-4 shadow-md">
                                     <div className="flex items-center mb-3">
-                                        <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 text-sm font-semibold shadow-md">
+                                        <div className="w-6 h-6 rounded-full bg-black-soft text-light-cream flex items-center justify-center mr-2 text-sm font-semibold shadow-md"> {/* Đổi bg-[#15397F] text-white thành bg-black-soft text-light-cream */}
                                             1
                                         </div>
-                                        <div className="font-semibold text-lg text-[#15397F]">
+                                        <div className="font-semibold text-lg text-dark-brown font-serif"> {/* Đổi text-[#15397F] thành text-dark-brown, thêm font-serif */}
                                             Chọn salon
                                         </div>
                                     </div>
                                     <div
-                                        className={`flex items-center bg-gray-50 h-11 rounded-lg px-3 ${
+                                        className={`flex items-center bg-soft-gray h-11 rounded-lg px-3 ${ /* Đổi bg-gray-50 thành bg-soft-gray */
                                             errorStore
                                                 ? "border-2 border-red-600"
                                                 : ""
-                                        } cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm`}
+                                        } cursor-pointer  hover:text-light-cream transition duration-200 shadow-sm`} /* Đổi hover:bg-gray-100 thành  hover:text-light-cream */
                                         onClick={() => handleStepChange(1)}
                                     >
-                                        <FaStore className="mr-3 w-4 h-4 text-[#15397F]" />
-                                        <span className="text-sm text-gray-700 truncate w-full font-medium">
+                                        <FaStore className="mr-3 w-4 h-4 text-dark-brown" /> {/* Đổi text-[#15397F] thành text-dark-brown */}
+                                        <span className="text-sm text-dark-brown truncate w-full font-medium"> {/* Đổi text-gray-700 thành text-dark-brown */}
                                             {selectedStore
                                                 ? selectedStore.storeName
                                                 : "Chọn salon"}
                                         </span>
-                                        <FaChevronRight className="w-3 h-3 ml-2 text-gray-400" />
+                                        <FaChevronRight className="w-3 h-3 ml-2 text-medium-gray" /> 
                                     </div>
                                     {errorStore && (
                                         <div className="text-red-600 font-bold text-xs mt-1">
@@ -500,26 +484,26 @@ export default function BookingForm() {
                                 {/* Chọn dịch vụ */}
                                 <div className="bg-white rounded-lg p-4 shadow-md">
                                     <div className="flex items-center mb-3">
-                                        <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 text-sm font-semibold shadow-md">
+                                        <div className="w-6 h-6 rounded-full bg-black-soft text-light-cream flex items-center justify-center mr-2 text-sm font-semibold shadow-md"> {/* Đổi bg-[#15397F] text-white thành bg-black-soft text-light-cream */}
                                             2
                                         </div>
-                                        <div className="font-semibold text-lg text-[#15397F]">
+                                        <div className="font-semibold text-lg text-dark-brown font-serif"> {/* Đổi text-[#15397F] thành text-dark-brown, thêm font-serif */}
                                             Chọn dịch vụ
                                         </div>
                                     </div>
                                     <div
-                                        className={`flex items-center bg-gray-50 h-11 rounded-lg px-3 ${
+                                        className={`flex items-center bg-soft-gray h-11 rounded-lg px-3 ${ /* Đổi bg-gray-50 thành bg-soft-gray */
                                             errorService
                                                 ? "border-2 border-red-600"
                                                 : ""
-                                        } cursor-pointer hover:bg-gray-100 transition duration-200 shadow-sm`}
+                                        } cursor-pointer  hover:text-light-cream transition duration-200 shadow-sm`} /* Đổi hover:bg-gray-100 thành  hover:text-light-cream */
                                         onClick={handleServiceClick}
                                     >
-                                        <FaCut className="mr-3 w-4 h-4 text-[#15397F]" />
-                                        <span className="text-sm text-gray-700 truncate w-full font-medium">
+                                        <FaCut className="mr-3 w-4 h-4 text-dark-brown" /> {/* Đổi text-[#15397F] thành text-dark-brown */}
+                                        <span className="text-sm text-dark-brown truncate w-full font-medium"> {/* Đổi text-gray-700 thành text-dark-brown */}
                                             Đã chọn {selectedServices.length} dịch vụ
                                         </span>
-                                        <FaChevronRight className="w-3 h-3 ml-2 text-gray-400" />
+                                        <FaChevronRight className="w-3 h-3 ml-2 text-medium-gray" /> 
                                     </div>
                                     {errorService && (
                                         <div className="text-red-600 font-bold text-xs mt-1">
@@ -527,13 +511,13 @@ export default function BookingForm() {
                                         </div>
                                     )}
                                     {selectedServices.length > 0 && (
-                                        <div className="mt-3 text-sm text-green-600 font-medium space-y-0.5">
+                                        <div className="mt-3 text-sm text-accent-gold font-medium space-y-0.5"> {/* Đổi text-green-600 thành text-accent-gold */}
                                             {selectedServices.map((service) => (
                                                 <div key={service.storeServiceId}>
                                                     {service.service.serviceName}
                                                 </div>
                                             ))}
-                                            <div className="mt-1 font-bold text-gray-800">
+                                            <div className="mt-1 font-bold text-dark-brown"> {/* Đổi text-gray-800 thành text-dark-brown */}
                                                 Tổng số tiền:{" "}
                                                 {selectedServices
                                                     .reduce(
@@ -550,10 +534,10 @@ export default function BookingForm() {
                                 {/* Chọn stylist, ngày và thời gian */}
                                 <div className="bg-white rounded-lg p-4 shadow-md">
                                     <div className="flex items-center mb-3">
-                                        <div className="w-6 h-6 rounded-full bg-[#15397F] text-white flex items-center justify-center mr-2 text-sm font-semibold shadow-md">
+                                        <div className="w-6 h-6 rounded-full bg-black-soft text-light-cream flex items-center justify-center mr-2 text-sm font-semibold shadow-md"> {/* Đổi bg-[#15397F] text-white thành bg-black-soft text-light-cream */}
                                             3
                                         </div>
-                                        <div className="font-semibold text-lg text-[#15397F]">
+                                        <div className="font-semibold text-lg text-dark-brown font-serif"> {/* Đổi text-[#15397F] thành text-dark-brown, thêm font-serif */}
                                             Chọn ngày, giờ & stylist
                                         </div>
                                     </div>
@@ -561,54 +545,54 @@ export default function BookingForm() {
                                     {/* Stylist Selection with Carousel */}
                                     <div className="mb-4 relative">
                                         <div
-                                            className="flex items-center bg-gray-50 h-11 rounded-lg px-3 shadow-sm cursor-pointer hover:bg-gray-100 transition duration-200"
+                                            className="flex items-center bg-soft-gray h-11 rounded-lg px-3 shadow-sm cursor-pointer  hover:text-light-cream transition duration-200" /* Đổi bg-gray-50 thành bg-soft-gray, hover:bg-gray-100 thành  hover:text-light-cream */
                                             onClick={handleStylistClick}
                                         >
-                                            <FaUser className="mr-3 w-4 h-4 text-[#15397F]" />
-                                            <span className="text-sm text-gray-700 flex-1 font-medium">
+                                            <FaUser className="mr-3 w-4 h-4 text-dark-brown" /> {/* Đổi text-[#15397F] thành text-dark-brown */}
+                                            <span className="text-sm text-dark-brown flex-1 font-medium"> {/* Đổi text-gray-700 thành text-dark-brown */}
                                                 {selectedStylist
                                                     ? selectedStylist.fullName
                                                     : "Chọn stylist"}
                                             </span>
                                             {stylistOpen ? (
-                                                <FaChevronUp className="w-3 h-3 text-gray-400" />
+                                                <FaChevronUp className="w-3 h-3 text-medium-gray" /> 
                                             ) : (
-                                                <FaChevronDown className="w-3 h-3 text-gray-400" />
+                                                <FaChevronDown className="w-3 h-3 text-medium-gray" /> 
                                             )}
                                         </div>
                                         {stylistOpen && (
                                             <div className="absolute z-10 w-full mt-1 bg-white rounded-lg shadow-lg py-3">
                                                 {stylists.length === 0 ? (
-                                                    <div className="text-center text-gray-500 py-3 text-sm">
+                                                    <div className="text-center text-medium-gray py-3 text-sm"> {/* Đổi text-gray-500 thành text-medium-gray */}
                                                         Không có stylist nào để hiển thị
                                                     </div>
                                                 ) : (
                                                     <>
                                                         <div className="relative flex items-center justify-center">
                                                             {/* Nút Previous */}
-                                                            {showNavigationButtons && ( // Chỉ hiển thị nút khi cần thiết
+                                                            {showNavigationButtons && (
                                                                 <button
                                                                     onClick={(e) => { e.stopPropagation(); handlePrevStylistPage(); }}
                                                                     disabled={currentStylistPage === 0}
-                                                                    className="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 p-2 rounded-full z-20 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                                                    className="absolute left-0 top-1/2 -translate-y-1/2 bg-soft-gray  p-2 rounded-full z-20 disabled:opacity-50 disabled:cursor-not-allowed transition" /* Đổi màu nút */
                                                                 >
-                                                                    <FaArrowLeft className="w-4 h-4 text-gray-700" />
+                                                                    <FaArrowLeft className="w-4 h-4 text-dark-brown" /> {/* Đổi text-gray-700 thành text-dark-brown */}
                                                                 </button>
                                                             )}
 
                                                             {/* Danh sách stylist với hiệu ứng cuộn mượt */}
-                                                            <div className="overflow-hidden w-full px-10"> {/* Container để ẩn các stylist không hiển thị */}
+                                                            <div className="overflow-hidden w-full px-10">
                                                                 <div
                                                                     ref={carouselRef}
-                                                                    className="flex transition-transform duration-500 ease-in-out" // Hiệu ứng chuyển động
-                                                                    style={{ transform: `translateX(-${currentStylistPage * (100 / stylistsPerPage)}%)` }} // Dịch chuyển
+                                                                    className="flex transition-transform duration-500 ease-in-out"
+                                                                    style={{ transform: `translateX(-${currentStylistPage * (100 / stylistsPerPage)}%)` }}
                                                                 >
-                                                                    {stylists.map((stylist) => ( // Render TẤT CẢ stylist
+                                                                    {stylists.map((stylist) => (
                                                                         <div
                                                                             key={stylist.employeeId}
-                                                                            className={`flex-shrink-0 relative flex flex-col rounded-lg overflow-hidden transition-all transform hover:scale-105 cursor-pointer mx-2 ${ // mx-2 để tạo khoảng cách giữa các item
+                                                                            className={`flex-shrink-0 relative flex flex-col rounded-lg overflow-hidden transition-all transform hover:scale-105 cursor-pointer mx-2 ${
                                                                                 selectedStylist?.employeeId === stylist.employeeId
-                                                                                    ? "ring-2 ring-[#15397F] shadow-lg"
+                                                                                    ? "ring-2 ring-accent-gold shadow-lg" /* Đổi ring-[#15397F] thành ring-accent-gold */
                                                                                     : "shadow-md"
                                                                             }`}
                                                                             onClick={(e) => {
@@ -617,28 +601,28 @@ export default function BookingForm() {
                                                                                 setStylistOpen(false);
                                                                             }}
                                                                             style={{
-                                                                                width: `calc(${100 / stylistsPerPage}% - 16px)`, // Tính toán width để 3 item hiển thị, trừ đi gap
-                                                                                aspectRatio: '3/4', // Tỷ lệ hình chữ nhật đứng (rộng/cao)
-                                                                                minHeight: '160px', // Đảm bảo kích thước tối thiểu
+                                                                                width: `calc(${100 / stylistsPerPage}% - 16px)`,
+                                                                                aspectRatio: '3/4',
+                                                                                minHeight: '160px',
                                                                             }}
                                                                         >
                                                                             {/* Ảnh stylist - nằm phủ kín thẻ */}
                                                                             <div className="absolute inset-0 w-full h-full">
                                                                                 {stylist.avatarUrl ? (
                                                                                     <img
-                                                                                        src={stylist.avatarUrl}
+                                                                                        src={`${url.BASE_IMAGES}${stylist.avatarUrl}`}
                                                                                         alt={stylist.fullName}
-                                                                                        className="w-full h-full object-cover object-center" // object-center để căn giữa ảnh
+                                                                                        className="w-full h-full object-cover object-center"
                                                                                     />
                                                                                 ) : (
-                                                                                    <div className="w-full h-full flex items-center justify-center bg-gray-300 text-gray-500">
+                                                                                    <div className="w-full h-full flex items-center justify-center bg-soft-gray text-medium-gray"> {/* Đổi bg-gray-300 text-gray-500 thành bg-soft-gray text-medium-gray */}
                                                                                         <FaUser className="text-6xl" />
                                                                                     </div>
                                                                                 )}
                                                                             </div>
 
                                                                             {/* Overlay, tên stylist, và Rating */}
-                                                                            <div className="absolute bottom-0 left-0 right-0 z-10 px-2 py-1 bg-gradient-to-t from-black via-black/70 to-transparent flex flex-col items-start text-white">
+                                                                            <div className="absolute bottom-0 left-0 right-0 z-10 px-2 py-1 bg-gradient-to-t from-black-soft via-black-soft/70 to-transparent flex flex-col items-start text-light-cream"> {/* Đổi from-black via-black/70 thành from-black-soft via-black-soft/70, text-white thành text-light-cream */}
                                                                                 <span className="font-bold text-base text-left w-full truncate">
                                                                                     {stylist.fullName}
                                                                                 </span>
@@ -646,10 +630,10 @@ export default function BookingForm() {
                                                                                 {stylist.totalReviews > 0 ? (
                                                                                     <div className="flex items-center text-xs mt-1">
                                                                                         <StarRating initialRating={stylist.averageRating} readOnly starSize={10} />
-                                                                                        <span className="ml-1">({stylist.totalReviews})</span>
+                                                                                        <span className="ml-1 text-light-cream/80">({stylist.totalReviews})</span> {/* Đổi text-white/80 thành text-light-cream/80 */}
                                                                                     </div>
                                                                                 ) : (
-                                                                                    <span className="text-xs text-gray-300 mt-1">Chưa có đánh giá</span>
+                                                                                    <span className="text-xs text-medium-gray mt-1">Chưa có đánh giá</span> 
                                                                                 )}
                                                                             </div>
                                                                         </div>
@@ -658,18 +642,18 @@ export default function BookingForm() {
                                                             </div>
 
                                                             {/* Nút Next */}
-                                                            {showNavigationButtons && ( // Chỉ hiển thị nút khi cần thiết
+                                                            {showNavigationButtons && (
                                                                 <button
                                                                     onClick={(e) => { e.stopPropagation(); handleNextStylistPage(); }}
                                                                     disabled={currentStylistPage >= Math.ceil(stylists.length / stylistsPerPage) - 1}
-                                                                    className="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-200 hover:bg-gray-300 p-2 rounded-full z-20 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                                                                    className="absolute right-0 top-1/2 -translate-y-1/2 bg-soft-gray  p-2 rounded-full z-20 disabled:opacity-50 disabled:cursor-not-allowed transition" /* Đổi màu nút */
                                                                 >
-                                                                    <FaChevronRight className="w-4 h-4 text-gray-700" />
+                                                                    <FaChevronRight className="w-4 h-4 text-dark-brown" /> {/* Đổi text-gray-700 thành text-dark-brown */}
                                                                 </button>
                                                             )}
                                                         </div>
-                                                        {showNavigationButtons && ( // Chỉ hiển thị chỉ số trang khi có nút điều hướng
-                                                            <div className="text-center text-xs text-gray-500 mt-2">
+                                                        {showNavigationButtons && (
+                                                            <div className="text-center text-xs text-medium-gray mt-2"> {/* Đổi text-gray-500 thành text-medium-gray */}
                                                                 Trang {currentStylistPage + 1} / {Math.ceil(stylists.length / stylistsPerPage)}
                                                             </div>
                                                         )}
@@ -682,13 +666,13 @@ export default function BookingForm() {
                                     {/* Chọn Ngày */}
                                     <div className="mb-4">
                                         <div
-                                            className={`flex items-center bg-gray-50 h-11 rounded-lg px-3 shadow-sm ${
+                                            className={`flex items-center bg-soft-gray h-11 rounded-lg px-3 shadow-sm ${ /* Đổi bg-gray-50 thành bg-soft-gray */
                                                 errorDate
                                                     ? "border-2 border-red-600"
                                                     : ""
-                                            } cursor-pointer hover:bg-gray-100 transition duration-200`}
+                                            } cursor-pointer  hover:text-light-cream transition duration-200`} /* Đổi hover:bg-gray-100 thành  hover:text-light-cream */
                                         >
-                                            <FaCalendarAlt className="mr-3 w-4 h-4 text-[#15397F]" />
+                                            <FaCalendarAlt className="mr-3 w-4 h-4 text-dark-brown" /> {/* Đổi text-[#15397F] thành text-dark-brown */}
                                             <input
                                                 type="date"
                                                 value={selectedDate}
@@ -696,7 +680,7 @@ export default function BookingForm() {
                                                     setErrorDate(null);
                                                     setSelectedDate(e.target.value);
                                                 }}
-                                                className="w-full bg-transparent border-none focus:outline-none text-sm text-gray-700 font-medium"
+                                                className="w-full bg-transparent border-none focus:outline-none text-sm text-dark-brown font-medium" /* Đổi text-gray-700 thành text-dark-brown */
                                                 min={
                                                     new Date()
                                                         .toISOString()
@@ -714,13 +698,13 @@ export default function BookingForm() {
                                     {/* Chọn Khung Giờ */}
                                     <div className="mb-4">
                                         {loading && (
-                                            <div className="text-center text-gray-500 py-3 font-medium text-sm">
+                                            <div className="text-center text-medium-gray py-3 font-medium text-sm"> {/* Đổi text-gray-500 thành text-medium-gray */}
                                                 Đang tải khung giờ...
                                             </div>
                                         )}
                                         {!loading &&
                                             (!selectedStylist || !selectedDate) && (
-                                                <div className="text-center text-gray-500 py-3 font-medium text-sm">
+                                                <div className="text-center text-medium-gray py-3 font-medium text-sm"> {/* Đổi text-gray-500 thành text-medium-gray */}
                                                     Vui lòng chọn stylist và ngày để xem
                                                     khung giờ
                                                 </div>
@@ -756,11 +740,11 @@ export default function BookingForm() {
                                                                 key={`${slot.timeSlotId}-${slot.startTime}`}
                                                                 className={`py-1.5 px-2 rounded-md text-xs font-semibold transition duration-200 shadow-sm ${
                                                                     isDisabled
-                                                                        ? "bg-gray-200 cursor-not-allowed text-gray-400"
+                                                                        ? "bg-soft-gray cursor-not-allowed text-medium-gray" /* Đổi màu disabled */
                                                                         : selectedSlot?.startTime ===
                                                                             slot.startTime
-                                                                          ? "bg-[#15397F] text-white shadow-md"
-                                                                          : "bg-white text-gray-800 shadow-sm hover:bg-gray-100"
+                                                                          ? "bg-dark-brown text-light-cream shadow-md" /* Đổi màu selected */
+                                                                          : "bg-white text-dark-brown shadow-sm hover:bg-soft-gray" /* Đổi màu default và hover */
                                                                 }`}
                                                                 onClick={() =>
                                                                     !isDisabled &&
@@ -780,7 +764,7 @@ export default function BookingForm() {
                                             selectedStylist &&
                                             selectedDate &&
                                             availableSlots.length === 0 && (
-                                                <div className="text-center text-gray-500 py-3 font-medium text-sm">
+                                                <div className="text-center text-medium-gray py-3 font-medium text-sm"> {/* Đổi text-gray-500 thành text-medium-gray */}
                                                     Không có khung giờ trống cho stylist
                                                     này vào ngày đã chọn
                                                 </div>
@@ -792,10 +776,10 @@ export default function BookingForm() {
                             {/* Nút xác nhận - Đặt nó bên trong phần form để cuộn theo */}
                             <div className="mt-8 p-4 bg-white rounded-b-xl shadow-lg -mx-6 -mb-8">
                                 <button
-                                    className={`w-full py-3 rounded-lg text-white font-semibold text-lg uppercase tracking-wide transition duration-200 shadow-md ${
+                                    className={`w-full py-3 rounded-lg text-light-cream font-semibold text-lg uppercase tracking-wide transition duration-200 shadow-md ${ /* Đổi text-white */
                                         isButtonEnabled
-                                            ? "bg-[#15397F] hover:bg-[#1e4bb8] hover:shadow-lg"
-                                            : "bg-gray-400 cursor-not-allowed"
+                                            ? "bg-black-soft hover:bg-dark-brown hover:shadow-lg" /* Đổi bg-[#15397F] hover:bg-[#1e4bb8] */
+                                            : "bg-soft-gray cursor-not-allowed text-medium-gray" /* Đổi bg-gray-400, thêm text */
                                     }`}
                                     onClick={handleConfirm}
                                     disabled={!isButtonEnabled}
@@ -807,16 +791,16 @@ export default function BookingForm() {
 
                         {/* Sidebar Tóm tắt đơn hàng (cột phải) */}
                         <div className="lg:w-1/3 bg-white px-6 py-8 rounded-xl shadow-xl h-fit sticky top-20">
-                            <h3 className="text-xl font-bold text-[#15397F] mb-5">Tóm tắt lịch hẹn</h3>
+                            <h3 className="text-xl font-bold text-dark-brown mb-5 font-serif">Tóm tắt lịch hẹn</h3> {/* Đổi text-[#15397F] thành text-dark-brown, thêm font-serif */}
                             <div className="space-y-4">
                                 {selectedStore && (
-                                    <div className="text-sm text-gray-700">
+                                    <div className="text-sm text-medium-gray"> {/* Đổi text-gray-700 thành text-medium-gray */}
                                         <p className="font-semibold mb-1">Salon đã chọn:</p>
                                         <p className="ml-2">{selectedStore.storeName}</p>
                                     </div>
                                 )}
                                 {selectedServices.length > 0 && (
-                                    <div className="text-sm text-gray-700">
+                                    <div className="text-sm text-medium-gray"> {/* Đổi text-gray-700 thành text-medium-gray */}
                                         <p className="font-semibold mb-1">Dịch vụ đã chọn:</p>
                                         <ul className="list-none list-inside ml-2 space-y-0.5">
                                             {selectedServices.map(service => (
@@ -828,19 +812,19 @@ export default function BookingForm() {
                                     </div>
                                 )}
                                 {selectedStylist && (
-                                    <div className="text-sm text-gray-700">
+                                    <div className="text-sm text-medium-gray"> {/* Đổi text-gray-700 thành text-medium-gray */}
                                         <p className="font-semibold mb-1">Stylist:</p>
                                         <p className="ml-2">{selectedStylist.fullName}</p>
                                     </div>
                                 )}
                                 {selectedDate && (
-                                    <div className="text-sm text-gray-700">
+                                    <div className="text-sm text-medium-gray"> {/* Đổi text-gray-700 thành text-medium-gray */}
                                         <p className="font-semibold mb-1">Ngày hẹn:</p>
                                         <p className="ml-2">{new Date(selectedDate).toLocaleDateString('vi-VN')}</p>
                                     </div>
                                 )}
                                 {selectedSlot && (
-                                    <div className="text-sm text-gray-700">
+                                    <div className="text-sm text-medium-gray"> {/* Đổi text-gray-700 thành text-medium-gray */}
                                         <p className="font-semibold mb-1">Thời gian:</p>
                                         <p className="ml-2">
                                             {new Date(selectedSlot.startTime).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }).replace(':', 'H')} -
@@ -848,9 +832,9 @@ export default function BookingForm() {
                                         </p>
                                     </div>
                                 )}
-                                <div className="text-lg font-bold text-[#15397F] flex justify-between pt-4 border-t border-gray-200">
+                                <div className="text-lg font-bold text-dark-brown flex justify-between pt-4 border-t border-soft-gray"> {/* Đổi text-[#15397F] thành text-dark-brown, border-gray-200 thành border-soft-gray */}
                                     <span>Tổng cộng:</span>
-                                    <span className="text-green-700">
+                                    <span className="text-accent-gold"> {/* Đổi text-green-700 thành text-accent-gold */}
                                         {selectedServices
                                             .reduce((sum, s) => sum + s.price, 0)
                                             .toLocaleString()}{" "}
@@ -880,7 +864,8 @@ export default function BookingForm() {
                 />
             )}
 
-             {/* Nút CTA cố định */}
+             {/* Nút CTA cố định - GIỮ NGUYÊN HOẶC XÓA TÙY Ý BẠN (đã có trong Home.tsx, nếu muốn dùng 1 cái duy nhất thì nên để trong Layout.tsx) */}
+            {/* Nếu bạn muốn nút này ở đây, hãy chỉnh màu sắc cho nó */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -889,7 +874,7 @@ export default function BookingForm() {
             >
                 <Link
                     to={routes.booking}
-                    className="flex items-center bg-blue-700 text-white font-bold py-3 px-7 rounded-full shadow-xl hover:bg-blue-800 transition-all duration-300"
+                    className="flex items-center bg-black-soft text-light-cream font-bold py-3 px-7 rounded-full shadow-xl hover:bg-dark-brown transition-all duration-300" /* Đổi màu sắc nút CTA */
                 >
                     <FaPhoneAlt className="mr-2" />
                     Đặt lịch ngay

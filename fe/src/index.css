@@ -2,111 +2,130 @@
 @tailwind components;
 @tailwind utilities;
 
-
+/* Reset font-family from default body and apply custom fonts */
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    /* Use 'Merriweather' for general text as a more readable serif font */
+    font-family: 'Merriweather', serif; /* Changed: Applied Merriweather */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Changed: Background to light cream for mộc mạc style */
+    background-color: var(--light-cream); /* Changed: Using CSS variable */
+    /* Changed: Default text color to dark brown */
+    color: var(--dark-brown); /* Changed: Using CSS variable */
 }
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-body {
-  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
-  background-color: #ffffff;
-  color: #15397F;
-  
-}
+/* Override previous body definition */
+/* Removed: Redundant body definition */
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
-  --radius: 0.5rem;
+    /* Màu sắc cơ bản cho phong cách mộc mạc cổ điển */
+    --light-cream: #F8F7F3; /* Nền chính: Trắng kem */
+    --soft-gray: #EAEAEA;   /* Nền phụ, viền nhẹ: Xám nhạt */
+    --dark-brown: #4A3B31;  /* Màu chữ đậm, tiêu đề: Nâu đen */
+    --medium-gray: #6B7280; /* Màu chữ phụ: Xám trung bình */
+    --black-soft: #1A1A1A;  /* Màu đen mềm mại làm điểm nhấn */
+    --accent-gold: #B8860B; /* Vàng đồng/vàng cổ điển làm điểm nhấn */
+    --accent-terracotta: #A0522D; /* Nâu đất nung làm điểm nhấn thứ cấp */
+    --text-on-accent: #FFFFFF; /* Màu chữ trên các nền điểm nhấn */
+
+    /* Cập nhật các biến gốc của shadcn/ui hoặc các thư viện khác để phù hợp */
+    --background: var(--light-cream);
+    --foreground: var(--dark-brown);
+    --card: #FFFFFF; /* Giữ card là trắng tinh nếu muốn độ tương phản cao */
+    --card-foreground: var(--dark-brown);
+    --popover: #FFFFFF;
+    --popover-foreground: var(--dark-brown);
+
+    /* Màu primary và secondary giờ sẽ theo theme mới */
+    --primary: var(--black-soft); /* Các nút hành động chính, tiêu đề quan trọng */
+    --primary-foreground: var(--light-cream); /* Chữ trên nền primary */
+
+    --secondary: var(--soft-gray); /* Nền các khối phụ, hover nhẹ */
+    --secondary-foreground: var(--dark-brown); /* Chữ trên nền secondary */
+
+    --muted: var(--soft-gray);
+    --muted-foreground: var(--medium-gray);
+    --accent: var(--accent-gold); /* Màu điểm nhấn chính */
+    --accent-foreground: var(--text-on-accent);
+    --destructive: 0 84.2% 60.2%; /* Giữ nguyên màu đỏ cảnh báo nếu cần */
+    --destructive-foreground: 0 0% 98%;
+
+    --border: var(--soft-gray); /* Màu border */
+    --input: var(--soft-gray);
+    --ring: var(--accent-gold); /* Màu ring focus cho input */
+    --radius: 0.5rem;
 }
 
+/* Styles for menu items */
 .menu-item-text {
-  font-size: 15px;
-  font-weight: 600;
-  color: #15397F;
-  padding: 0.5rem 0;
-  transition: color 0.2s;
+    font-size: 16px; /* Slightly larger for readability */
+    font-weight: 600;
+    color: var(--dark-brown); /* Changed to dark brown */
+    padding: 0.5rem 0;
+    transition: color 0.2s;
 }
 
 .menu-item-text:hover,
 .menu-item-text.active {
-  color: #FFCC33;
+    color: var(--accent-gold); /* Changed to accent gold for hover/active */
 }
 
 .pointer {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 /* Mobile menu */
 @media (max-width: 768px) {
-  .nav-bar__menu {
-    display: none;
-  }
+    .nav-bar__menu {
+        display: none;
+    }
 }
 
 /* Navigation and menu */
 .nav-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
 }
 
 .nav-bar__logo-main img {
-  height: 56px;
-  width: auto;
+    height: 56px;
+    width: auto;
 }
 
 .menu {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .menu-item {
-  margin: 0 0.75rem;
+    margin: 0 0.75rem;
 }
 
+/* Animation for stars - adjusted colors */
 @keyframes shine {
-  0%, 20% { color: #d1d5db; } /* xám */
-  30%, 50% { color: #facc15; } /* vàng */
-  60%, 100% { color: #d1d5db; }
+    0%, 20% { color: #d1d5db; } /* xám */
+    30%, 50% { color: var(--accent-gold); } /* vàng cổ điển */ /* Changed */
+    60%, 100% { color: #d1d5db; }
 }
 
 /* Gốc animation cho tất cả sao */
 .star {
-  animation: shine 5s infinite;
+    animation: shine 5s infinite;
 }
 
 /* Hover vào sao thì ngắt animation và vàng */
 .star:hover {
-  animation: none;
-  color: #facc15;
+    animation: none;
+    color: var(--accent-gold); /* Changed */
 }
 
 /* Gán delay khác nhau cho từng sao */
@@ -116,27 +135,22 @@ body {
 .star-4 { animation-delay: 1.5s; }
 .star-5 { animation-delay: 2s; }
 
-
-
-
-
-
 .custom-scrollbar-main::-webkit-scrollbar {
     width: 10px; /* Chiều rộng thanh cuộn chính */
 }
 
 .custom-scrollbar-main::-webkit-scrollbar-track {
-    background: #e0e0e0; /* Màu nền track chính */
+    background: var(--soft-gray); /* Màu nền track chính */ /* Changed */
     border-radius: 10px;
 }
 
 .custom-scrollbar-main::-webkit-scrollbar-thumb {
-    background: #a0a0a0; /* Màu thanh cuộn chính */
+    background: var(--medium-gray); /* Màu thanh cuộn chính */ /* Changed */
     border-radius: 10px;
 }
 
 .custom-scrollbar-main::-webkit-scrollbar-thumb:hover {
-    background: #808080; /* Màu khi hover thanh cuộn chính */
+    background: var(--dark-brown); /* Màu khi hover thanh cuộn chính */ /* Changed */
 }
 
 /* Custom Scrollbar for inner store list */
@@ -145,22 +159,22 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--soft-gray); /* Changed */
     border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #bbb; /* Màu thanh cuộn nhạt hơn */
+    background: var(--medium-gray); /* Màu thanh cuộn nhạt hơn */ /* Changed */
     border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #999;
+    background: var(--dark-brown); /* Changed */
 }
 
 /* Firefox compatibility */
 .custom-scrollbar-main,
 .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: #a0a0a0 #e0e0e0; /* thumb color track color */
+    scrollbar-color: var(--medium-gray) var(--soft-gray); /* thumb color track color */ /* Changed */
 }
