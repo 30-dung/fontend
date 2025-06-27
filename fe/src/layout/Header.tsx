@@ -35,7 +35,10 @@ export function Header() {
                     return; // Exit to prevent re-fetching if data is complete
                 }
             } catch (e) {
-                console.error("Failed to parse user data from localStorage:", e);
+                console.error(
+                    "Failed to parse user data from localStorage:",
+                    e
+                );
                 // If parsing fails, proceed to fetch or clear storage
             }
 
@@ -50,12 +53,15 @@ export function Header() {
                         topupBalance: response.data.topupBalance || 0,
                     });
                     // Update the 'user' item in localStorage as well, if fetched successfully
-                    localStorage.setItem("user", JSON.stringify({
-                        userId: response.data.userId, // Assuming userId comes from profile API
-                        fullName: response.data.fullName,
-                        email: response.data.email, // Assuming email comes from profile API
-                        topupBalance: response.data.topupBalance || 0,
-                    }));
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify({
+                            userId: response.data.userId, // Assuming userId comes from profile API
+                            fullName: response.data.fullName,
+                            email: response.data.email, // Assuming email comes from profile API
+                            topupBalance: response.data.topupBalance || 0,
+                        })
+                    );
                 } catch (error) {
                     console.error("Failed to fetch user data:", error);
                     // Clear all related localStorage items on fetch failure
@@ -118,7 +124,11 @@ export function Header() {
                 <nav className="nav-bar flex items-center justify-between py-2">
                     <div className="nav-bar__logo-main">
                         <NavLink to={routes.home} title="trang chủ">
-                            <img src={logo} className="h-full w-full object-fill object-contain " alt="30 Shine Logo" />
+                            <img
+                                src={logo}
+                                className="h-full w-full object-fill object-contain "
+                                alt="30 Shine Logo"
+                            />
                         </NavLink>
                     </div>
 
@@ -166,14 +176,14 @@ export function Header() {
                             <li className="menu-item">
                                 <NavLink to={routes.about}>
                                     <span className="menu-item-text pointer hover:text-shine-secondary">
-                                        Về FourShine
+                                        Về BarberShop
                                     </span>
                                 </NavLink>
                             </li>
                             <li className="menu-item">
                                 <NavLink to={routes.location_page}>
                                     <span className="menu-item-text pointer hover:text-shine-secondary">
-                                        Tìm FourShine gần nhất
+                                        Tìm BarberShop gần nhất
                                     </span>
                                 </NavLink>
                             </li>
@@ -246,7 +256,6 @@ export function Header() {
                                                 Lịch sử tạo dáng
                                             </NavLink>
                                         </li>
-                                        
 
                                         <li
                                             role="menuitem"
@@ -265,8 +274,10 @@ export function Header() {
                         ) : (
                             <div className="login-button">
                                 <NavLink to={routes.login}>
-                                    <span className="rounded border border-dark-brown px-4 py-1.5 text-dark-brown transition-colors
-                                                   hover:bg-dark-brown hover:text-light-cream">
+                                    <span
+                                        className="rounded border border-dark-brown px-4 py-1.5 text-dark-brown transition-colors
+                                                   hover:bg-dark-brown hover:text-light-cream"
+                                    >
                                         Đăng nhập
                                     </span>
                                 </NavLink>
